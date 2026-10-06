@@ -2,8 +2,8 @@
 
 **Status: frozen for phase 1 (plan: [`ffman-python.md`](ffman-python.md)).**
 Every value, range and message below is taken from the bash implementation
-(`tools/ffman.sh` at tag `ffman-bash-final`), not from its help text. **A** marks
-behaviour stage A reproduces exactly. **B** marks what arrives in stage B.
+(nixos-config's `tools/ffman.sh` at its tag `ffman-bash-final`), not from its help
+text. **A** marks behaviour stage A reproduces exactly. **B** marks what arrives in stage B.
 **New** marks surface that exists from phase 1 and has no bash counterpart.
 
 ## 1. Invocation

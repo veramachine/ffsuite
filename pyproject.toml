@@ -30,8 +30,8 @@ line-length = 100
 # first-party: ffman and its `tests` package, from their import roots (pytest's pythonpath); the
 # libraries, other distributions, sort as third-party
 src = ["packages/ffman/src", "packages/ffman"]
-# reference, not ffman's code: the skills' scripts, the planning-era docs, the bash origin
-extend-exclude = [".agents", "docs", "bash"]
+# reference, not ffman's code: the skills' scripts, the planning-era docs
+extend-exclude = [".agents", "docs"]
 
 [tool.ruff.lint]
 select = ["ALL"]

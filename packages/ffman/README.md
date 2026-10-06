@@ -122,9 +122,9 @@ The rules, each measured:
   [`CHANGELOG.md`](https://github.com/veramachine/ffsuite/blob/main/packages/ffman/CHANGELOG.md).
 - Working on it: [`AGENTS.md`](https://github.com/veramachine/ffsuite/blob/main/AGENTS.md).
 
-It replaced the bash ffman (`bash/ffman.sh` in this history, removed in phase 5 of
-[`ffman-python.md`](https://github.com/veramachine/ffsuite/blob/main/docs/ffman-python.md);
-in git history), after equalling it on every invocation of the bash suites.
+It replaced a bash ffman (retired in phase 5 of
+[`ffman-python.md`](https://github.com/veramachine/ffsuite/blob/main/docs/ffman-python.md)),
+after equalling it on every invocation of the bash suites.
 
 ## Licence
 

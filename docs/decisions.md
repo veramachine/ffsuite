@@ -12,8 +12,8 @@ in [`docs/ffman-spec.md`](ffman-spec.md). One command today, `convert`;
 (a system's ffmpeg-full, FDK and all). Its checks (`nix/checks.nix`), each on Python 3.13 and
 3.14: `tests` (the suite, 100% line and branch), `matrix` (the combination matrix, `pytest -m
 slow`), `types` (basedpyright), `vulture`, `installed` (the built binary through its wrapper
-alone); `lint` once (ruff, nixfmt, shellcheck). It replaced the
-bash `bash/ffman.sh` (removed in phase 5; in this history), after equalling it on
+alone); `lint` once (ruff, nixfmt, shellcheck). It replaced the bash `tools/ffman.sh`
+(nixos-config's, at its tag `ffman-bash-final`; removed in phase 5), after equalling it on
 every invocation of the bash suites; those suites live on as its tests. Both
 paths pass on the pinned ffmpeg 8.1.2: FDK, and native aac through the test hook
 `FFMAN_NO_FDK=1`. **Needs ffmpeg ≥ 7**: `-enc_time_base:v demux` (below) is not

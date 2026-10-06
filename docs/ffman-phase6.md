@@ -1484,7 +1484,6 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
         docs/                   the spec, the plans, decisions.md (here)
         .agents/skills/         cue, ffmetadata, vorbiscomment: ffmeta's
                                 tests' oracles (here)
-        bash/                   the bash origin: in the history alone
         packages/ffman/         pyproject.toml, README.md, CHANGELOG.md,
                                 LICENSE-MIT, LICENSE-APACHE, src/ffman/ (cli,
                                 jobs, plan, graph, effects, media, subs -- the
@@ -1560,6 +1559,16 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       projects -- `ffkit` and `fftoolkit` taken that way; `ffman`, `ffmeta`, `subverter` free.
       *Done: every reference (URLs, README titles, the flake's `nix run` line, the plan's
       boxes, `origin`) -- ffmpeg's own `fftools/` paths kept.*
+- [x] Published fresh (the owner's decision, the bash past): `veramachine/ffsuite` begins at
+      one commit, its tree the one built above (measured: every file and mode equal). The
+      history before -- ffman's own in nixos-config, kept there whole, never rewritten, its tag
+      `ffman-bash-final` on `tools/ffman.sh` -- and the extraction's commits from 6.7.4 to the
+      push stay unpublished. The docs' commit hashes are nixos-config's (71, each found there)
+      but one, 6.7.6's base `7b8c433`, that history's record alone (the other hex in the docs:
+      digests and numbers, each read). *Done: what pointed into the old history points to
+      nixos-config's -- the spec's source and decisions' (its `tools/ffman.sh` at its tag); the
+      layout's `bash/` gone, ruff's exclusion of it dropped (the files it checks the same, 211);
+      ffman's README, its PyPI page, tells the bash ffman retired, no history named.*
 
 *6.7.5 The packages and their pyproject.toml*
 
