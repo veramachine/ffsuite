@@ -2136,6 +2136,17 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       sound: nothing else names `tools.ffman` or the input; the installer's lock rewrite takes
       every manifest node, `ffsuite` with them; no ignore file, formatter or task runner named
       ffman.*
+- [x] 6.7.8 reviewed whole (owner's request). *Both repositories swept together, the record's
+      counts and references re-proven, two corrected there: of ffman's five plans one is
+      identical here and four edited since (hashed), and eleven inputs were compared by git
+      tree -- nixpkgs' source was already in the store, admitted, as each, by its lock's NAR
+      hash (its fixed-output path present). `decisions.md` now says the 07-tools section
+      points here. Re-proven: the lock's 13 nodes, 8 direct; no tracked nixos-config file
+      names `tools/ffman`, `ffmanEnv`, `ffmanRuntime`, `devShells.ffman` or the moved plans
+      but the review maps' history; ffsuite's references into nixos-config (flake, packages,
+      the skills' index, `docs/upgrading.md`) accurate; nixos-config's lock still at dd0e31a
+      (ffsuite's later commits: docs, and ruff told to skip them; `nix flake update ffsuite`
+      the owner's, after the push); the bundle reproduces nixos-config's tree on 253c5eb.*
 
 *6.7.9 Its tooling* (adapted from csan and imi; each file its source)
 
