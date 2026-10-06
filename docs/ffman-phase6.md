@@ -2129,7 +2129,13 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       mpv test against this ffman, from a read-only copy of its check's fileset, and failing
       on a mutated `mpv.conf`; review maps regenerated (their selftest passing; at 253c5eb
       they had been current). `nix flake check` whole exceeds this sandbox's memory, at
-      253c5eb too: the owner's to run, with the build.*
+      253c5eb too: the owner's to run, with the build. Reviewed (owner's request): the
+      checks' bindings named for what they hold (`ffsuiteChecks`, `pythonSuffix`), the guard
+      shown refusing a Python ffsuite lacks; a blank line the removal left in
+      `pkgs/default.nix` gone; `docs/upgrading.md` made a numbered list, its words unchanged
+      (compared). Checked and sound: nothing else names `tools.ffman` or the input; the
+      installer's lock rewrite takes every manifest node, `ffsuite` with them; no ignore file,
+      formatter or task runner named ffman.*
 
 *6.7.9 Its tooling* (adapted from csan and imi; each file its source)
 
