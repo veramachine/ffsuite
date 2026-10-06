@@ -2556,3 +2556,77 @@ statement corrected. measure=True stays -- the blurred head read as itself is
 exact by construction, for any format; the padded one agrees only as measured.
 DRY: "a fit with blurred bars", written in head's match and in burn, is
 blurred_fit, once. Types: the bar's word a BarKind (Literal black, blurred).
+
+## 9. Assessed for nixos-config (owner's request, after 6.7.8)
+
+Not ffman's work: two of nixos-config's choices, assessed here, where the work is carried. At
+nixos-config `aee27e3` and its nixpkgs pin (rustc 1.95.0 the default, 1.97.1 beside it;
+nix-update 1.15.1).
+
+**9.1 imi as a flake input, with a `flake.nix` of its own**
+
+Today `pkgs/imi/default.nix` builds the crates.io crate (`fetchCrate`) with two written hashes:
+`src.hash`, and `cargoHash` (its `Cargo.lock`'s 61 crates, vendored as one fixed output).
+`nix flake update` reaches neither: it rewrites `flake.lock`, which holds inputs only.
+
+Proposed, as ffsuite: imi's repository (`github:veralvx/imi`) gains a `flake.nix` (packages,
+`overlays.default`, checks) building with `cargoLock.lockFile = ./Cargo.lock` -- each crate
+fetched against the checksum `Cargo.lock` already holds (nixpkgs' `importCargoLock`), so no
+written hash; a git dependency would need one, and at `v0.3.0` there is none. nixos-config takes
+it as it takes ffsuite: `imi.url = "github:veralvx/imi/v0.3.0"`,
+`imi.inputs.nixpkgs.follows = "nixpkgs"`, the overlay applied in `modules/tools.nix`.
+
+Measured: tags `v0.1.4` to `v0.3.0`, `main` past the last (`d2c73a4`; `v0.3.0` is `db710d2`) --
+so the URL names a tag, and a bump edits it (Nix relocks a changed input itself); untagged,
+`nix flake update imi` would follow unreleased commits. The workspace has two members
+(`crates/imi`, `crates/imi-core`): the package builds `-p imi`. `rust-toolchain.toml` (1.95) is
+rustup's, unread by nixpkgs' cargo; `rust-version = "1.95"` cargo enforces against the rustc it
+is given -- under `follows`, nixos-config's, so the MSRV stays the system's question
+(`rustPackages_1_97` exists at this pin: a later MSRV need not wait for the channel).
+
+Moving with it (6.7.8's blast radius, measured there): the two tests skipped by name
+(`/sys/block`, a terminal) go to imi's package -- better, its tests skip themselves there;
+`meta.license` becomes `MIT OR Apache-2.0` (crates.io and its `Cargo.toml`; nixos-config's says
+MIT, unverified); in nixos-config, `pkgs/imi` and its export removed, the ISO's lock-node counts
+(14 nodes, 9 direct), the installer's, `eval-report.sh`'s three input lists, 07-tools and the
+review maps. `cargo-hash` (`tools/cargo-hash.sh`, run-book `cargo-hashes.md`) has no other user
+(`fetchCrate` is imi's alone): it could retire with it.
+
+Found stale on the way, left: `modules/tools.nix` calls imi a "unicode lookup" (its keywords:
+usb, iso, disk, bootable, flash); `flake.nix`'s export comment, `pkgs/default.nix` and
+`pkgs/imi/default.nix`'s header still describe a placeholder `cargoHash`, filled since;
+`flake.nix`'s icon-theme comment likewise a `lib.fakeHash` since replaced.
+
+- [ ] Decided with the owner: imi's own flake, then nixos-config taking it as an input -- or
+      imi kept as it is.
+
+**9.2 nix-update for the written hashes**
+
+What it does (its source at 1.15.1, read, not run): finds a package in a flake's
+`packages.<system>` (or by attribute path from the flake's root); finds the newest version from
+its source URL's host (GitHub, Bitbucket, crates.io and others); rewrites the version on its
+declaration line, and the old rev or tag and the old hash on every line of that file (text
+replacement); computes each new hash by building the fixed output with an empty one and reading
+Nix's `got:` -- the trust-on-first-use step this repository's run-books take by hand.
+
+What it reaches here: exported packages only, three of nine sources with written hashes.
+
+| Source                           | Exported             | Fit                                                                                                                                                                   |
+| -------------------------------- | -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| imi (`src.hash`, `cargoHash`)    | yes                  | partial: its URL is `static.crates.io` (fetchCrate's default here), its lookup takes host `crates.io` only -- `--version` needed; MSRV unchecked (`--build` shows it) |
+| yamis-cosmic-icon-theme          | yes                  | full: a GitHub tag                                                                                                                                                    |
+| yamis-icon-theme                 | yes                  | partial: a Bitbucket commit beside upstream's 1.5.2 -- `--version` needed                                                                                             |
+| jux cosmic (icons, cursors)      | no (unfree)          | --                                                                                                                                                                    |
+| libretro-database (`gaming.nix`) | no (a `let` binding) | and its commit is inside the URL, no `rev` to rewrite                                                                                                                 |
+| wine-mono `.msi`                 | no (a `let` binding) | its version is wine's, checked by the build                                                                                                                           |
+| ArtCNN shader, blur-edges        | no (inline)          | --                                                                                                                                                                    |
+| SWORD modules                    | no (unfree)          | `scripts/prefetch-sword-hashes.sh`, their own                                                                                                                         |
+
+Each current hash and rev appears once in its file (counted): the text replacement would touch
+nothing else today. Assessed: little to gain. With 9.1, imi's hashes go; what remains in reach
+is the two YAMIS themes, one of them fully. Exporting the rest only for the tool adds outputs
+nothing else uses. Its place is an occasional command
+(`nix run nixpkgs#nix-update -- --flake yamis-cosmic-icon-theme`), not a dependency.
+
+- [ ] Decided with the owner: nix-update named in the run-books as the bump command for the
+      exported packages -- or not.
