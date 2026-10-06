@@ -54,7 +54,8 @@ and 1.5). `nix fmt` formats the Nix files.
 `nix flake check` runs the same, each on Python 3.13 and 3.14 (pytest against the installed
 packages): `tests-*`, `matrix-*`, `types-*`, `vulture-*`, and `installed-*` -- the built binary
 through its wrapper alone (`nix/installed.sh`), which nothing else reaches: the suite calls
-`main()` in-process; `lint` once (ruff, nixfmt, shellcheck: no interpreter).
+`main()` in-process; `lint` once (ruff, nixfmt, shellcheck: no interpreter). At a nixpkgs bump,
+the tools' behaviour ffman holds to, re-checked: [`docs/upgrading.md`](docs/upgrading.md).
 
 ## The outcome report
 
