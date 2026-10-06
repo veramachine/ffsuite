@@ -1,0 +1,23 @@
+{
+  "skill_name": "vorbiscomment",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I add chapters to my FLAC files with ffmpeg -metadata CHAPTER000=... CHAPTER000NAME=..., but some chapters come out without titles. Why?",
+      "expected_output": "ffmpeg's tag dictionary moves its last entry into a replaced key's place (libavutil/dict.c); it replaces encoder on every write, so a NAME can land before its CHAPTERxxx and its reader then keeps it a plain tag. Use metaflac --set-tag, which keeps the order, and read the result back. Run: ffmpeg wrote CHAPTER001NAME first, its title lost; metaflac kept the order, both titled.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Put these tags into my song.ogg: TITLE=Song, ARTIST=Band, and LYRICS with two lines.",
+      "expected_output": "A text file in the escaped form (LYRICS=first line\\nsecond line), every line ended with LF, written with vorbiscomment -w -e -c. Run: the .ogg holds the three tags, LYRICS as one two-line value.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Add two chapters to my podcast.opus: 'One' at 0:00 and 'Two' at 1:30.5.",
+      "expected_output": "Not through ffmpeg's own chapter writing (it puts a start with a fraction of 0.5 s or more a second late: 91.5 s); write CHAPTER000/CHAPTER000NAME/CHAPTER001=00:01:30.500/CHAPTER001NAME comments in order, three fractional digits, and check the order. Run: ffmpeg's own wrote 91.5 s; the comments gave 90.5 s.",
+      "files": []
+    }
+  ]
+}

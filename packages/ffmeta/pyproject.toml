@@ -1,0 +1,68 @@
+[build-system]
+# 1.26.0 brought license-files to PEP 639's final form; 1.26.2 fixed the metadata 1.26.0 wrote
+# for older core-metadata versions (hatchling's changelog)
+requires = ["hatchling>=1.26.2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ffmeta"
+version = "0.1.0"
+description = "Media metadata files -- ffmetadata, Vorbis comments, cue sheets -- read, written and converted through one model"
+readme = "README.md"
+# the owner's: MIT or Apache-2.0, the user's choice
+license = "MIT OR Apache-2.0"
+license-files = ["LICENSE-MIT", "LICENSE-APACHE"]
+requires-python = ">=3.13"
+authors = [{ name = "VERA LVX", email = "veralvx@veralvx.com" }]
+maintainers = [{ name = "VERA LVX", email = "veralvx@veralvx.com" }]
+keywords = [
+    "metadata",
+    "ffmetadata",
+    "vorbis",
+    "vorbiscomment",
+    "flac",
+    "opus",
+    "cue",
+    "cuesheet",
+    "chapters",
+    "tags",
+]
+# https://pypi.org/classifiers/ -- no License :: one (PEP 639); OS Independent: nothing
+# platform-bound imported (measured)
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Multimedia :: Sound/Audio",
+    "Topic :: Multimedia :: Video",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+dependencies = []  # the standard library alone
+
+[project.urls]
+Homepage = "https://github.com/veramachine/ffsuite/tree/main/packages/ffmeta"
+Issues = "https://github.com/veramachine/ffsuite/issues"
+Repository = "https://github.com/veramachine/ffsuite"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ffmeta"]
+
+[tool.hatch.build.targets.sdist]
+# test_skills reads the repository's .agents/skills, which no sdist holds (an upward path
+# breaks one, 6.7.4): left out, the rest of its tests run from it
+exclude = ["tests/test_skills.py"]
+
+[tool.pytest.ini_options]
+# its own, for its sdist's tests alone; from the repository's root, the root's governs
+minversion = "9.0"
+testpaths = ["tests"]
+pythonpath = ["tests"]
+addopts = ["--strict-markers", "--strict-config", "-ra", "--import-mode=importlib"]
+xfail_strict = true
+filterwarnings = ["error"]

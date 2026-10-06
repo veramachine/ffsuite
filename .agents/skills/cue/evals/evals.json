@@ -1,0 +1,23 @@
+{
+  "skill_name": "cue",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I re-encoded my album FLAC with ffmpeg and its embedded cue sheet is gone. How do I keep it?",
+      "expected_output": "ffmpeg reads the CUESHEET block as chapters but its FLAC muxer writes no block and no chapters (flacenc.c), copied or encoded again. Carry it with metaflac: --export-cuesheet-to from the original, --import-cuesheet-from into the new file. Run: block lost after ffmpeg; restored by metaflac, chapters at 255, 542.987 and 600 s.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Write a cue sheet for my podcast.flac with chapters 'Intro' at 0:00, 'The Road' at 12:30.5 and 'Arrival' at 41:05.5.",
+      "expected_output": "The safe form: one FILE \"podcast.flac\" WAVE, TRACK 01-03 AUDIO with quoted TITLEs, INDEX 01 times by integer arithmetic to the nearest frame -- 12:30:38 and 41:05:38 (each 6.667 ms late, the most a cue time can be off) -- with the loss stated. Run: libcue and metaflac accept it; ffmpeg's chapters at 750.507 and 2465.507 s.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Why does the first chapter of my FLAC show the title GBAYE7900001?",
+      "expected_output": "The FLAC has a CUESHEET block; ffmpeg turns each track into a chapter and passes the track's ISRC where the title goes (flacdec.c), so a track with an ISRC gets it as its title -- the block holds no titles at all. Run: the EAC case's track 1 (ISRC GBAYE7900001) read as a chapter titled GBAYE7900001.",
+      "files": []
+    }
+  ]
+}

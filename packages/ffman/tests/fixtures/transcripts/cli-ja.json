@@ -1,0 +1,104 @@
+{
+ "result": {
+  "language": "ja"
+ },
+ "transcription": [
+  {
+   "offsets": {
+    "from": 1000,
+    "to": 3000
+   },
+   "text": "今日は良い天気です",
+   "tokens": [
+    {
+     "text": "[_BEG_]",
+     "offsets": {
+      "from": 1000,
+      "to": 1000
+     },
+     "t_dtw": -1
+    },
+    {
+     "text": "今",
+     "offsets": {
+      "from": 1000,
+      "to": 1180
+     },
+     "t_dtw": -1
+    },
+    {
+     "text": "日",
+     "offsets": {
+      "from": 1200,
+      "to": 1380
+     },
+     "t_dtw": -1
+    },
+    {
+     "text": "は",
+     "offsets": {
+      "from": 1400,
+      "to": 1580
+     },
+     "t_dtw": -1
+    },
+    {
+     "text": "良",
+     "offsets": {
+      "from": 1600,
+      "to": 1780
+     },
+     "t_dtw": -1
+    },
+    {
+     "text": "い",
+     "offsets": {
+      "from": 1800,
+      "to": 1980
+     },
+     "t_dtw": -1
+    },
+    {
+     "text": "天",
+     "offsets": {
+      "from": 2000,
+      "to": 2180
+     },
+     "t_dtw": -1
+    },
+    {
+     "text": "気",
+     "offsets": {
+      "from": 2200,
+      "to": 2380
+     },
+     "t_dtw": -1
+    },
+    {
+     "text": "で",
+     "offsets": {
+      "from": 2400,
+      "to": 2580
+     },
+     "t_dtw": -1
+    },
+    {
+     "text": "す",
+     "offsets": {
+      "from": 2600,
+      "to": 2780
+     },
+     "t_dtw": -1
+    },
+    {
+     "text": "[_TT_100]",
+     "offsets": {
+      "from": 3000,
+      "to": 3000
+     },
+     "t_dtw": -1
+    }
+   ]
+  }
+ ]
+}

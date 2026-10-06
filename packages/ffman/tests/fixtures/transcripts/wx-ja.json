@@ -1,0 +1,67 @@
+{
+ "segments": [
+  {
+   "start": 1.0,
+   "end": 3.0,
+   "text": "今日は良い天気です",
+   "words": [
+    {
+     "word": "今",
+     "start": 1.0,
+     "end": 1.18,
+     "score": 0.9
+    },
+    {
+     "word": "日",
+     "start": 1.2,
+     "end": 1.38,
+     "score": 0.9
+    },
+    {
+     "word": "は",
+     "start": 1.4,
+     "end": 1.58,
+     "score": 0.9
+    },
+    {
+     "word": "良",
+     "start": 1.6,
+     "end": 1.78,
+     "score": 0.9
+    },
+    {
+     "word": "い",
+     "start": 1.8,
+     "end": 1.98,
+     "score": 0.9
+    },
+    {
+     "word": "天",
+     "start": 2.0,
+     "end": 2.18,
+     "score": 0.9
+    },
+    {
+     "word": "気",
+     "start": 2.2,
+     "end": 2.38,
+     "score": 0.9
+    },
+    {
+     "word": "で",
+     "start": 2.4,
+     "end": 2.58,
+     "score": 0.9
+    },
+    {
+     "word": "す",
+     "start": 2.6,
+     "end": 2.78,
+     "score": 0.9
+    }
+   ]
+  }
+ ],
+ "word_segments": [],
+ "language": "ja"
+}

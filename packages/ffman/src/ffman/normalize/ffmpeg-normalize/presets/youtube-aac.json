@@ -1,0 +1,15 @@
+{
+  "normalization-type": "ebu",
+  "target-level": -14.0,
+  "loudness-range-target": 7.0,
+  "true-peak": -2.0,
+  "pre-filter": "aformat=sample_fmts=fltp:channel_layouts=stereo",
+  "audio-channels": 2,
+  "sample-rate": "48000",
+  "audio-codec": "libfdk_aac",
+  "audio-bitrate": "384k",
+  "extension": "m4a",
+  "extra-output-options": "-profile:a aac_low -cutoff 20000 -movflags +faststart -use_editlist 0",
+  "progress": true,
+  "verbose": true
+}

@@ -1,0 +1,1109 @@
+{
+ "segments": [
+  {
+   "start": 0.151,
+   "end": 7.357,
+   "text": " Hi there, and welcome to the Five Minute English Podcast, the place where you learn real English for real life in just five minutes a day.",
+   "words": [
+    {
+     "word": "Hi",
+     "start": 0.151,
+     "end": 0.291,
+     "score": 0.767
+    },
+    {
+     "word": "there,",
+     "start": 0.311,
+     "end": 0.531,
+     "score": 0.835
+    },
+    {
+     "word": "and",
+     "start": 0.872,
+     "end": 0.972,
+     "score": 0.691
+    },
+    {
+     "word": "welcome",
+     "start": 0.992,
+     "end": 1.312,
+     "score": 0.773
+    },
+    {
+     "word": "to",
+     "start": 1.332,
+     "end": 1.392,
+     "score": 0.749
+    },
+    {
+     "word": "the",
+     "start": 1.432,
+     "end": 1.512,
+     "score": 0.832
+    },
+    {
+     "word": "Five",
+     "start": 1.572,
+     "end": 1.812,
+     "score": 0.672
+    },
+    {
+     "word": "Minute",
+     "start": 1.852,
+     "end": 2.113,
+     "score": 0.697
+    },
+    {
+     "word": "English",
+     "start": 2.153,
+     "end": 2.433,
+     "score": 0.798
+    },
+    {
+     "word": "Podcast,",
+     "start": 2.473,
+     "end": 3.033,
+     "score": 0.94
+    },
+    {
+     "word": "the",
+     "start": 3.594,
+     "end": 3.674,
+     "score": 0.995
+    },
+    {
+     "word": "place",
+     "start": 3.714,
+     "end": 3.934,
+     "score": 0.916
+    },
+    {
+     "word": "where",
+     "start": 3.954,
+     "end": 4.094,
+     "score": 0.816
+    },
+    {
+     "word": "you",
+     "start": 4.114,
+     "end": 4.234,
+     "score": 0.826
+    },
+    {
+     "word": "learn",
+     "start": 4.254,
+     "end": 4.474,
+     "score": 0.617
+    },
+    {
+     "word": "real",
+     "start": 4.534,
+     "end": 4.755,
+     "score": 0.711
+    },
+    {
+     "word": "English",
+     "start": 4.835,
+     "end": 5.195,
+     "score": 0.71
+    },
+    {
+     "word": "for",
+     "start": 5.235,
+     "end": 5.355,
+     "score": 0.89
+    },
+    {
+     "word": "real",
+     "start": 5.395,
+     "end": 5.595,
+     "score": 0.761
+    },
+    {
+     "word": "life",
+     "start": 5.635,
+     "end": 5.875,
+     "score": 0.619
+    },
+    {
+     "word": "in",
+     "start": 6.176,
+     "end": 6.256,
+     "score": 0.834
+    },
+    {
+     "word": "just",
+     "start": 6.276,
+     "end": 6.476,
+     "score": 0.71
+    },
+    {
+     "word": "five",
+     "start": 6.536,
+     "end": 6.776,
+     "score": 0.793
+    },
+    {
+     "word": "minutes",
+     "start": 6.816,
+     "end": 7.076,
+     "score": 0.738
+    },
+    {
+     "word": "a",
+     "start": 7.116,
+     "end": 7.136,
+     "score": 1.0
+    },
+    {
+     "word": "day.",
+     "start": 7.176,
+     "end": 7.357,
+     "score": 0.794
+    }
+   ],
+   "avg_logprob": -0.05466538202017546
+  },
+  {
+   "start": 8.377,
+   "end": 12.0,
+   "text": "Here, we keep things simple, practical, and easy to follow.",
+   "words": [
+    {
+     "word": "Here,",
+     "start": 8.377,
+     "end": 8.578,
+     "score": 0.831
+    },
+    {
+     "word": "we",
+     "start": 8.958,
+     "end": 9.078,
+     "score": 0.956
+    },
+    {
+     "word": "keep"
+    },
+    {
+     "word": "things",
+     "start": 9.298,
+     "end": 9.498,
+     "score": 0.914
+    },
+    {
+     "word": "simple,",
+     "start": 9.578,
+     "end": 9.939,
+     "score": 0.911
+    },
+    {
+     "word": "practical,"
+    },
+    {
+     "word": "and",
+     "start": 11.139,
+     "end": 11.24,
+     "score": 0.786
+    },
+    {
+     "word": "easy",
+     "start": 11.32,
+     "end": 11.54,
+     "score": 0.729
+    },
+    {
+     "word": "to",
+     "start": 11.56,
+     "end": 11.62,
+     "score": 0.802
+    },
+    {
+     "word": "follow.",
+     "start": 11.66,
+     "end": 12.0,
+     "score": 0.854
+    }
+   ],
+   "avg_logprob": -0.05466538202017546
+  },
+  {
+   "start": 12.981,
+   "end": 21.507,
+   "text": "You'll hear clear English, useful conversations, and everyday vocabulary that you can actually use, whether you're learning at home, on a break, or on the go.",
+   "words": [
+    {
+     "word": "You'll",
+     "start": 12.981,
+     "end": 13.161,
+     "score": 0.957
+    },
+    {
+     "word": "hear",
+     "start": 13.181,
+     "end": 13.321,
+     "score": 0.711
+    },
+    {
+     "word": "clear",
+     "start": 13.401,
+     "end": 13.621,
+     "score": 0.69
+    },
+    {
+     "word": "English,",
+     "score": 0.827,
+     "start": 13.401,
+     "end": 13.621
+    },
+    {
+     "word": "useful",
+     "score": 0.943,
+     "start": 14.762,
+     "end": 15.523
+    },
+    {
+     "word": "conversations,",
+     "start": 14.762,
+     "end": 15.523,
+     "score": 0.882
+    },
+    {
+     "word": "and",
+     "start": 15.623,
+     "end": 15.723,
+     "score": 0.71
+    },
+    {
+     "word": "everyday",
+     "start": 15.823,
+     "end": 16.143,
+     "score": 0.81
+    },
+    {
+     "word": "vocabulary",
+     "start": 16.203,
+     "end": 16.824,
+     "score": 0.85
+    },
+    {
+     "word": "that",
+     "start": 16.864,
+     "end": 16.964,
+     "score": 0.886
+    },
+    {
+     "word": "you",
+     "start": 17.004,
+     "end": 17.104,
+     "score": 0.903
+    },
+    {
+     "word": "can",
+     "start": 17.124,
+     "end": 17.244,
+     "score": 0.893
+    },
+    {
+     "word": "actually",
+     "start": 17.344,
+     "end": 17.704,
+     "score": 0.802
+    },
+    {
+     "word": "use,",
+     "start": 17.845,
+     "end": 18.065,
+     "score": 0.788
+    },
+    {
+     "word": "whether",
+     "start": 18.645,
+     "end": 18.845,
+     "score": 0.856
+    },
+    {
+     "word": "you're",
+     "start": 18.865,
+     "end": 19.005,
+     "score": 0.984
+    },
+    {
+     "word": "learning",
+     "start": 19.025,
+     "end": 19.266,
+     "score": 0.805
+    },
+    {
+     "word": "at",
+     "start": 19.286,
+     "end": 19.346,
+     "score": 0.883
+    },
+    {
+     "word": "home,",
+     "start": 19.406,
+     "end": 19.666,
+     "score": 0.734
+    },
+    {
+     "word": "on",
+     "start": 20.046,
+     "end": 20.126,
+     "score": 0.776
+    },
+    {
+     "word": "a",
+     "start": 20.166,
+     "end": 20.186,
+     "score": 0.997
+    },
+    {
+     "word": "break,",
+     "start": 20.226,
+     "end": 20.507,
+     "score": 0.746
+    },
+    {
+     "word": "or",
+     "start": 20.967,
+     "end": 21.047,
+     "score": 0.932
+    },
+    {
+     "word": "on",
+     "start": 21.107,
+     "end": 21.167,
+     "score": 0.989
+    },
+    {
+     "word": "the",
+     "start": 21.207,
+     "end": 21.267,
+     "score": 0.999
+    },
+    {
+     "word": "go.",
+     "start": 21.287,
+     "end": 21.507,
+     "score": 0.928
+    }
+   ],
+   "avg_logprob": -0.05466538202017546
+  },
+  {
+   "start": 22.508,
+   "end": 28.253,
+   "text": "New episodes drop regularly, so don't forget to follow, subscribe, and turn on the bell if you're watching on YouTube.",
+   "words": [
+    {
+     "word": "New"
+    },
+    {
+     "word": "episodes"
+    },
+    {
+     "word": "drop"
+    },
+    {
+     "word": "regularly,"
+    },
+    {
+     "word": "so"
+    },
+    {
+     "word": "don't"
+    },
+    {
+     "word": "forget"
+    },
+    {
+     "word": "to"
+    },
+    {
+     "word": "follow,"
+    },
+    {
+     "word": "subscribe,"
+    },
+    {
+     "word": "and"
+    },
+    {
+     "word": "turn"
+    },
+    {
+     "word": "on"
+    },
+    {
+     "word": "the"
+    },
+    {
+     "word": "bell"
+    },
+    {
+     "word": "if"
+    },
+    {
+     "word": "you're"
+    },
+    {
+     "word": "watching"
+    },
+    {
+     "word": "on"
+    },
+    {
+     "word": "YouTube."
+    }
+   ],
+   "avg_logprob": -0.05466538202017546
+  },
+  {
+   "start": 29.309,
+   "end": 32.511,
+   "text": " We've got a free vocabulary PDF waiting for you in the description.",
+   "words": [
+    {
+     "word": "We've",
+     "start": 29.309,
+     "end": 29.469,
+     "score": 0.909
+    },
+    {
+     "word": "got",
+     "start": 29.489,
+     "end": 29.609,
+     "score": 0.787
+    },
+    {
+     "word": "a",
+     "start": 29.629,
+     "end": 29.669,
+     "score": 0.493
+    },
+    {
+     "word": "free",
+     "start": 29.709,
+     "end": 29.889,
+     "score": 0.918
+    },
+    {
+     "word": "vocabulary",
+     "start": 29.929,
+     "end": 30.53,
+     "score": 0.884
+    },
+    {
+     "word": "PDF",
+     "start": 30.59,
+     "end": 31.15,
+     "score": 0.875
+    },
+    {
+     "word": "waiting",
+     "start": 31.21,
+     "end": 31.47,
+     "score": 0.912
+    },
+    {
+     "word": "for",
+     "start": 31.51,
+     "end": 31.59,
+     "score": 1.0
+    },
+    {
+     "word": "you",
+     "start": 31.63,
+     "end": 31.75,
+     "score": 0.898
+    },
+    {
+     "word": "in",
+     "start": 31.79,
+     "end": 31.85,
+     "score": 0.75
+    },
+    {
+     "word": "the",
+     "start": 31.89,
+     "end": 31.95,
+     "score": 0.981
+    },
+    {
+     "word": "description.",
+     "start": 31.97,
+     "end": 32.511,
+     "score": 0.873
+    }
+   ],
+   "avg_logprob": -0.043209866592378326
+  }
+ ],
+ "word_segments": [
+  {
+   "word": "Hi",
+   "start": 0.151,
+   "end": 0.291,
+   "score": 0.767
+  },
+  {
+   "word": "there,",
+   "start": 0.311,
+   "end": 0.531,
+   "score": 0.835
+  },
+  {
+   "word": "and",
+   "start": 0.872,
+   "end": 0.972,
+   "score": 0.691
+  },
+  {
+   "word": "welcome",
+   "start": 0.992,
+   "end": 1.312,
+   "score": 0.773
+  },
+  {
+   "word": "to",
+   "start": 1.332,
+   "end": 1.392,
+   "score": 0.749
+  },
+  {
+   "word": "the",
+   "start": 1.432,
+   "end": 1.512,
+   "score": 0.832
+  },
+  {
+   "word": "Five",
+   "start": 1.572,
+   "end": 1.812,
+   "score": 0.672
+  },
+  {
+   "word": "Minute",
+   "start": 1.852,
+   "end": 2.113,
+   "score": 0.697
+  },
+  {
+   "word": "English",
+   "start": 2.153,
+   "end": 2.433,
+   "score": 0.798
+  },
+  {
+   "word": "Podcast,",
+   "start": 2.473,
+   "end": 3.033,
+   "score": 0.94
+  },
+  {
+   "word": "the",
+   "start": 3.594,
+   "end": 3.674,
+   "score": 0.995
+  },
+  {
+   "word": "place",
+   "start": 3.714,
+   "end": 3.934,
+   "score": 0.916
+  },
+  {
+   "word": "where",
+   "start": 3.954,
+   "end": 4.094,
+   "score": 0.816
+  },
+  {
+   "word": "you",
+   "start": 4.114,
+   "end": 4.234,
+   "score": 0.826
+  },
+  {
+   "word": "learn",
+   "start": 4.254,
+   "end": 4.474,
+   "score": 0.617
+  },
+  {
+   "word": "real",
+   "start": 4.534,
+   "end": 4.755,
+   "score": 0.711
+  },
+  {
+   "word": "English",
+   "start": 4.835,
+   "end": 5.195,
+   "score": 0.71
+  },
+  {
+   "word": "for",
+   "start": 5.235,
+   "end": 5.355,
+   "score": 0.89
+  },
+  {
+   "word": "real",
+   "start": 5.395,
+   "end": 5.595,
+   "score": 0.761
+  },
+  {
+   "word": "life",
+   "start": 5.635,
+   "end": 5.875,
+   "score": 0.619
+  },
+  {
+   "word": "in",
+   "start": 6.176,
+   "end": 6.256,
+   "score": 0.834
+  },
+  {
+   "word": "just",
+   "start": 6.276,
+   "end": 6.476,
+   "score": 0.71
+  },
+  {
+   "word": "five",
+   "start": 6.536,
+   "end": 6.776,
+   "score": 0.793
+  },
+  {
+   "word": "minutes",
+   "start": 6.816,
+   "end": 7.076,
+   "score": 0.738
+  },
+  {
+   "word": "a",
+   "start": 7.116,
+   "end": 7.136,
+   "score": 1.0
+  },
+  {
+   "word": "day.",
+   "start": 7.176,
+   "end": 7.357,
+   "score": 0.794
+  },
+  {
+   "word": "Here,",
+   "start": 8.377,
+   "end": 8.578,
+   "score": 0.831
+  },
+  {
+   "word": "we",
+   "start": 8.958,
+   "end": 9.078,
+   "score": 0.956
+  },
+  {
+   "word": "keep",
+   "start": 9.118,
+   "end": 9.258,
+   "score": 0.999
+  },
+  {
+   "word": "things",
+   "start": 9.298,
+   "end": 9.498,
+   "score": 0.914
+  },
+  {
+   "word": "simple,",
+   "start": 9.578,
+   "end": 9.939,
+   "score": 0.911
+  },
+  {
+   "word": "practical,",
+   "start": 10.259,
+   "end": 10.779,
+   "score": 0.89
+  },
+  {
+   "word": "and",
+   "start": 11.139,
+   "end": 11.24,
+   "score": 0.786
+  },
+  {
+   "word": "easy",
+   "start": 11.32,
+   "end": 11.54,
+   "score": 0.729
+  },
+  {
+   "word": "to",
+   "start": 11.56,
+   "end": 11.62,
+   "score": 0.802
+  },
+  {
+   "word": "follow.",
+   "start": 11.66,
+   "end": 12.0,
+   "score": 0.854
+  },
+  {
+   "word": "You'll",
+   "start": 12.981,
+   "end": 13.161,
+   "score": 0.957
+  },
+  {
+   "word": "hear",
+   "start": 13.181,
+   "end": 13.321,
+   "score": 0.711
+  },
+  {
+   "word": "clear",
+   "start": 13.401,
+   "end": 13.621,
+   "score": 0.69
+  },
+  {
+   "word": "English,",
+   "start": 13.701,
+   "end": 14.062,
+   "score": 0.827
+  },
+  {
+   "word": "useful",
+   "start": 14.442,
+   "end": 14.702,
+   "score": 0.943
+  },
+  {
+   "word": "conversations,",
+   "start": 14.762,
+   "end": 15.523,
+   "score": 0.882
+  },
+  {
+   "word": "and",
+   "start": 15.623,
+   "end": 15.723,
+   "score": 0.71
+  },
+  {
+   "word": "everyday",
+   "start": 15.823,
+   "end": 16.143,
+   "score": 0.81
+  },
+  {
+   "word": "vocabulary",
+   "start": 16.203,
+   "end": 16.824,
+   "score": 0.85
+  },
+  {
+   "word": "that",
+   "start": 16.864,
+   "end": 16.964,
+   "score": 0.886
+  },
+  {
+   "word": "you",
+   "start": 17.004,
+   "end": 17.104,
+   "score": 0.903
+  },
+  {
+   "word": "can",
+   "start": 17.124,
+   "end": 17.244,
+   "score": 0.893
+  },
+  {
+   "word": "actually",
+   "start": 17.344,
+   "end": 17.704,
+   "score": 0.802
+  },
+  {
+   "word": "use,",
+   "start": 17.845,
+   "end": 18.065,
+   "score": 0.788
+  },
+  {
+   "word": "whether",
+   "start": 18.645,
+   "end": 18.845,
+   "score": 0.856
+  },
+  {
+   "word": "you're",
+   "start": 18.865,
+   "end": 19.005,
+   "score": 0.984
+  },
+  {
+   "word": "learning",
+   "start": 19.025,
+   "end": 19.266,
+   "score": 0.805
+  },
+  {
+   "word": "at",
+   "start": 19.286,
+   "end": 19.346,
+   "score": 0.883
+  },
+  {
+   "word": "home,",
+   "start": 19.406,
+   "end": 19.666,
+   "score": 0.734
+  },
+  {
+   "word": "on",
+   "start": 20.046,
+   "end": 20.126,
+   "score": 0.776
+  },
+  {
+   "word": "a",
+   "start": 20.166,
+   "end": 20.186,
+   "score": 0.997
+  },
+  {
+   "word": "break,",
+   "start": 20.226,
+   "end": 20.507,
+   "score": 0.746
+  },
+  {
+   "word": "or",
+   "start": 20.967,
+   "end": 21.047,
+   "score": 0.932
+  },
+  {
+   "word": "on",
+   "start": 21.107,
+   "end": 21.167,
+   "score": 0.989
+  },
+  {
+   "word": "the",
+   "start": 21.207,
+   "end": 21.267,
+   "score": 0.999
+  },
+  {
+   "word": "go.",
+   "start": 21.287,
+   "end": 21.507,
+   "score": 0.928
+  },
+  {
+   "word": "New",
+   "start": 22.508,
+   "end": 22.628,
+   "score": 0.886
+  },
+  {
+   "word": "episodes",
+   "start": 22.688,
+   "end": 23.089,
+   "score": 0.882
+  },
+  {
+   "word": "drop",
+   "start": 23.129,
+   "end": 23.349,
+   "score": 0.888
+  },
+  {
+   "word": "regularly,",
+   "start": 23.389,
+   "end": 23.909,
+   "score": 0.898
+  },
+  {
+   "word": "so",
+   "start": 24.33,
+   "end": 24.43,
+   "score": 0.916
+  },
+  {
+   "word": "don't",
+   "start": 24.45,
+   "end": 24.61,
+   "score": 0.719
+  },
+  {
+   "word": "forget",
+   "start": 24.65,
+   "end": 24.87,
+   "score": 0.871
+  },
+  {
+   "word": "to",
+   "start": 24.91,
+   "end": 24.97,
+   "score": 0.901
+  },
+  {
+   "word": "follow,",
+   "start": 25.03,
+   "end": 25.39,
+   "score": 0.833
+  },
+  {
+   "word": "subscribe,",
+   "start": 25.731,
+   "end": 26.291,
+   "score": 0.881
+  },
+  {
+   "word": "and",
+   "start": 26.371,
+   "end": 26.471,
+   "score": 0.675
+  },
+  {
+   "word": "turn",
+   "start": 26.511,
+   "end": 26.691,
+   "score": 0.732
+  },
+  {
+   "word": "on",
+   "start": 26.731,
+   "end": 26.791,
+   "score": 0.806
+  },
+  {
+   "word": "the",
+   "start": 26.811,
+   "end": 26.892,
+   "score": 0.834
+  },
+  {
+   "word": "bell",
+   "start": 26.912,
+   "end": 27.132,
+   "score": 0.844
+  },
+  {
+   "word": "if",
+   "start": 27.172,
+   "end": 27.232,
+   "score": 0.996
+  },
+  {
+   "word": "you're",
+   "start": 27.272,
+   "end": 27.432,
+   "score": 0.912
+  },
+  {
+   "word": "watching",
+   "start": 27.472,
+   "end": 27.752,
+   "score": 0.9
+  },
+  {
+   "word": "on",
+   "start": 27.812,
+   "end": 27.872,
+   "score": 0.988
+  },
+  {
+   "word": "YouTube.",
+   "start": 27.912,
+   "end": 28.253,
+   "score": 0.71
+  },
+  {
+   "word": "We've",
+   "start": 29.309,
+   "end": 29.469,
+   "score": 0.909
+  },
+  {
+   "word": "got",
+   "start": 29.489,
+   "end": 29.609,
+   "score": 0.787
+  },
+  {
+   "word": "a",
+   "start": 29.629,
+   "end": 29.669,
+   "score": 0.493
+  },
+  {
+   "word": "free",
+   "start": 29.709,
+   "end": 29.889,
+   "score": 0.918
+  },
+  {
+   "word": "vocabulary",
+   "start": 29.929,
+   "end": 30.53,
+   "score": 0.884
+  },
+  {
+   "word": "PDF",
+   "start": 30.59,
+   "end": 31.15,
+   "score": 0.875
+  },
+  {
+   "word": "waiting",
+   "start": 31.21,
+   "end": 31.47,
+   "score": 0.912
+  },
+  {
+   "word": "for",
+   "start": 31.51,
+   "end": 31.59,
+   "score": 1.0
+  },
+  {
+   "word": "you",
+   "start": 31.63,
+   "end": 31.75,
+   "score": 0.898
+  },
+  {
+   "word": "in",
+   "start": 31.79,
+   "end": 31.85,
+   "score": 0.75
+  },
+  {
+   "word": "the",
+   "start": 31.89,
+   "end": 31.95,
+   "score": 0.981
+  },
+  {
+   "word": "description.",
+   "start": 31.97,
+   "end": 32.511,
+   "score": 0.873
+  }
+ ],
+ "language": "en"
+}

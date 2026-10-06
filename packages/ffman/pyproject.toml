@@ -1,0 +1,91 @@
+[build-system]
+# 1.26.0 brought license-files to PEP 639's final form; 1.26.2 fixed the metadata 1.26.0 wrote
+# for older core-metadata versions (hatchling's changelog)
+requires = ["hatchling>=1.26.2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ffman"
+version = "0.1.0"
+description = "Opinionated media conversion on ffmpeg: resize, effects, subtitles"
+readme = "README.md"
+# the owner's: MIT or Apache-2.0, the user's choice; the wheel carries the OFL fonts. The
+# parentheses are the meaning: SPDX applies AND before OR (3.0.1, Annex B)
+license = "(MIT OR Apache-2.0) AND OFL-1.1"
+license-files = ["LICENSE-MIT", "LICENSE-APACHE", "src/ffman/fonts/OFL.txt"]
+requires-python = ">=3.13"
+authors = [{ name = "VERA LVX", email = "veralvx@veralvx.com" }]
+maintainers = [{ name = "VERA LVX", email = "veralvx@veralvx.com" }]
+keywords = [
+    "ffmpeg",
+    "video",
+    "audio",
+    "subtitles",
+    "media",
+    "conversion",
+    "resize",
+    "effects",
+    "metadata",
+    "cli",
+]
+# https://pypi.org/classifiers/ -- no License :: one: with a license expression, PyPI rejects
+# the upload (PEP 639). POSIX: process groups, killpg, SIGHUP (media/run.py)
+classifiers = [
+    "Development Status :: 4 - Beta",  # 0.x, as its libraries: young, not yet stable (the owner's)
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "Natural Language :: English",
+    "Operating System :: POSIX",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Multimedia :: Graphics :: Graphics Conversion",
+    "Topic :: Multimedia :: Sound/Audio :: Conversion",
+    "Topic :: Multimedia :: Video :: Conversion",
+    "Typing :: Typed",
+]
+# each library's 0.1 line: in 0.x a minor release may break, so the next is kept out (PEP 440:
+# `<0.2` admits no 0.2 pre-release either)
+dependencies = ["ffmeta>=0.1,<0.2", "subverter>=0.1,<0.2"]
+
+[project.urls]
+Changelog = "https://github.com/veramachine/ffsuite/blob/main/packages/ffman/CHANGELOG.md"
+Documentation = "https://github.com/veramachine/ffsuite"
+Homepage = "https://github.com/veramachine/ffsuite"
+Issues = "https://github.com/veramachine/ffsuite/issues"
+Releasenotes = "https://github.com/veramachine/ffsuite/releases"
+Repository = "https://github.com/veramachine/ffsuite"
+
+[project.scripts]
+ffman = "ffman.__main__:main"
+
+[tool.uv.sources]
+ffmeta = { workspace = true }
+subverter = { workspace = true }
+
+[tool.hatch.build.targets.sdist]
+# hatchling adds pyproject.toml, the README and the licence files itself. Its tests pass from it
+# alone (measured); the repository's own are left out -- test_workspace (it reads the whole
+# workspace) and the outcome harness with its test (it compares the repository's revisions,
+# each run on its own sources)
+only-include = ["src", "tests", "CHANGELOG.md"]
+exclude = ["tests/test_workspace.py", "tests/test_outcome.py", "tests/outcome"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ffman"]
+
+[tool.pytest.ini_options]
+# its own, for its sdist's tests alone; from the repository's root, the root's governs
+minversion = "9.0"
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = ["--strict-markers", "--strict-config", "-ra", "--import-mode=importlib"]
+xfail_strict = true
+filterwarnings = ["error"]
+timeout = 600
+markers = [
+  "ffmpeg: runs ffmpeg (integration)",
+  "slow: the combination matrix",
+]

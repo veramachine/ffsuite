@@ -1,0 +1,18 @@
+# Nix
+result
+result-*
+.direnv/
+
+# Python
+__pycache__/
+*.egg-info/
+build/
+dist/
+.venv/
+
+# tool caches and data
+.ruff_cache/
+.pytest_cache/
+.hypothesis/
+.coverage
+.coverage.*
