@@ -2098,44 +2098,44 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       with its index's, `AGENTS.md`'s and the review checklist's references
       to them pointed at ffman's repository. Proven: the flake evaluates, the
       system's closure holds `ffman`. *Done, on nixos-config at its last delivered
-      commit (253c5eb; its own history never rewritten). The input named for the
-      repository, `ffsuite`, `nixpkgs` followed; locked by hand at the pushed commit (dd0e31a)
-      -- its NAR hash computed from the commit's tree, as GitHub's tarball unpacks (shown on
-      the ten other inputs: each git tree's NAR hash equal to its lock's), and `nix flake lock
-      --offline` leaves the file unchanged. `modules/tools.nix` applies `overlays.default`
-      and selects `pkgs.ffman` (the media set). nixos-config's checks re-export ffsuite's on
-      the system's Python (`-py` from `python3.pythonVersion`, refused if ffsuite has none):
+      commit (253c5eb; its own history never rewritten). The input named for the repository,
+      `ffsuite`, `nixpkgs` followed; locked by hand at the pushed commit (dd0e31a) -- its NAR
+      hash computed from the commit's tree, as GitHub's tarball unpacks (shown on the eleven
+      other GitHub inputs: each git tree's NAR hash equal to its lock's), and `nix flake lock
+      --offline` leaves the file unchanged. `modules/tools.nix` applies `overlays.default` and
+      selects `pkgs.ffman` (the media set). nixos-config's checks re-export ffsuite's on the
+      system's Python (`-py` from `python3.pythonVersion`, refused if ffsuite has none):
       `ffman-tests`, `-matrix`, `-installed`, `-types`, `-vulture`, `-lint`. Removed:
       `tools/ffman`, ffman's part of `pkgs/default.nix` (now nixfmt-clean, the one construct
       that was not gone with it), its export and dev shell, the three skills (each file
-      byte-identical here) and ffman's five plans (here, and newer); the 07-tools section's
-      61 decision areas each found in `decisions.md`. `test_mpv_conf` re-homed as
-      `tests/mpv/` with its check (`mpv-conf`): its imports were stale -- `Transcript` and
-      `Chunk` are subverter's now (shown: it failed to import against this ffman) -- and its
-      skip gone (the file is always there). Found by its blast radius: the evaluation
-      harness (`scripts/eval-report.sh`) clones and overrides every input and builds a
-      wrapper flake that passes its own `inputs` to the modules -- without ffsuite there,
-      every variant would fail; added. The ISO carries every lock node (13 now, 8 direct;
-      `ffsuite` among them, evaluated) -- its counts and the installer's and harness's
-      comments follow. Run-book 11.49's ffman facts moved to `docs/upgrading.md`
-      (blur-edges' fetch and mpv's defaults stay nixos-config's), the item put back in
-      section 11 (it sat under 12) and 6.5 counting `ffsuite` among the inputs a channel
-      moves. Proven, offline, the inputs fetched by git and admitted by their lock's NAR
-      hash: every check, package and dev shell evaluates on both systems; the five hosts'
-      toplevels; on each media host and both generic ISOs, `ffman-0.1.0` on the system's own
-      `ffmpeg-full` (the same derivation, `--enable-libfdk-aac`); the ISOs with their
-      inputs as store paths (their `fetchTree` needs network here, and fails alike at
-      253c5eb); harness cells (a tool, the hostname seed, three x86 variants) passing; the
-      mpv test against this ffman, from a read-only copy of its check's fileset, and failing
-      on a mutated `mpv.conf`; review maps regenerated (their selftest passing; at 253c5eb
-      they had been current). `nix flake check` whole exceeds this sandbox's memory, at
-      253c5eb too: the owner's to run, with the build. Reviewed (owner's request): the
-      checks' bindings named for what they hold (`ffsuiteChecks`, `pythonSuffix`), the guard
-      shown refusing a Python ffsuite lacks; a blank line the removal left in
-      `pkgs/default.nix` gone; `docs/upgrading.md` made a numbered list, its words unchanged
-      (compared). Checked and sound: nothing else names `tools.ffman` or the input; the
-      installer's lock rewrite takes every manifest node, `ffsuite` with them; no ignore file,
-      formatter or task runner named ffman.*
+      byte-identical here) and ffman's five plans (here: one identical, four edited since);
+      the 07-tools section's 61 decision areas each found in `decisions.md`. `test_mpv_conf`
+      re-homed as `tests/mpv/` with its check (`mpv-conf`): its imports were stale --
+      `Transcript` and `Chunk` are subverter's now (shown: it failed to import against this
+      ffman) -- and its skip gone (the file is always there). Found by its blast radius: the
+      evaluation harness (`scripts/eval-report.sh`) clones and overrides every input and
+      builds a wrapper flake that passes its own `inputs` to the modules -- without ffsuite
+      there, every variant would fail; added. The ISO carries every lock node (13 now, 8
+      direct; `ffsuite` among them, evaluated) -- its counts and the installer's and harness's
+      comments follow. Run-book 11.49's ffman facts moved to `docs/upgrading.md` (blur-edges'
+      fetch and mpv's defaults stay nixos-config's), the item put back in section 11 (it sat
+      under 12) and 6.5 counting `ffsuite` among the inputs a channel moves. Proven, offline,
+      each input admitted by its lock's NAR hash (nixpkgs' already in the store, the rest
+      fetched by git): every check, package and dev shell evaluates on both systems; the five
+      hosts' toplevels; on each media host and both generic ISOs, `ffman-0.1.0` on the
+      system's own `ffmpeg-full` (the same derivation, `--enable-libfdk-aac`); the ISOs with
+      their inputs as store paths (their `fetchTree` needs network here, and fails alike at
+      253c5eb); harness cells (a tool, the hostname seed, three x86 variants) passing; the mpv
+      test against this ffman, from a read-only copy of its check's fileset, and failing on a
+      mutated `mpv.conf`; review maps regenerated (their selftest passing; at 253c5eb they had
+      been current). `nix flake check` whole exceeds this sandbox's memory, at 253c5eb too:
+      the owner's to run, with the build. Reviewed (owner's request): the checks' bindings
+      named for what they hold (`ffsuiteChecks`, `pythonSuffix`), the guard shown refusing a
+      Python ffsuite lacks; a blank line the removal left in `pkgs/default.nix` gone;
+      `docs/upgrading.md` made a numbered list, its words unchanged (compared). Checked and
+      sound: nothing else names `tools.ffman` or the input; the installer's lock rewrite takes
+      every manifest node, `ffsuite` with them; no ignore file, formatter or task runner named
+      ffman.*
 
 *6.7.9 Its tooling* (adapted from csan and imi; each file its source)
 

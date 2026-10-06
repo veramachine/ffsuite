@@ -1,7 +1,7 @@
 # ffman: decisions
 
 Copied from nixos-config's `.agents/docs/07-tools.md`, its `## ffman` section, at
-`253c5eb`; that file's history stays there.
+`253c5eb`; that file's history stays there, and the section now points here (6.7.8).
 
 ffman, in Python 3.13: [`README.md`](../packages/ffman/README.md) for
 using it, [`AGENTS.md`](../AGENTS.md) for working on it, the plan
