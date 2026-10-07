@@ -319,6 +319,13 @@ def test_into_a_cue_the_rems_quoting_and_the_catalog() -> None:
     )
     quoted = convert(Metadata((Tag("genre", 'say "hi" now'),)), "ffmetadata", "cue", media="m")
     assert quoted.notes[0] == "the tag 'genre': a quote and a space: no REM quotes it: left out"
+    # quoted, a final '\' is libcue's escape: the sheet after it read into the value
+    escaped = convert(Metadata((Tag("genre", "Rock and\\"),)), "ffmetadata", "cue", media="m")
+    assert escaped.meta.disc is not None
+    assert escaped.meta.disc.rems == ()
+    assert escaped.notes[0] == (
+        "the tag 'genre': it ends in '\\': libcue reads the rest of the sheet into it: left out"
+    )
 
 
 def test_into_a_cue_chapters_ordered_gapped_rounded_and_past_99() -> None:

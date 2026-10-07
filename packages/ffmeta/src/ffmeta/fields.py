@@ -125,11 +125,19 @@ def rem_field(rem: str) -> tuple[str, str]:
 
 
 def rem_text(field: Field, tag: Tag, notes: list[str]) -> str | None:
-    """``tag`` as its REM line's text: quoted when it holds a space, if its field's is."""
+    r"""``tag`` as its REM line's text: quoted when it holds a space, if its field's is.
+
+    Left out, noted, what a quote cannot hold: a ``"``, or a final ``\`` (libcue's escape, as
+    the cue writer's strings).
+    """
     value = tag.value
     if field.quoted and " " in value:
         if '"' in value:
             notes.append(left_out(f"the tag '{tag.name}'", "a quote and a space: no REM quotes it"))
+            return None
+        if value.endswith("\\"):
+            why = "it ends in '\\': libcue reads the rest of the sheet into it"
+            notes.append(left_out(f"the tag '{tag.name}'", why))
             return None
         value = f'"{value}"'
     return f"{field.cue.removeprefix('REM ')} {value}".rstrip()
