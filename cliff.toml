@@ -1,6 +1,7 @@
-# git-cliff 2.13.1: each package's CHANGELOG.md and its release notes, from the commits touching
-# it (.github/changelog.sh gives the package's paths and tags). csan's grouping by commit type, a
-# header after imi's; the commit's subject is its entry, so it is written for the package's users.
+# git-cliff 2.13.1: each package's CHANGELOG.md, from the commits touching it (`just changelog`
+# gives the package's paths and tags), its release notes that file's section. csan's grouping by
+# commit type, a header after imi's; a commit's subject is its entry, written for the package's
+# users.
 
 [changelog]
 header = """

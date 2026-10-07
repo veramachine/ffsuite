@@ -127,7 +127,8 @@ release package semver:
     # made, the commit and the tag: a failed push is retried as it is, never the bump
     git push --atomic --follow-tags origin main
 
-[doc("A package's next changelog section, from its commits since its last release")]
+[doc("git-cliff over a package's commits (cliff.toml); --unreleased: its next section")]
 [group("Misc")]
-changelog package:
-    .github/changelog.sh "{{ package }}" --unreleased --strip all
+changelog package *args:
+    uv run --locked --isolated --only-group release git-cliff --offline --config cliff.toml \
+        --include-path "packages/{{ package }}/**" --tag-pattern "^{{ package }}-v" {{ args }}

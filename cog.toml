@@ -12,12 +12,12 @@ generate_mono_repository_global_tag = false
 # a package's tag, `ffmeta-v0.2.0`: what release.yml and publish.yml read
 generate_mono_repository_package_tags = true
 tag_prefix = "v"
-# hooks run in the package's folder; their changes join the bump's commit. `uv version` also
-# re-locks; test_workspace refuses a version ffman's dependency range excludes (uv's lock records
-# workspace members without one)
+# hooks run in the package's folder (just runs from the root); their changes join the bump's
+# commit. `uv version` also re-locks; test_workspace refuses a version ffman's dependency range
+# excludes (uv's lock records workspace members without one)
 pre_package_bump_hooks = [
     "uv version --package {{package}} {{version}} --no-sync",
-    "../../.github/changelog.sh {{package}} --tag {{package}}-v{{version}} --output packages/{{package}}/CHANGELOG.md",
+    "just changelog {{package}} --tag {{package}}-v{{version}} --output packages/{{package}}/CHANGELOG.md",
     "uv run --no-sync pytest -q -p no:cacheprovider ../ffman/tests/test_workspace.py",
 ]
 

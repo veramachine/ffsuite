@@ -8,7 +8,8 @@ Thank you for considering contributing to ffsuite: ffman, ffmeta and subverter.
   basedpyright, just, dprint, cocogitto, pre-commit, and ffman's runtime (ffmpeg 8.1, FLAC
   1.5, which the tests hold it to). On NixOS, the wheels uv installs need
   `programs.nix-ld.enable`.
-- **Without Nix**: uv, just, dprint, cocogitto and pre-commit on your `PATH`. The tests marked
+- **Without Nix**: uv 0.11.21 (`pyproject.toml`'s `required-version`: nixpkgs', as every pin
+  here), just, dprint, cocogitto and pre-commit on your `PATH`. The tests marked
   `ffmpeg` need ffmpeg 8.1 and metaflac 1.5, which `just checks` runs. Without them, run the
   suite as GitHub's `checks.yml` does: `uv run pytest -m "not ffmpeg and not slow"`.
 
@@ -55,8 +56,9 @@ just format   # ruff and dprint, in place
 ## Creating a Pull Request
 
 1. Make sure `just checks` passes.
-2. Open a pull request against `main`. Describe the problem it solves, and link its issue
-   (`Fixes #123`), if any.
+2. Open a pull request against `main`, titled as a conventional commit: a squash merge makes the
+   title its commit, and so a changelog entry (CI checks it). Describe the problem it solves, and
+   link its issue (`Fixes #123`), if any.
 3. Wait for a maintainer's review.
 
 ## Releasing (maintainers)
@@ -67,7 +69,7 @@ from a clean `main` up to date with `origin`. It refuses a version below the pac
 `CHANGELOG.md` (git-cliff, `cliff.toml`) and commit both. It then tags `<package>-v<version>`
 and pushes the commit and the tag together. The tag runs `release.yml` (the GitHub release, its
 notes the changelog's new section) and `publish.yml` (PyPI).
-`just changelog <package>` shows that section before the release.
+`just changelog <package> --unreleased` shows that section before the release.
 
 - A first release is `minor`: cocogitto counts from 0.0.0, so it gives 0.1.0, the version each
   package carries.

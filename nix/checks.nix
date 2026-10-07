@@ -9,7 +9,7 @@ let
   # What the Python checks read: the workspace's configuration, its three packages -- their
   # trees and the sources they read themselves (test_architecture, test_imports, test_outcome),
   # their files (test_workspace, against the root's licences) -- and the skills (test_skills).
-  # Lint reads the Nix files and the release's scripts too; the Python checks do not, so an edit
+  # Lint reads the Nix files and the workflows' script too; the Python checks do not, so an edit
   # there reruns lint, not them.
   pythonFiles = [
     ../pyproject.toml
@@ -31,7 +31,6 @@ let
       ../flake.nix
       ../nix
       ../.github/package-tag.sh
-      ../.github/changelog.sh
     ]
   );
 
@@ -137,13 +136,14 @@ onPython "py313" pkgs.python313Packages
         ruff check --no-cache .
         ruff format --check --no-cache .
         nixfmt --check flake.nix nix/*.nix
-        shellcheck nix/*.sh .github/*.sh
+        shellcheck nix/*.sh .github/package-tag.sh
         touch $out
       '';
 
-  # Every pin in pyproject.toml's dependency groups is this nixpkgs' version, so uv's verdict is
-  # Nix's; no Dependabot moves them (.github/dependabot.yml): a nixpkgs bump that leaves one
-  # behind fails here (docs/upgrading.md). Each from python3Packages, but nixpkgs' applications.
+  # Every pin in pyproject.toml's dependency groups, and uv's required version, is this nixpkgs'
+  # version, so uv's verdict is Nix's; no Dependabot moves them (.github/dependabot.yml): a nixpkgs
+  # bump that leaves one behind fails here (docs/upgrading.md). Each from python3Packages, but
+  # nixpkgs' applications.
   pins =
     let
       applications = {
@@ -153,6 +153,7 @@ onPython "py313" pkgs.python313Packages
           ty
           pip-audit
           git-cliff
+          uv
           ;
       };
       nixpkgsVersion = name: (applications.${name} or pkgs.python3Packages.${name}).version;
@@ -165,9 +166,13 @@ onPython "py313" pkgs.python313Packages
           name = lib.head parts;
           version = lib.last parts;
         };
-      groups = (lib.importTOML ../pyproject.toml).dependency-groups;
+      pyproject = lib.importTOML ../pyproject.toml;
+      uv = {
+        name = "uv";
+        version = lib.removePrefix "==" pyproject.tool.uv.required-version;
+      };
       stale = lib.filter (p: nixpkgsVersion p.name != p.version) (
-        map pin (lib.concatLists (lib.attrValues groups))
+        [ uv ] ++ map pin (lib.concatLists (lib.attrValues pyproject.dependency-groups))
       );
     in
     pkgs.runCommand "pins"

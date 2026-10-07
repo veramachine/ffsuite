@@ -1,12 +1,15 @@
 # imi's style-check-cocogitto.yml; on a push, the whole history, not --from-latest-tag: with no tag
 # yet, cog 7.0.0 (the action's) stops "unable to get any tag" (measured), and every commit here is
-# conventional from the first.
+# conventional from the first. A pull request's title too: a squash merge of two commits or more
+# makes it the commit (docs.github.com, "Configuring commit squashing for pull requests"), and so
+# a changelog entry (cliff.toml) -- checked again when it is edited.
 name: Conventional Commits Check
 
 on:
   push:
     branches: [main]
   pull_request:
+    types: [opened, synchronize, reopened, edited]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
@@ -32,6 +35,12 @@ jobs:
         with:
           command: check
           args: --ignore-merge-commits ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}
+
+      - name: Check PR Title
+        if: github.event_name == 'pull_request'
+        env:
+          TITLE: ${{ github.event.pull_request.title }} # through the environment, never the script
+        run: cog verify "$TITLE"
 
       - name: Check Push Commits
         if: github.event_name == 'push'

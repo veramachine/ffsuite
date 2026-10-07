@@ -20,11 +20,16 @@ dev = [
     "ty==0.0.38",
     "vulture==2.14",
 ]
-# security.yml's: pip-audit over the lock, exported (`uv export`); not the dev group, so not in
-# `uv sync`'s default environment
+# security.yml's and `just audit`'s: pip-audit over the lock, exported (`uv export`); not the dev
+# group, so not in `uv sync`'s default environment
 audit = ["pip-audit==2.10.0"]
-# the changelogs' (.github/changelog.sh), run as `audit` is
+# `just changelog`'s: git-cliff, each package's changelog (cliff.toml), run as `audit` is
 release = ["git-cliff==2.13.1"]
+
+[tool.uv]
+# uv too is nixpkgs' (the `pins` check): its resolver writes and checks the lock, and setup-uv
+# installs this one in the workflows (its README: `required-version`, else the latest)
+required-version = "==0.11.21"
 
 [tool.uv.workspace]
 members = ["packages/*"]

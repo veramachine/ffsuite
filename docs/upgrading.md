@@ -48,5 +48,5 @@ matrix, the installed binary, on each Python). Moved from nixos-config's channel
     moves); ffv1enc still starts at 2x2 slices; vp9_set_row_mt still needs GOOD in one pass.
 21. gblur's steps still 1-6 (6 the most accurate); lutrgb still takes 16-bit val
     (`graph/light.py`); color_transfer still 'iec61966-2-1' for sRGB in ffprobe.
-22. the dependency groups' pins (`pyproject.toml`) set to the new nixpkgs' versions, then
-    `uv lock`: the `pins` check names each one left behind.
+22. the dependency groups' pins and uv's `required-version` (`pyproject.toml`) set to the new
+    nixpkgs' versions, then `uv lock`: the `pins` check names each one left behind.

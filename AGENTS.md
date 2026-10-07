@@ -29,7 +29,7 @@ with their rules; ffmeta's tests read them as oracles.
 | `packages/*/tests/`                                            | each library's own tests, no package (`--import-mode=importlib`): ffmeta's with `ffmeta_support` (strategies, examples, its oracles' tools) and the pinned-tool fixtures; subverter's; `test_imports.py` in each: itself and the standard library alone. One run from the root takes all three trees; each sdist runs its own                                                                                                                                                 |
 | `flake.nix`, `nix/`                                            | the flake (Linux, Apple silicon): the packages (`packages.nix`: the runtime, the wrapper), the image (`image.nix`, Linux's: FDK's ffmpeg, never published), the checks (`checks.nix`; `installed.sh`, the installed binary's), the dev shell (`shell.nix`)                                                                                                                                                                                                                    |
 | `justfile` `cog.toml` `dprint.json` `.pre-commit-config.yaml`  | the tooling (CONTRIBUTING.md): the checks and the release as recipes; Conventional Commits and the packages' tags; their changelogs, `cliff.toml` (git-cliff's); Markdown and TOML formatting; the hooks                                                                                                                                                                                                                                                                      |
-| `.github/`                                                     | the workflows, each from its source (csan's, imi's); `package-tag.sh`, a package's tag read as its package (release's and publish's); `changelog.sh`, git-cliff over one package (the bump's, `just changelog`'s); Dependabot (GitHub Actions alone); the issue and pull request templates                                                                                                                                                                                    |
+| `.github/`                                                     | the workflows, each from its source (csan's, imi's); `package-tag.sh`, a package's tag read as its package (release's and publish's); Dependabot (GitHub Actions alone); the issue and pull request templates                                                                                                                                                                                                                                                                 |
 
 ## The checks
 
@@ -61,7 +61,8 @@ fixture). `nix fmt` formats the Nix files.
 installed packages): `tests-*`, `matrix-*`, `types-*`, `vulture-*`, and `installed-*` -- the built
 binary through its wrapper alone (`nix/installed.sh`), which nothing else reaches: the suite calls
 `main()` in-process; `lint` once (ruff, nixfmt, shellcheck: no interpreter); `pins`, every pin in
-the dependency groups this nixpkgs' version -- Dependabot moves none of them. At a nixpkgs bump,
+the dependency groups, and uv's `required-version`, this nixpkgs' version -- Dependabot moves none
+of them. At a nixpkgs bump,
 the tools' behaviour ffman holds to, re-checked: [`docs/upgrading.md`](docs/upgrading.md).
 
 GitHub runs them too (`.github/workflows/`): `checks.yml`, the dev group's tools on 3.13 and 3.14
