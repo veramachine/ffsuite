@@ -2176,17 +2176,17 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       not `--from-latest-tag` (no tag yet: cog 7.0.0, the action's, stops "unable to get any
       tag", measured; every commit is conventional); a release's notes are the commits
       touching its package since its previous tag (`git log`; cog's changelogs are the third
-      box's); pip-audit pinned in an `audit` group (2.10.1; the lock grew by it), run
-      `--isolated`. Proven, `checks.yml`'s steps as written, on uv's 3.13 and 3.14 with a
-      `PATH` lacking ffmpeg and metaflac, as the runner's image (its software list): lock
-      checked, ruff, basedpyright 0 errors, vulture, pytest 1411 passed, the same with an apt
-      ffmpeg 6.1 on `PATH` instead. The outcome job's command (uv in place of the dev shell)
-      against `HEAD`, with ffmpeg 8.1.2: 427 identical; again from an environment of the
-      workspace's packages alone (`--no-dev`), against the commit before. `nix develop ../..`
-      from `packages/ffman` resolves to the repository's flake; its checks evaluate on
-      x86_64-linux and aarch64-darwin, 11 each. pip-audit over the exported lock (45
-      packages): no known vulnerabilities, `.venv` untouched. On test tags: a match prints the
-      package, a version or a package not the tree's is refused; the notes start after the
+      box's); pip-audit pinned in an `audit` group (2.10.1, nixpkgs' 2.10.0 in the next box;
+      the lock grew by it), run `--isolated`. Proven, `checks.yml`'s steps as written, on uv's
+      3.13 and 3.14 with a `PATH` lacking ffmpeg and metaflac, as the runner's image (its
+      software list): lock checked, ruff, basedpyright 0 errors, vulture, pytest 1411 passed,
+      the same with an apt ffmpeg 6.1 on `PATH` instead. The outcome job's command (uv in
+      place of the dev shell) against `HEAD`, with ffmpeg 8.1.2: 427 identical; again from an
+      environment of the workspace's packages alone (`--no-dev`), against the commit before.
+      `nix develop ../..` from `packages/ffman` resolves to the repository's flake; its checks
+      evaluate on x86_64-linux and aarch64-darwin, 11 each. pip-audit over the exported lock
+      (45 packages): no known vulnerabilities, `.venv` untouched. On test tags: a match prints
+      the package, a version or a package not the tree's is refused; the notes start after the
       package's own previous tag; `uv build --package --no-sources` builds that package alone,
       twice byte for byte alike. actionlint 1.7.12 with ShellCheck: clean. Not reachable here:
       a run on GitHub (after the push); `style-check-dprint.yml` passes only with the third
