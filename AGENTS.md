@@ -50,7 +50,8 @@ uv run pytest -m slow -n auto                         # the matrix, in parallel
 On NixOS, the wheels uv installs (numpy, basedpyright's node) need the common C++ runtime:
 `programs.nix-ld.enable`. Without Nix, `uv sync --locked` gives the same tools, and ffmpeg and
 the runtime are the host's (the tests that run ffmpeg and metaflac hold them to the pins' 8.1
-and 1.5). `nix fmt` formats the Nix files.
+and 1.5; `-m "not ffmpeg"` leaves each out, the conftests marking every test that takes either
+fixture). `nix fmt` formats the Nix files.
 
 `nix flake check` runs the same, each on Python 3.13 and 3.14 (pytest against the installed
 packages): `tests-*`, `matrix-*`, `types-*`, `vulture-*`, and `installed-*` -- the built binary

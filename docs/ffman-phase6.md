@@ -2197,9 +2197,10 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       directly or through another (a hook, `tryfirst`, before `-m` deselects; ffmeta's and
       ffman's held identical by `test_workspace`; the marker's text names both pins, ffmeta's
       pyproject declaring it as the root's does) -- now 1087 deselected, 993 before; removing
-      a hook brings the errors back (76 in ffman's own run). `uv publish --trusted-publishing
-      always`: a missing publisher fails as one. The outcome job syncs `--no-dev`. Dependabot
-      moves a commit pin and its comment on the same line (its documentation).*
+      a hook brings the errors back (76 in ffman's own run); AGENTS.md names `-m "not ffmpeg"`
+      for a host's own tools. `uv publish --trusted-publishing always`: a missing publisher
+      fails as one. The outcome job syncs `--no-dev`. Dependabot moves a commit pin and its
+      comment on the same line (its documentation).*
 - [ ] `dependabot.yml`: `uv` and `github-actions` (imi's schedule, groups,
       cooldown, labels, `chore` prefix). Issue templates (bug, feature,
       documentation, `config.yml`) and the PR template, imi's, adapted.
