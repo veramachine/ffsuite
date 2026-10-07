@@ -32,6 +32,18 @@ CORPUS = Path("/t/ffman-outcome.ab_c9/corpus")
 EXPORTED = Path("/t/ffman-compare.x_y1z2ab/packages/ffman/src")
 
 
+def _plain(into: Path) -> Path:
+    """The workspace's sources copied where the report can name them: ffman's ``src`` there.
+
+    The checkout's own path may hold a space, which the report refuses to name.
+    """
+    for own in SRC.parent.parent.glob("*/src"):  # packages/*/src: ffman's and its libraries'
+        package = into / "packages" / own.parent.name
+        _ = shutil.copytree(own, package / "src", ignore=shutil.ignore_patterns("__pycache__"))
+        _ = shutil.copy(own.parent / "pyproject.toml", package)  # its version, uninstalled
+    return into / "packages" / "ffman" / "src"
+
+
 def _outcome(**changes: object) -> Outcome:
     base = Outcome(
         args=["convert", "--dry-run", "-i", "v.mp4", "-w", "160"],
@@ -197,7 +209,7 @@ def test_a_case_runs_its_work_directory_kept(tmp_path: Path, ffmpeg: str) -> Non
     case = corpus.Case(
         "burn", ("convert", "--dry-run", "-i", "v.mp4", "--burn-subs", "regular.srt")
     )
-    outcome = run_case(SRC, root, tmp_path / "scratch", case)
+    outcome = run_case(_plain(tmp_path / "tree"), root, tmp_path / "scratch", case)
     assert outcome["status"] == 0, outcome["stderr"]
     assert outcome["workdir"]
     assert list(outcome["files"]) == ["$WORK/subs.ass"]

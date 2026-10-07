@@ -1,6 +1,7 @@
 """ffman's own font (6.7.3): FFMAN_FONTS_DIR, else the package's copy, else one written safe."""
 
 import hashlib
+import shutil
 from fractions import Fraction
 from importlib import resources
 from pathlib import Path
@@ -37,11 +38,20 @@ def test_a_variable_the_filters_split_is_refused(monkeypatch: pytest.MonkeyPatch
 
 
 def test_unset_ffmans_own(
-    capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
+    capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
+    # installed at a path the filters take as is (tmp_path): the package's own folder. Not the
+    # checkout's, whose path may hold a space -- the next test's case
+    package = tmp_path / "ffman"
+    _ = shutil.copytree(OWN, package / "fonts")
     monkeypatch.delenv("FFMAN_FONTS_DIR", raising=False)
+
+    def files(_package: str) -> Path:
+        return package
+
+    monkeypatch.setattr(resources, "files", files)  # the module fonts asks: the same object
     with Runner(dry_run=True) as runner:
-        assert fonts.fonts_dir(runner, FONT) == str(OWN)
+        assert fonts.fonts_dir(runner, FONT) == str(package / "fonts")
     assert capsys.readouterr().err == ""  # both fonts there: nothing to say
     assert sorted(p.name for p in OWN.glob("*.otf")) == sorted([*FONT_FILES.values(), STAMP_FILE])
 

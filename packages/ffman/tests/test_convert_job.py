@@ -1,6 +1,7 @@
 import json
 import os
 import re
+import shlex
 import shutil
 import subprocess
 import tempfile
@@ -478,8 +479,10 @@ def test_youtube_normalises_other_audio(
     argv = ["convert", "-i", str(compliant), "-p", "yt", "--normalize", "-o", str(out), "--dry-run"]
     monkeypatch.delenv("FFMAN_NORMALIZE_HOME", raising=False)  # ffman's own presets
     assert main(argv) == 0
-    own = resources.files("ffman") / "normalize"
-    assert f"env XDG_CONFIG_HOME={own} ffmpeg-normalize" in capsys.readouterr().out
+    own = resources.files("ffman") / "normalize"  # quoted if its path needs it (a space)
+    assert (
+        shlex.join(["env", f"XDG_CONFIG_HOME={own}", "ffmpeg-normalize"]) in capsys.readouterr().out
+    )
     home = tmp_path / "home"
     monkeypatch.setenv("FFMAN_NORMALIZE_HOME", str(home))
     assert main(argv) == 1
@@ -493,7 +496,7 @@ def test_youtube_normalises_other_audio(
     assert main(argv) == 0
     said = capsys.readouterr()
     assert "ffman: normalising audio (aac 48000 Hz 2 ch) with preset youtube-aac" in said.err
-    assert f"env XDG_CONFIG_HOME={home} ffmpeg-normalize" in said.out
+    assert shlex.join(["env", f"XDG_CONFIG_HOME={home}", "ffmpeg-normalize"]) in said.out
     assert "-map 1:a:0" in said.out
 
 
