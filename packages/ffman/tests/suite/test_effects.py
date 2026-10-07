@@ -200,7 +200,7 @@ def test_invert_is_exact(ffmpeg: str, capsys: pytest.CaptureFixture[str]) -> Non
 
 @pytest.mark.ffmpeg
 @pytest.mark.usefixtures("here")
-def test_a_gif_frame_holds_256_colours(
+def test_a_gif_frame_has_256_entries_none_transparent(
     ffmpeg: str, capsys: pytest.CaptureFixture[str]
 ) -> None:  # S267
     fractal = [
@@ -218,6 +218,6 @@ def test_a_gif_frame_holds_256_colours(
     _ = tool(ffmpeg, "-v", "error", "-y", *fractal, "mb.mp4")
     assert ff(capsys, "-i", "mb.mp4", "-w", "320", "-o", "mb.gif", "-y")[0] == 0
     # the table, not the colours a frame shows: those are ffmpeg's arithmetic, the platform's
-    # (on arm64 the frame showed 255); palettegen's reserve_transparent would make one of the
-    # 256 transparent
+    # (ubuntu-24.04-arm's frame showed 255); palettegen's reserve_transparent would make one of
+    # the 256 transparent
     assert gif_palette(Path("mb.gif")) == (256, False)

@@ -204,6 +204,7 @@ _NOT_A_TRANSCRIPT: Final = (
         ),
         pytest.param(b"[" * 1000 + b"]" * 1000, _NOT_A_TRANSCRIPT, id="1000 deep"),
         (b"[]", _NOT_A_TRANSCRIPT),
+        (b"5", _NOT_A_TRANSCRIPT),
         (b'{"transcription": [{"tokens": [{"text": 5}]}]}', "unreadable whisper-cli -ojf JSON"),
     ],
 )

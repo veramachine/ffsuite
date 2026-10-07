@@ -15,8 +15,8 @@ from subverter.transcript import Cue, Reading, Timing
 
 __all__ = ["read"]
 
-# Arrays and objects nested deeper are refused, alike on every machine: Python 3.14 bounds
-# json's recursion by the thread's C stack, not sys.getrecursionlimit() (CPython's
+# Valid JSON whose arrays and objects nest deeper is refused alike on every machine: Python
+# 3.14 bounds json's recursion by the thread's C stack, not a fixed count (CPython's
 # InternalDocs/stack_protection.md), so what parses varies with the machine -- 100000 levels
 # do with a 64 MiB stack, not with 8 MiB. A whisper-cli transcript nests 6 deep.
 _DEEPEST: Final = 1000
@@ -45,25 +45,24 @@ def read(data: bytes, name: str) -> Reading:
 
 def _deeper_than(root: object, limit: int) -> bool:
     """Whether ``root``'s arrays and objects nest past ``limit`` (walked, not recursed)."""
-    pending: list[tuple[object, int]] = [(root, 1)]
+    pending: list[tuple[object, int]] = [(root, 1)] if _is_container(root) else []
     while pending:
-        value, depth = pending.pop()
-        children = _children(value)
-        if children is None:
-            continue
+        container, depth = pending.pop()
         if depth > limit:
             return True
-        pending.extend((child, depth + 1) for child in children)
+        pending.extend((c, depth + 1) for c in _children(container) if _is_container(c))
     return False
 
 
-def _children(value: object) -> list[object] | None:
-    """An array's items or an object's values; ``None`` for a value that is neither."""
-    if isinstance(value, dict):
-        return list(cast("dict[str, object]", value).values())
-    if isinstance(value, list):
-        return cast("list[object]", value)
-    return None
+def _is_container(value: object) -> bool:
+    return isinstance(value, (dict, list))
+
+
+def _children(container: object) -> list[object]:
+    """An array's items, or an object's values."""
+    if isinstance(container, dict):
+        return list(cast("dict[str, object]", container).values())
+    return cast("list[object]", container)
 
 
 def _obj(value: object) -> dict[str, object]:
