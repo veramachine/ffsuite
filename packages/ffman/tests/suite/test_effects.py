@@ -10,7 +10,7 @@ import pytest
 
 from ffman.cli import main
 from ffman.effects.stages import POST, PRE
-from tests.support.measures import effect_property
+from tests.support.measures import effect_property, gif_palette
 from tests.support.media import ff, raw, tool
 
 
@@ -217,5 +217,7 @@ def test_a_gif_frame_holds_256_colours(
     ]
     _ = tool(ffmpeg, "-v", "error", "-y", *fractal, "mb.mp4")
     assert ff(capsys, "-i", "mb.mp4", "-w", "320", "-o", "mb.gif", "-y")[0] == 0
-    frame = rgb(ffmpeg, "mb.gif")
-    assert len({frame[i : i + 3] for i in range(0, len(frame), 3)}) == 256
+    # the table, not the colours a frame shows: those are ffmpeg's arithmetic, the platform's
+    # (on arm64 the frame showed 255); palettegen's reserve_transparent would make one of the
+    # 256 transparent
+    assert gif_palette(Path("mb.gif")) == (256, False)

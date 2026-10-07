@@ -243,6 +243,30 @@ def effect_property(ffmpeg: str, ffprobe: str, name: str, out: str, ref: str) ->
     return False, f"unknown effect {name}"
 
 
+def gif_palette(path: Path) -> tuple[int, bool]:
+    """A GIF's first frame: its colour table's entries, and whether one of them is transparent.
+
+    GIF89a's blocks: the logical screen's table, then extensions (0x21) -- the graphic
+    control one (0xF9) carrying the transparency flag -- before the image (0x2C), whose own
+    table, if it has one, replaces the screen's.
+    """
+    data = path.read_bytes()
+    screen = data[10]
+    screen_size = 2 << (screen & 7) if screen & 0x80 else 0
+    at = 13 + 3 * screen_size
+    transparent = False
+    while data[at] == 0x21:
+        if data[at + 1] == 0xF9:
+            transparent = bool(data[at + 3] & 1)
+        at += 2
+        while data[at]:  # sub-blocks, each its length first, to a zero one
+            at += data[at] + 1
+        at += 1
+    assert data[at] == 0x2C, f"no image where {path} has byte {data[at]:#x}"
+    image = data[at + 9]
+    return (2 << (image & 7) if image & 0x80 else screen_size), transparent
+
+
 def frames_of(
     ffmpeg: str, path: str, pix_fmt: str, shape: tuple[int, ...], count: int | None = None
 ) -> "Image":
