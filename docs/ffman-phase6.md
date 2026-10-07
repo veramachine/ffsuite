@@ -2200,7 +2200,13 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       a hook brings the errors back (76 in ffman's own run); AGENTS.md names `-m "not ffmpeg"`
       for a host's own tools. `uv publish --trusted-publishing always`: a missing publisher
       fails as one. The outcome job syncs `--no-dev`. Dependabot moves a commit pin and its
-      comment on the same line (its documentation).*
+      comment on the same line (its documentation). Amended (owner's request): a runner checks
+      its own system alone (`nix flake check` says so: "Use '--all-systems' to check all"),
+      and aarch64 Linux had none -- nixos-config's aarch64 ISO installs ffman.
+      `ubuntu-24.04-arm` joins the flake check's matrix (16 GB, 4 CPUs for a public
+      repository: GitHub's runner reference; install-nix-action's own tests run there), and a
+      job evaluates every output of all three systems, building nothing: 13 s here; a break
+      thrown on aarch64-linux alone passed the default check and failed this one (measured).*
 - [x] `dependabot.yml`: `uv` and `github-actions` (imi's schedule, groups,
       cooldown, labels, `chore` prefix). Issue templates (bug, feature,
       documentation, `config.yml`) and the PR template, imi's, adapted.

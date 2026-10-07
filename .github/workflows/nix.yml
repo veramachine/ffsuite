@@ -1,7 +1,9 @@
 # The flake's checks where ffmpeg is the pin: nixpkgs' ffmpeg-full 8.1.2 and FLAC 1.5, which a
 # runner's apt cannot give -- the ffmpeg-bound tests, the matrix, the installed binary, types,
-# dead code and lint (nix/checks.nix), on Linux and on Apple silicon (macos-latest: macOS 26
-# Arm64, actions/runner-images). On a pull request, the outcome report against its base.
+# dead code, lint and the pins (nix/checks.nix), built on each system the flake declares: x86_64
+# and aarch64 Linux, Apple silicon (macos-latest: macOS 26 Arm64; actions/runner-images). A
+# runner checks its own system alone, so every system is also evaluated in one job. On a pull
+# request, the outcome report against its base.
 name: Nix
 
 on:
@@ -24,7 +26,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, ubuntu-24.04-arm, macos-latest]
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -35,6 +37,21 @@ jobs:
 
       - name: nix flake check
         run: nix flake check --print-build-logs
+
+  evaluate:
+    # every output of every system, nothing built: a break on one runner's system alone shows
+    # here too, in seconds (the three systems evaluated in 13 s, measured)
+    name: nix flake check --all-systems (evaluation)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
+
+      - name: Evaluate
+        run: nix flake check --no-build --all-systems
 
   outcome:
     # What the pull request changes in ffman's outcomes (AGENTS.md, "The outcome report"): exit 1

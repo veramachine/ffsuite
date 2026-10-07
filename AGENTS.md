@@ -62,9 +62,10 @@ bump, the tools' behaviour ffman holds to, re-checked: [`docs/upgrading.md`](doc
 
 GitHub runs them too (`.github/workflows/`): `checks.yml`, the dev group's tools on 3.13 and 3.14
 without ffmpeg (`-m "not ffmpeg and not slow"`; ty advisory) and `uv lock --check`; `nix.yml`,
-`nix flake check` on Linux and Apple silicon, and on a pull request the outcome report against
-its base; `security.yml`, pip-audit over the lock, daily; on a package's tag (`ffmeta-v0.2.0`),
-`release.yml` and `publish.yml`: its GitHub release, and PyPI through Trusted Publishing.
+`nix flake check` built on x86_64 and aarch64 Linux and Apple silicon and evaluated for all three
+at once, and on a pull request the outcome report against its base; `security.yml`, pip-audit over
+the lock, daily; on a package's tag (`ffmeta-v0.2.0`), `release.yml` and `publish.yml`: its GitHub
+release, and PyPI through Trusted Publishing.
 
 ## The outcome report
 
