@@ -1,0 +1,46 @@
+# imi's rust-audit.yml as pip-audit: the lock's packages, exported with their hashes, against
+# PyPI's advisories -- daily, on demand, and when the lock changes. A finding fails the run,
+# notified to the workflow's creator (or whoever last changed its cron: docs.github.com,
+# "Notifications for workflow runs"); cargo-audit's issues have no counterpart here.
+name: Security
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # daily, midnight UTC
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "uv.lock"
+      - ".github/workflows/security.yml"
+  pull_request:
+    paths:
+      - "uv.lock"
+      - ".github/workflows/security.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  pip-audit:
+    name: pip-audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+
+      - name: Export the lock
+        # every group, the workspace's own packages left out: they are this repository
+        run: >-
+          uv export --locked --all-packages --all-groups --no-emit-workspace
+          --format requirements.txt --quiet --output-file requirements.txt
+
+      - name: pip-audit
+        # the audit group's pinned pip-audit, in an environment of its own; the hashes are the
+        # lock's, so nothing is resolved anew
+        run: >-
+          uv run --locked --isolated --only-group audit
+          pip-audit --strict --disable-pip --require-hashes -r requirements.txt

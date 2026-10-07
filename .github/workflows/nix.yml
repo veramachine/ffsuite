@@ -1,0 +1,61 @@
+# The flake's checks where ffmpeg is the pin: nixpkgs' ffmpeg-full 8.1.2 and FLAC 1.5, which a
+# runner's apt cannot give -- the ffmpeg-bound tests, the matrix, the installed binary, types,
+# dead code and lint (nix/checks.nix), on Linux and on Apple silicon (macos-latest: macOS 26
+# Arm64, actions/runner-images). On a pull request, the outcome report against its base.
+name: Nix
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  flake-check:
+    name: nix flake check (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Nix
+        # flakes on, and the job's token for GitHub fetches (its install-nix.sh)
+        uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
+
+      - name: nix flake check
+        run: nix flake check --print-build-logs
+
+  outcome:
+    # What the pull request changes in ffman's outcomes (AGENTS.md, "The outcome report"): exit 1
+    # on any change, each one's diff printed -- a signal to read, not a required check.
+    name: Outcome report
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # the base revision, which the report exports
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
+
+      - name: Compare with the base
+        # in the dev shell (nix/shell.nix): its uv on its Python, the runtime tools on PATH
+        working-directory: packages/ffman
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          nix develop ../.. --command uv sync --locked
+          nix develop ../.. --command uv run --no-sync python -m tests.outcome compare "$BASE"

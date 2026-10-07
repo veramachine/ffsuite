@@ -1,0 +1,36 @@
+# csan's publish.yml for the workspace: a package's tag publishes that package alone to PyPI,
+# through Trusted Publishing -- a publisher per project (ffman, ffmeta, subverter) names this
+# repository, this file and the pypi environment (the owner's, plan 6.7.9). Not a reusable
+# workflow: PyPI's Trusted Publishing takes none.
+name: Publish
+
+on:
+  push:
+    tags: ["ffman-v*", "ffmeta-v*", "subverter-v*"]
+
+permissions: {}
+
+jobs:
+  pypi:
+    name: PyPI
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+    permissions:
+      id-token: write # the short-lived token Trusted Publishing exchanges
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+
+      - name: Build the tag's package
+        # --no-sources: as any other builder sees it, without the workspace's sources (uv's guide)
+        run: |
+          package=$(.github/package-tag.sh "$GITHUB_REF_NAME")
+          uv build --package "$package" --no-sources
+
+      - name: Publish
+        run: uv publish

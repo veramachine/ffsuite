@@ -1,0 +1,38 @@
+# imi's style-check-dprint.yml, its paths what dprint.json formats here: Markdown and TOML (path
+# filters take no brace expansion, so one entry each).
+name: Dprint Formatting Checks
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "**/*.md"
+      - "**/*.toml"
+      - "dprint.json"
+      - ".github/workflows/style-check-dprint.yml"
+  pull_request:
+    paths:
+      - "**/*.md"
+      - "**/*.toml"
+      - "dprint.json"
+      - ".github/workflows/style-check-dprint.yml"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  dprint:
+    name: dprint check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Dprint format check
+        uses: dprint/check@7dc032d8874778fc024f6f9b4a7e6d896782c330 # v2.5
+        with:
+          config-path: dprint.json

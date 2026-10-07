@@ -20,6 +20,9 @@ dev = [
     "ty==0.0.38",
     "vulture==2.14",
 ]
+# security.yml's: pip-audit over the lock, exported (`uv export`); not the dev group's, so not in
+# `uv sync`'s default environment
+audit = ["pip-audit==2.10.1"]
 
 [tool.uv.workspace]
 members = ["packages/*"]
@@ -71,6 +74,10 @@ convention = "google"
 "packages/ffman/tests/support/transcripts.py" = ["RUF001"]
 # The copies' test: the libraries' private copies of ffman's helpers are its subject.
 "packages/ffman/tests/test_copies.py" = ["SLF001"]
+
+[tool.ty.src]
+# as ruff's: the skills' scripts and the planning-era docs are reference, not the packages' code
+exclude = [".agents", "docs"]
 
 [tool.basedpyright]
 # the import roots: the three packages' sources, resolved from the tree whatever is installed

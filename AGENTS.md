@@ -28,6 +28,7 @@ with their rules; ffmeta's tests read them as oracles.
 | `packages/ffman/tests/support/`                                | ffman's shared measures (numpy), media helpers, Hypothesis strategies                                                                                                                                                                                                                                                                                                                                                                                                         |
 | `packages/*/tests/`                                            | each library's own tests, no package (`--import-mode=importlib`): ffmeta's with `ffmeta_support` (strategies, examples, its oracles' tools) and the pinned-tool fixtures; subverter's; `test_imports.py` in each: itself and the standard library alone. One run from the root takes all three trees; each sdist runs its own                                                                                                                                                 |
 | `flake.nix`, `nix/`                                            | the flake (Linux, Apple silicon): the packages (`packages.nix`: the runtime, the wrapper), the image (`image.nix`, Linux's: FDK's ffmpeg, never published), the checks (`checks.nix`; `installed.sh`, the installed binary's), the dev shell (`shell.nix`)                                                                                                                                                                                                                    |
+| `.github/`                                                     | the workflows, each from its source (csan's, imi's), and `package-tag.sh`: a package's tag read as its package, release's and publish's                                                                                                                                                                                                                                                                                                                                       |
 
 ## The checks
 
@@ -56,6 +57,12 @@ packages): `tests-*`, `matrix-*`, `types-*`, `vulture-*`, and `installed-*` -- t
 through its wrapper alone (`nix/installed.sh`), which nothing else reaches: the suite calls
 `main()` in-process; `lint` once (ruff, nixfmt, shellcheck: no interpreter). At a nixpkgs bump,
 the tools' behaviour ffman holds to, re-checked: [`docs/upgrading.md`](docs/upgrading.md).
+
+GitHub runs them too (`.github/workflows/`): `checks.yml`, the dev group's tools on 3.13 and 3.14
+without ffmpeg (`-m "not ffmpeg and not slow"`; ty advisory) and `uv lock --check`; `nix.yml`,
+`nix flake check` on Linux and Apple silicon, and on a pull request the outcome report against
+its base; `security.yml`, pip-audit over the lock, daily; on a package's tag (`ffmeta-v0.2.0`),
+`release.yml` and `publish.yml`: its GitHub release, and PyPI through Trusted Publishing.
 
 ## The outcome report
 

@@ -1501,8 +1501,8 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
                                 src/subverter/
                                 (+ py.typed), tests/ (the readers' tests)
                                 (6.7.5, 6.7.6)
-        .github/                workflows/, dependabot.yml, ISSUE_TEMPLATE/,
-                                PULL_REQUEST_TEMPLATE.md (6.7.9)
+        .github/                workflows/, package-tag.sh, dependabot.yml,
+                                ISSUE_TEMPLATE/, PULL_REQUEST_TEMPLATE.md (6.7.9)
 
       *Done: the design, checked; its files are its boxes'. uv's own
       documentation: "Every workspace needs a root, which is also a
@@ -2150,7 +2150,7 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
 
 *6.7.9 Its tooling* (adapted from csan and imi; each file its source)
 
-- [ ] Workflows: `checks.yml` (csan's: uv, `uv sync --locked`, ruff,
+- [x] Workflows: `checks.yml` (csan's: uv, `uv sync --locked`, ruff,
       basedpyright, ty, vulture, pytest; 3.13 and 3.14; `uv lock --check`),
       `nix.yml` (`nix flake check` on Linux and on macOS, Apple silicon: the
       ffmpeg-bound tests, the matrix, the
@@ -2162,6 +2162,35 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       `style-check-cocogitto.yml`, `style-check-dprint.yml` (imi's),
       `release.yml` and `publish.yml` (a package's tag, `ffmeta-v1.2.0`:
       `uv build --package`, `uv publish`, Trusted Publishing).
+      *Done: the nine, each headed by its source and what it changed, and
+      `.github/package-tag.sh` -- a tag read as its package, its version checked against that
+      package's `pyproject.toml` -- shared by `release.yml` and `publish.yml`. Every action
+      pinned to a commit, its release in a comment (setup-uv's own README; setup-uv publishes
+      no floating tag past `v7`, measured; Dependabot moves both, the next box). Changed from
+      the box, each for a reason found: ty runs advisory, `continue-on-error`
+      (`ffman-python.md` §6: never failing the build until 1.0 is in the pin; its two
+      diagnostics, `fonts.py:44` and the outcome driver's `fsdecode`, left, `[tool.ty.src]`
+      excluding `.agents` and `docs` as ruff does); `dependency-review.yml` watches the
+      workflows alone (GitHub's dependency graph reads no `uv.lock`: its ecosystems list pip,
+      pipenv and Poetry files), the lock pip-audit's; cocogitto checks a push's whole history,
+      not `--from-latest-tag` (no tag yet: cog 7.0.0, the action's, stops "unable to get any
+      tag", measured; every commit is conventional); a release's notes are the commits
+      touching its package since its previous tag (`git log`; cog's changelogs are the third
+      box's); pip-audit pinned in an `audit` group (2.10.1; the lock grew by it), run
+      `--isolated`. Proven, `checks.yml`'s steps as written, on uv's 3.13 and 3.14 with a
+      `PATH` lacking ffmpeg and metaflac, as the runner's image (its software list): lock
+      checked, ruff, basedpyright 0 errors, vulture, pytest 1411 passed and 94 skipped -- with
+      an apt ffmpeg 6.1 on `PATH` instead, 83 errors, the fixtures holding the pin: the tests
+      taking the `ffmpeg` fixture are not all marked, and skip only for want of one. The
+      outcome job's command (uv in place of the dev shell) against `HEAD`, with ffmpeg 8.1.2:
+      427 identical. `nix develop ../..` from `packages/ffman` resolves to the repository's
+      flake; its checks evaluate on x86_64-linux and aarch64-darwin, 11 each. pip-audit over
+      the exported lock (45 packages): no known vulnerabilities, `.venv` untouched. On test
+      tags: a match prints the package, a version or a package not the tree's is refused; the
+      notes start after the package's own previous tag; `uv build --package --no-sources`
+      builds that package alone, twice byte for byte alike. actionlint 1.7.12 with ShellCheck:
+      clean. Not reachable here: a run on GitHub (after the push); `style-check-dprint.yml`
+      passes only with the third box's `dprint.json`; macOS's flake check is 6.7.10's.*
 - [ ] `dependabot.yml`: `uv` and `github-actions` (imi's schedule, groups,
       cooldown, labels, `chore` prefix). Issue templates (bug, feature,
       documentation, `config.yml`) and the PR template, imi's, adapted.

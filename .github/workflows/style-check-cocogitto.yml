@@ -1,0 +1,41 @@
+# imi's style-check-cocogitto.yml; on a push, the whole history, not --from-latest-tag: with no tag
+# yet, cog 7.0.0 (the action's) stops "unable to get any tag" (measured), and every commit here is
+# conventional from the first.
+name: Conventional Commits Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check_commits:
+    name: Check Conventional Commits
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+
+      - name: Check PR Commits
+        if: github.event_name == 'pull_request'
+        uses: cocogitto/cocogitto-action@52d0023b4396897f1815648e553db2ab8d782f3a # v4.2.0
+        with:
+          command: check
+          args: --ignore-merge-commits ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}
+
+      - name: Check Push Commits
+        if: github.event_name == 'push'
+        uses: cocogitto/cocogitto-action@52d0023b4396897f1815648e553db2ab8d782f3a # v4.2.0
+        with:
+          command: check
+          args: --ignore-merge-commits

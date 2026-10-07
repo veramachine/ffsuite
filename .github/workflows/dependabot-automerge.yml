@@ -1,0 +1,43 @@
+# imi's dependabot-automerge.yml, its guard this repository's. Required repository settings (the
+# owner's, once; plan 6.7.9):
+# 1. Settings > General > Allow auto-merge
+# 2. Settings > Actions > General > Workflow permissions > Read and write permissions
+# 3. Settings > Actions > General > Allow GitHub Actions to create and approve pull requests
+# 4. Settings > Branches > a protection rule on main: a pull request before merging, and the
+#    status checks (Checks, Nix) required to pass
+name: Dependabot Auto-Merge
+
+on:
+  pull_request:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  dependabot:
+    runs-on: ubuntu-latest
+    # user.login, the pull request's author -- not github.actor, whoever triggered this run, which
+    # a re-run changes (docs.github.com, "Automating Dependabot with GitHub Actions")
+    if: >-
+      github.event.pull_request.user.login == 'dependabot[bot]' &&
+      github.repository == 'veramachine/ffsuite'
+    steps:
+      - name: Fetch Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v3.1.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Enable auto-merge for patch and minor updates
+        # update-type is version-update:semver-{patch,minor,major} alone: a security update
+        # carries the same labels (gating on alert-state needs alert-lookup, and a PAT)
+        if: >-
+          contains(
+            fromJSON('["version-update:semver-patch", "version-update:semver-minor"]'),
+            steps.metadata.outputs.update-type
+          )
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,61 @@
+# csan's checks.yml, adapted: the dev group (ruff, basedpyright, ty advisory, vulture, pytest) on
+# both supported Pythons, without ffmpeg -- the runner image has none (actions/runner-images'
+# Ubuntu 24.04 list), so the tests needing the pinned ffmpeg 8.1 or FLAC 1.5 skip here and run in
+# nix.yml, where Nix provides both.
+name: Checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: Checks (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.13", "3.14"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Lock and environment
+        run: |
+          uv lock --check
+          uv sync --locked
+          uv run --no-sync python --version
+
+      - name: Ruff
+        run: |
+          uv run --no-sync ruff check --output-format=github
+          uv run --no-sync ruff format --check
+
+      - name: Types (basedpyright)
+        run: uv run --no-sync basedpyright
+
+      - name: Types (ty, advisory)
+        # never failing the build until ty is 1.0 in the pin and runs clean (ffman-python.md §6)
+        continue-on-error: true
+        run: uv run --no-sync ty check --output-format=github
+
+      - name: Dead code
+        run: uv run --no-sync vulture
+
+      - name: Pytest
+        # the matrix (slow) and the ffmpeg integration tests are nix.yml's
+        run: uv run --no-sync pytest -m "not ffmpeg and not slow" -n auto
