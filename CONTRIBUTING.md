@@ -12,7 +12,8 @@ Thank you for considering contributing to ffsuite: ffman, ffmeta and subverter.
 - **Without Nix**: uv 0.11.21 (`pyproject.toml`'s `required-version`: nixpkgs', as every pin
   here), just, dprint, cocogitto and pre-commit on your `PATH`. The tests marked
   `ffmpeg` need ffmpeg 8.1 and metaflac 1.5, which `just checks` runs. Without them, run the
-  suite as GitHub's `checks.yml` does: `uv run pytest -m "not ffmpeg and not slow"`.
+  suite as GitHub's `checks.yml` does: `uv run pytest -m "not ffmpeg and not slow"`. `just
+  checks` ends with the flake's checks, so without Nix it stops there, every other check passed.
 
 ## Setup
 
@@ -47,8 +48,9 @@ that ffman's behaviour is its contract.
 2. Run the checks. The `justfile` runs the workflows' commands:
 
 ```sh
-just checks   # the lock, ruff, types, dead code, the suite and the matrix, dprint, cog, pip-audit
-just nix      # the flake's checks, as nix.yml
+just checks   # the lock, ruff, types, dead code, the suite and the matrix, dprint, cog, pip-audit,
+              # then `just nix`
+just nix      # the flake's checks alone, as nix.yml: git's files only -- `git add` a new one
 just format   # ruff and dprint, in place
 just build    # each package's sdist and wheel, into dist/ (the root itself is no package)
 ```

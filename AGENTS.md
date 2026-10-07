@@ -46,7 +46,7 @@ just vulture       # dead code: src only, [tool.vulture]
 just static        # types: basedpyright blocks, ty advisory (never blocking)
 just pytest        # the suite but the matrix: 100% line and branch
 just matrix        # the matrix, in parallel
-just checks        # all of these, and the lock, dprint, cog and pip-audit: the workflows'
+just checks        # all of these, the lock, dprint, cog, pip-audit and, last, `just nix`
 ```
 
 Each recipe's command is in the `justfile`. `pre-commit install` adds the hooks: ruff, dprint

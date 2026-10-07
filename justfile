@@ -1,7 +1,7 @@
 # csan's Justfile for the workspace, its groups and aliases, with imi's `checks`, `cog`,
 # `dprint-check`, `audit` and `release`. The commands are the workflows' (.github/workflows/):
 # `just checks` runs checks.yml's -- in the dev shell with every test, ffmpeg's and the matrix --
-# the style checks' and security.yml's; `just nix` runs nix.yml's. Run them in `nix develop`.
+# the style checks', security.yml's and, last, nix.yml's (`just nix`). Run them in `nix develop`.
 
 alias check := checks
 alias fmt := format
@@ -98,9 +98,11 @@ audit:
     uv run --locked --isolated --only-group audit \
         pip-audit --strict --disable-pip --require-hashes -r "$requirements"
 
-[doc("Every check but Nix's")]
+# `nix` last: the slowest, and the one a machine without Nix cannot run -- every other has passed
+# by then. The flake sees git's files only: a new file is invisible to it until `git add`ed.
+[doc("Every check, the flake's last")]
 [group("Checks")]
-checks: lock-check ruff-checks static vulture pytest matrix dprint-check cog audit
+checks: lock-check ruff-checks static vulture pytest matrix dprint-check cog audit nix
 
 [doc("The flake: every system evaluated, this one's checks built")]
 [group("Nix")]
