@@ -1,6 +1,6 @@
-// imi's, with what this repository's files keep (measured: `dprint check` clean on dprint 0.54.0,
-// nixpkgs', and 0.60.1). The plugins are imi's versions: the newer markdown 0.26.0 and toml 0.9.0
-// re-wrap a line opening with `--` and re-indent arrays, against `maintain` and uv's layout.
+// imi's, with what this repository's files keep. Its plugins the latest (the owner's: 2026-10-07;
+// `just dprint-update`), clean on dprint 0.54.0 (nixpkgs') and 0.60.1 (the action's). The markdown
+// plugin joins a line opening with `--` or a list marker (`500)`) to the one before: break earlier.
 {
   "markdown": {
     "textWrap": "maintain",
@@ -17,7 +17,7 @@
     "packages/*/CHANGELOG.md"
   ],
   "plugins": [
-    "https://plugins.dprint.dev/markdown-0.22.1.wasm",
-    "https://plugins.dprint.dev/toml-0.7.0.wasm"
+    "https://plugins.dprint.dev/markdown-0.26.0.wasm",
+    "https://plugins.dprint.dev/toml-0.9.0.wasm"
   ]
 }

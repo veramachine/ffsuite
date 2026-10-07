@@ -138,3 +138,6 @@ conditional expression) is invisible to coverage: find its cases by their output
 - **Markers**: `ffmpeg`, a pinned tool needed (ffmpeg, metaflac) -- by hand, or by the fixture a
   test takes (the conftests); `slow`, the combination matrix (its own
   check). A marked test's parameter ids are the bash checks they port.
+- **Documents**: no badges in a README (the owner's). dprint's plugins are pinned by version in
+  `dprint.json`, as every tool, but kept at their latest releases, not nixpkgs' (the owner's):
+  `just dprint-update`.

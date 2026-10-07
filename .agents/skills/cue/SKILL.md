@@ -76,8 +76,8 @@ index points -- ending with a lead-out (170 for CD-DA, else 255). No text.
 back: `INDEX` in `mm:ss:ff` for CD-DA but **in sample numbers otherwise**, which
 other readers take for frames or refuse.
 
-ffmpeg reads the block as chapters starting at each track's first index point
--- `INDEX 00` when there is one, so a pregap opens the chapter -- titled with the
+ffmpeg reads the block as chapters starting at each track's first index point --
+`INDEX 00` when there is one, so a pregap opens the chapter -- titled with the
 track's **ISRC**. It writes no block: a FLAC through ffmpeg, copied or encoded
 again, loses its cue sheet and gains no chapters. Carry it with metaflac.
 
@@ -102,8 +102,8 @@ file has no chapters, reads it with its `.cue` parser -- one file, at least one
    `INDEX 00` and `01` nor after `01`); tracks `01`-`99` in order, each `AUDIO`;
    indexes numbered `00` or `01` first and one more each; the first index
    `00:00:00`.
-5. Times from whole milliseconds by integer arithmetic: `frames = (ms * 75 +
-   500) // 1000` (to the nearest frame -- a cue time cannot hold most
+5. Times from whole milliseconds by integer arithmetic:
+   `frames = (ms * 75 + 500) // 1000` (to the nearest frame -- a cue time cannot hold most
    milliseconds; the error is at most 6.7 ms), then `mm = frames // 4500`,
    `ss = frames // 75 % 60`, `ff = frames % 75`, each two digits (`mm` more if
    need be).

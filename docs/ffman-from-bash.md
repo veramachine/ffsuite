@@ -97,8 +97,8 @@ which git-cliff writes at each release from the commits (`packages/ffman/CHANGEL
   written by `--preset ffmetadata` (the default) or `vorbiscomment`; each loss
   is a note, each malformed line refused with its number. `--normalize` now
   needs `--preset youtube`, the only preset it means.
-- **Numbers are written as their value.** A number given in another spelling
-  -- `--font-size 057.50`, `--bblur 012.50` -- is written to the subtitles and
+- **Numbers are written as their value.** A number given in another spelling --
+  `--font-size 057.50`, `--bblur 012.50` -- is written to the subtitles and
   the filtergraph, and echoed in notes, as its value (`57.5`, `12.5`): ffman
   carries numbers typed, no longer the text as typed. libass and ffmpeg read
   both spellings alike (a frame rendered with each: identical).

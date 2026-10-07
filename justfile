@@ -74,6 +74,12 @@ lock-check:
 dprint-check:
     dprint check
 
+[doc("dprint's plugins to their latest (dprint.json), then the Markdown and TOML rechecked")]
+[group("Style")]
+dprint-update:
+    dprint config update
+    dprint check
+
 [doc("Every commit conventional (cog.toml)")]
 [group("Checks")]
 [group("Style")]

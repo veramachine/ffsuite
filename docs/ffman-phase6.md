@@ -1689,8 +1689,8 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       example and a test that runs it. The sdist: unscoped it held
       `packages/` (12 files), `docs/`, `.agents/`, `uv.lock`. Scoped to
       `src`, `tests`, `CHANGELOG.md` (hatchling adds the README, licences,
-      `pyproject.toml`), it was proven by its own tests, unpacked: 9 failed
-      -- `test_workspace` (it tests the repository: excluded) and the three
+      `pyproject.toml`), it was proven by its own tests, unpacked: 9 failed --
+      `test_workspace` (it tests the repository: excluded) and the three
       oracle tests (they read `SKILL.md`: those three files included, while
       the tests are ffman's) -- then 1632 passed, none failed. `twine check
       --strict` on all six artefacts; the repository's suite 1638.
@@ -2248,8 +2248,10 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       `dprint-check`, `audit`, `release`); `.pre-commit-config.yaml` (ruff,
       dprint, `uv lock --check`, cocogitto's commit-message check).
       *Done, on nixpkgs' tools (just 1.51.0, cocogitto 7.0.0, pre-commit 4.5.1, dprint 0.54.0,
-      git-cliff 2.13.1). `dprint.json`: imi's plugins (markdown 0.26.0 and toml 0.9.0 re-wrap a
-      line opening `--` and re-indent arrays, measured), asterisk emphasis (the repository's),
+      git-cliff 2.13.1). `dprint.json`: the plugins at their latest, markdown 0.26.0 and toml
+      0.9.0 (the owner's, over imi's 0.22.1 and 0.7.0; 0.26.0 joins a line opening `--` or a list
+      marker to the one before: three such lines broken earlier; `ffman-python.md` still
+      excluded, `>=` still `> =`; `just dprint-update`), asterisk emphasis (the repository's),
       four-space TOML (uv's); the four pyproject files re-indented, their data equal; clean on
       dprint 0.54.0 and 0.60.1 (the action's); an exclusion holds for a path given
       (pre-commit's). `cog.toml`: cocogitto's tables are strict, so `[monorepo.packages]`
