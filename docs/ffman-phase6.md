@@ -2236,13 +2236,37 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       on the way: AGENTS.md's markers rule still said `ffmpeg` runs ffmpeg (the last box's
       hook) -- now the pinned tool, by hand or by fixture; and `package-tag.sh` joins `lint`'s
       shellcheck.*
-- [ ] `CONTRIBUTING.md` imi's, its tools ffman's (uv, just, Nix); `cog.toml`
+- [x] `CONTRIBUTING.md` imi's, its tools ffman's (uv, just, Nix); `cog.toml`
       imi's with `[packages]` for the three (their own tags); `dprint.json`
       imi's, excluding `docs/ffman-python.md` (a finished record it cannot
       round-trip: a line's `>=` read as a quote, `> =`; measured); the
       `justfile` (csan's groups and aliases, imi's `checks`, `cog`,
       `dprint-check`, `audit`, `release`); `.pre-commit-config.yaml` (ruff,
       dprint, `uv lock --check`, cocogitto's commit-message check).
+      *Done, on nixpkgs' tools (just 1.51.0, cocogitto 7.0.0, pre-commit 4.5.1, dprint 0.54.0).
+      `dprint.json`: imi's plugins (markdown 0.26.0 and toml 0.9.0 re-wrap a line opening `--`
+      and re-indent arrays, measured), asterisk emphasis (the repository's), four-space TOML
+      (uv's); the four pyproject files re-indented, their data equal; clean on dprint 0.54.0 and
+      on 0.60.1 (the action's); the exclusion holds for a path given (pre-commit's).
+      `cog.toml`: cocogitto's tables are strict, so `[monorepo.packages]` (`[packages]` refused);
+      `from_latest_tag` off (no tag: `cog check` stops); no global tag; no changelog (ffman's is
+      curated, notes are git log's); bumps from `main`; the bump's hooks `uv version --no-sync`
+      (it re-locks) and `test_workspace`. Found: uv locks a workspace member without ffman's
+      specifier, so ffmeta bumped past ffman's `<0.2` locked (measured). `test_workspace` now
+      holds ffman's range to each library's version (three mutations); a failing hook stashes
+      its changes, nothing committed. `justfile`: csan's groups and aliases (its `lintr`, a typo,
+      and `ruff` for `format` dropped), the workflows' commands under `uv run --locked`; `checks`
+      as `checks.yml`, the matrix, dprint, cog, pip-audit: 1730 and 770 passed, 100%, 400 s;
+      `nix` all systems evaluated, then this one's built. `release PACKAGE major|minor|patch`
+      refuses, before the checks, off `main`, dirty, behind `origin`, or below the package's
+      version (cog counts from 0.0.0: a first `patch` gave 0.0.1, measured), then bumps, tags
+      annotated (`--follow-tags` skips lightweight tags) and pushes atomically. Proven on a clone
+      with a bare remote: ffmeta's first `minor` 0.1.0 (its tag `package-tag.sh`'s), `patch`
+      0.1.1 (pyproject and lock committed), `minor` refused by `test_workspace`.
+      `.pre-commit-config.yaml`: local hooks, the dev shell's tools (no second pin);
+      `default_stages` (unset, every hook also ran at the message's stage); each hook failed by
+      its mutation, a merge message passed. `CONTRIBUTING.md` imi's sections with the release's
+      rules; AGENTS.md's checks through `just`; the README links it.*
 
 - [ ] The owner's, outside any file: the GitHub repository and its settings
       (auto-merge allowed, branch protection requiring the checks, a `pypi`

@@ -16,6 +16,6 @@ tools it runs come with it (a container image too, and Windows through WSL: ffma
 nix run github:veramachine/ffsuite -- convert -i in.mp4 -w 1280
 ```
 
-Working on them: [`AGENTS.md`](AGENTS.md). Licensed under either of
+Working on them: [`CONTRIBUTING.md`](CONTRIBUTING.md) and [`AGENTS.md`](AGENTS.md). Licensed under either of
 [MIT](LICENSE-MIT) or [Apache-2.0](LICENSE-APACHE), at your option; ffman's fonts, IBM Plex,
 under the [OFL](packages/ffman/src/ffman/fonts/OFL.txt).

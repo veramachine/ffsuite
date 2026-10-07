@@ -1,0 +1,35 @@
+# The checks a commit can fail fast on, each the tool `nix develop` gives (local hooks: no second
+# pin to keep): ruff, dprint, the lock, and the message, conventional (cog.toml). The rest is
+# `just checks`. Install both hooks with `pre-commit install`.
+default_install_hook_types: [pre-commit, commit-msg]
+default_stages: [pre-commit] # a hook runs at every stage otherwise, the message's too
+repos:
+  - repo: local
+    hooks:
+      # ruff-pre-commit's two: the linter refuses, the formatter rewrites (re-stage to commit)
+      - id: ruff-check
+        name: ruff check
+        entry: uv run --locked ruff check --force-exclude
+        language: system
+        types_or: [python, pyi]
+      - id: ruff-format
+        name: ruff format
+        entry: uv run --locked ruff format --force-exclude
+        language: system
+        types_or: [python, pyi]
+      - id: dprint
+        name: dprint fmt
+        entry: dprint fmt --allow-no-files
+        language: system
+        types_or: [markdown, toml]
+      - id: uv-lock
+        name: uv lock --check
+        entry: uv lock --check
+        language: system
+        files: ^(.*/)?(pyproject\.toml|uv\.lock)$
+        pass_filenames: false
+      - id: cog-verify
+        name: cog verify
+        entry: cog verify --file
+        language: system
+        stages: [commit-msg]

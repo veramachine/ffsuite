@@ -28,6 +28,7 @@ with their rules; ffmeta's tests read them as oracles.
 | `packages/ffman/tests/support/`                                | ffman's shared measures (numpy), media helpers, Hypothesis strategies                                                                                                                                                                                                                                                                                                                                                                                                         |
 | `packages/*/tests/`                                            | each library's own tests, no package (`--import-mode=importlib`): ffmeta's with `ffmeta_support` (strategies, examples, its oracles' tools) and the pinned-tool fixtures; subverter's; `test_imports.py` in each: itself and the standard library alone. One run from the root takes all three trees; each sdist runs its own                                                                                                                                                 |
 | `flake.nix`, `nix/`                                            | the flake (Linux, Apple silicon): the packages (`packages.nix`: the runtime, the wrapper), the image (`image.nix`, Linux's: FDK's ffmpeg, never published), the checks (`checks.nix`; `installed.sh`, the installed binary's), the dev shell (`shell.nix`)                                                                                                                                                                                                                    |
+| `justfile` `cog.toml` `dprint.json` `.pre-commit-config.yaml`  | the tooling (CONTRIBUTING.md): the checks and the release as recipes; Conventional Commits and the packages' tags; Markdown and TOML formatting; the hooks                                                                                                                                                                                                                                                                                                                    |
 | `.github/`                                                     | the workflows, each from its source (csan's, imi's); `package-tag.sh`, a package's tag read as its package (release's and publish's); Dependabot (GitHub Actions alone); the issue and pull request templates                                                                                                                                                                                                                                                                 |
 
 ## The checks
@@ -39,13 +40,16 @@ same nixpkgs' versions, so a uv run's verdict is Nix's (basedpyright resolves nu
 numpy 2.4's differ from 2.5's; ruff's `ALL` grows with each release). Then:
 
 ```sh
-uv run ruff check . && uv run ruff format --check .   # lint
-uv run vulture                                        # dead code: src only, [tool.vulture]
-uv run basedpyright                                   # types: blocks
-uv run ty check                                       # types: advisory, never blocking
-uv run pytest -m "not slow" --cov                     # the suite: 100% line and branch
-uv run pytest -m slow -n auto                         # the matrix, in parallel
+just ruff-checks   # lint and format
+just vulture       # dead code: src only, [tool.vulture]
+just static        # types: basedpyright blocks, ty advisory (never blocking)
+just pytest        # the suite but the matrix: 100% line and branch
+just matrix        # the matrix, in parallel
+just checks        # all of these, and the lock, dprint, cog and pip-audit: the workflows'
 ```
+
+Each recipe's command is in the `justfile`. `pre-commit install` adds the hooks: ruff, dprint
+and the lock before a commit, and its message conventional (`cog.toml`).
 
 On NixOS, the wheels uv installs (numpy, basedpyright's node) need the common C++ runtime:
 `programs.nix-ld.enable`. Without Nix, `uv sync --locked` gives the same tools, and ffmpeg and
@@ -53,19 +57,20 @@ the runtime are the host's (the tests that run ffmpeg and metaflac hold them to 
 and 1.5; `-m "not ffmpeg"` leaves each out, the conftests marking every test that takes either
 fixture). `nix fmt` formats the Nix files.
 
-`nix flake check` runs the same, each on Python 3.13 and 3.14 (pytest against the installed
-packages): `tests-*`, `matrix-*`, `types-*`, `vulture-*`, and `installed-*` -- the built binary
-through its wrapper alone (`nix/installed.sh`), which nothing else reaches: the suite calls
-`main()` in-process; `lint` once (ruff, nixfmt, shellcheck: no interpreter); `pins`, every pin
-in the dependency groups this nixpkgs' version -- Dependabot moves none of them. At a nixpkgs
-bump, the tools' behaviour ffman holds to, re-checked: [`docs/upgrading.md`](docs/upgrading.md).
+`nix flake check` (`just nix`) runs the same, each on Python 3.13 and 3.14 (pytest against the
+installed packages): `tests-*`, `matrix-*`, `types-*`, `vulture-*`, and `installed-*` -- the built
+binary through its wrapper alone (`nix/installed.sh`), which nothing else reaches: the suite calls
+`main()` in-process; `lint` once (ruff, nixfmt, shellcheck: no interpreter); `pins`, every pin in
+the dependency groups this nixpkgs' version -- Dependabot moves none of them. At a nixpkgs bump,
+the tools' behaviour ffman holds to, re-checked: [`docs/upgrading.md`](docs/upgrading.md).
 
 GitHub runs them too (`.github/workflows/`): `checks.yml`, the dev group's tools on 3.13 and 3.14
 without ffmpeg (`-m "not ffmpeg and not slow"`; ty advisory) and `uv lock --check`; `nix.yml`,
 `nix flake check` built on x86_64 and aarch64 Linux and Apple silicon and evaluated for all three
 at once, and on a pull request the outcome report against its base; `security.yml`, pip-audit over
 the lock, daily; on a package's tag (`ffmeta-v0.2.0`), `release.yml` and `publish.yml`: its GitHub
-release, and PyPI through Trusted Publishing.
+release, and PyPI through Trusted Publishing. `just release` cuts that tag
+(CONTRIBUTING.md).
 
 ## The outcome report
 

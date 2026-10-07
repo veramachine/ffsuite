@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Final, cast
 
 import pytest
+from packaging.requirements import Requirement  # pytest's own dependency
 
 ROOT: Final = Path(__file__).resolve().parents[3]  # packages/ffman/tests/ -> the workspace
 PACKAGES: Final = ("ffman", "ffmeta", "subverter")
@@ -65,6 +66,19 @@ def test_the_licence_expressions_agree(package: str) -> None:
     own = _project(_pyproject(ROOT / "packages" / package))
     # ffman's is the libraries' and the fonts': SPDX applies AND before OR, hence the parentheses
     assert ffman["license"] == f"({cast('str', own['license'])}) AND OFL-1.1"
+
+
+@pytest.mark.parametrize("package", LIBRARIES)
+def test_ffmans_range_admits_each_librarys_version(package: str) -> None:
+    # uv locks a workspace member without ffman's specifier (measured): a library bumped out of
+    # the range still locks, and ffman would be tested on a version its wheel refuses. The
+    # release hook (cog.toml) runs this test after the bump
+    version = cast("str", _project(_pyproject(ROOT / "packages" / package))["version"])
+    ffman = _project(_pyproject(ROOT / "packages/ffman"))
+    (requirement,) = (
+        r for r in map(Requirement, cast("list[str]", ffman["dependencies"])) if r.name == package
+    )
+    assert requirement.specifier.contains(version), (str(requirement), version)
 
 
 def _definitions(module: Path) -> dict[str, str]:
