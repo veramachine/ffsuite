@@ -31,7 +31,7 @@ keywords = [
 # https://pypi.org/classifiers/ -- no License :: one: with a license expression, PyPI rejects
 # the upload (PEP 639). POSIX: process groups, killpg, SIGHUP (media/run.py)
 classifiers = [
-    "Development Status :: 4 - Beta",  # 0.x, as its libraries: young, not yet stable (the owner's)
+    "Development Status :: 4 - Beta", # 0.x, as its libraries: young, not yet stable (the owner's)
     "Environment :: Console",
     "Intended Audience :: Developers",
     "Intended Audience :: End Users/Desktop",
@@ -86,6 +86,6 @@ xfail_strict = true
 filterwarnings = ["error"]
 timeout = 600
 markers = [
-  "ffmpeg: needs a pinned tool, ffmpeg 8.1 or metaflac 1.5 (integration)",
-  "slow: the combination matrix",
+    "ffmpeg: needs a pinned tool, ffmpeg 8.1 or metaflac 1.5 (integration)",
+    "slow: the combination matrix",
 ]

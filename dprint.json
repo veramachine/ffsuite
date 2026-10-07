@@ -1,0 +1,21 @@
+// imi's, with what this repository's files keep (measured: `dprint check` clean on dprint 0.54.0,
+// nixpkgs', and 0.60.1). The plugins are imi's versions: the newer markdown 0.26.0 and toml 0.9.0
+// re-wrap a line opening with `--` and re-indent arrays, against `maintain` and uv's layout.
+{
+  "markdown": {
+    "textWrap": "maintain",
+    // the repository's emphasis: the plugin's defaults are underscores
+    "emphasisKind": "asterisks",
+    "strongKind": "asterisks"
+  },
+  // uv's own: `uv add` and `uv version` write four spaces
+  "toml": { "indentWidth": 4 },
+  "excludes": [
+    // a finished record it cannot round-trip: a line's `>=` read as a quote, `> =`
+    "docs/ffman-python.md"
+  ],
+  "plugins": [
+    "https://plugins.dprint.dev/markdown-0.22.1.wasm",
+    "https://plugins.dprint.dev/toml-0.7.0.wasm"
+  ]
+}

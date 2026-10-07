@@ -42,7 +42,7 @@ classifiers = [
     "Topic :: Text Processing",
     "Typing :: Typed",
 ]
-dependencies = []  # the standard library alone
+dependencies = [] # the standard library alone
 
 [project.urls]
 Homepage = "https://github.com/veramachine/ffsuite/tree/main/packages/subverter"

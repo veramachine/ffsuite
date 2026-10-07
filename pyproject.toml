@@ -8,7 +8,7 @@
 # grown) and numpy 2.5's stubs disagreed with them on the same code (measured)
 dev = [
     "basedpyright==1.39.3",
-    "coverage==7.14.1",  # pytest-cov's, floating otherwise: the 100% gate is its verdict
+    "coverage==7.14.1", # pytest-cov's, floating otherwise: the 100% gate is its verdict
     "hypothesis==6.151.10",
     "numpy==2.4.4",
     "pytest==9.0.3",
@@ -39,18 +39,18 @@ extend-exclude = [".agents", "docs"]
 [tool.ruff.lint]
 select = ["ALL"]
 ignore = [
-  # The formatter owns trailing commas and string concatenation (ruff's docs:
-  # these two conflict with ruff format).
-  "COM812",
-  "ISC001",
-  # Long strings are joined with an explicit +: basedpyright refuses implicit concatenation
-  # (reportImplicitStringConcatenation -- a missing comma merges two strings unseen), which
-  # ISC003 would ask for instead.
-  "ISC003",
-  # Refusals are user-facing sentences, specified in ffman-spec.md, raised as
-  # the one error type (errors.FfmanError); TRY003's remedy, a class per
-  # message, would scatter the spec's text. EM101/EM102 still apply.
-  "TRY003",
+    # The formatter owns trailing commas and string concatenation (ruff's docs:
+    # these two conflict with ruff format).
+    "COM812",
+    "ISC001",
+    # Long strings are joined with an explicit +: basedpyright refuses implicit concatenation
+    # (reportImplicitStringConcatenation -- a missing comma merges two strings unseen), which
+    # ISC003 would ask for instead.
+    "ISC003",
+    # Refusals are user-facing sentences, specified in ffman-spec.md, raised as
+    # the one error type (errors.FfmanError); TRY003's remedy, a class per
+    # message, would scatter the spec's text. EM101/EM102 still apply.
+    "TRY003",
 ]
 
 [tool.ruff.lint.pydocstyle]
@@ -111,11 +111,11 @@ testpaths = ["packages/ffman/tests", "packages/ffmeta/tests", "packages/subverte
 pythonpath = ["packages/ffman", "packages/ffmeta/tests", "packages/subverter/tests"]
 addopts = ["--strict-markers", "--strict-config", "-ra", "--import-mode=importlib"]
 xfail_strict = true
-filterwarnings = ["error"]  # a warning fails the suite: a leaked pipe went unseen for long
+filterwarnings = ["error"] # a warning fails the suite: a leaked pipe went unseen for long
 timeout = 600
 markers = [
-  "ffmpeg: needs a pinned tool, ffmpeg 8.1 or metaflac 1.5 (integration)",
-  "slow: the combination matrix",
+    "ffmpeg: needs a pinned tool, ffmpeg 8.1 or metaflac 1.5 (integration)",
+    "slow: the combination matrix",
 ]
 
 [tool.vulture]
