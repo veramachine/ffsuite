@@ -15,15 +15,24 @@ from subverter.transcript import Cue, Reading, Timing
 
 __all__ = ["read"]
 
+# Arrays and objects nested deeper are refused, alike on every machine: Python 3.14 bounds
+# json's recursion by the thread's C stack, not sys.getrecursionlimit() (CPython's
+# InternalDocs/stack_protection.md), so what parses varies with the machine -- 100000 levels
+# do with a 64 MiB stack, not with 8 MiB. A whisper-cli transcript nests 6 deep.
+_DEEPEST: Final = 1000
+
 
 def read(data: bytes, name: str) -> Reading:
     """A whisper JSON's source name, word timings or not, its cues, its words, its notes."""
+    too_deep = f"JSON nested too deeply to be a transcript: {name}"
     try:
         root = cast("object", json.loads(data, parse_float=json_number))  # exact, bounded
     except ValueError:
         refuse(f"not valid JSON: {name}")
-    except RecursionError:  # past Python's recursion limit: no transcript nests so
-        refuse(f"JSON nested too deeply to be a transcript: {name}")
+    except RecursionError:  # deeper than this machine's parser holds: deeper than _DEEPEST
+        refuse(too_deep)
+    if _deeper_than(root, _DEEPEST):
+        refuse(too_deep)
     doc = _obj(root)
     if isinstance(doc.get("transcription"), list):
         return _whisper_cli(doc, name)
@@ -32,6 +41,29 @@ def read(data: bytes, name: str) -> Reading:
         refuse(f"not {kinds}: {name}")
     cues, words = _whisperx(doc)
     return Reading("WhisperX JSON", has_words=bool(words), cues=cues, words=words)
+
+
+def _deeper_than(root: object, limit: int) -> bool:
+    """Whether ``root``'s arrays and objects nest past ``limit`` (walked, not recursed)."""
+    pending: list[tuple[object, int]] = [(root, 1)]
+    while pending:
+        value, depth = pending.pop()
+        children = _children(value)
+        if children is None:
+            continue
+        if depth > limit:
+            return True
+        pending.extend((child, depth + 1) for child in children)
+    return False
+
+
+def _children(value: object) -> list[object] | None:
+    """An array's items or an object's values; ``None`` for a value that is neither."""
+    if isinstance(value, dict):
+        return list(cast("dict[str, object]", value).values())
+    if isinstance(value, list):
+        return cast("list[object]", value)
+    return None
 
 
 def _obj(value: object) -> dict[str, object]:

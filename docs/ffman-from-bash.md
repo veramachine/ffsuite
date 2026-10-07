@@ -127,7 +127,7 @@ which git-cliff writes at each release from the commits (`packages/ffman/CHANGEL
   differently, each for one of these.
 - **A transcript Python cannot hold is refused, never a crash.** A time past a
   double's range -- a JSON integer, an LRC minute, a SubRip hour -- is no
-  time; JSON nested past Python's recursion limit is refused as such; a CSV or
+  time; JSON nested past 1000 levels is refused as such; a CSV or
   TSV field past `csv`'s 128 KiB is refused, naming the limit (no subtitle's
   text is that long; bash's gawk read it). Each was a Python traceback.
 - **Times are exact, to the millisecond.** A time is read from its decimal

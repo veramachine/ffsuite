@@ -248,7 +248,7 @@ def test_a_backslash_is_one_in_every_format(tmp_path: Path, name: str) -> None:
     assert "\na\\b\n" in srt(t.chunks, None)
 
 
-PAST_LIMITS: Final = {  # past what Python's float, int, csv and json hold: never a crash
+PAST_LIMITS: Final = {  # past what Python's float, int and csv hold, or JSON's depth: never a crash
     "a huge integer time": (
         "x.json",
         json.dumps({"segments": [{"start": 10**400, "end": 10**401, "text": "a"}]}),

@@ -6,6 +6,7 @@ before ffman's normalising (no trim, no sort but LRC's, no clamp, no cue dropped
 
 import json
 import re
+from typing import Final
 
 import pytest
 import subverter
@@ -182,19 +183,46 @@ def test_a_field_past_csvs_limit_is_refused_by_name() -> None:
 
 # --- whisper JSON: refused unless whisper-cli's or WhisperX's
 
+_NOT_A_TRANSCRIPT: Final = (
+    "not a whisper-cli (.transcription) or WhisperX (.segments) JSON transcript"
+)
+
 
 @pytest.mark.parametrize(
     ("data", "message"),
     [
         (b"{", "not valid JSON"),
-        (b"[" * 100_000, "JSON nested too deeply to be a transcript"),
-        (b"[]", "not a whisper-cli (.transcription) or WhisperX (.segments) JSON transcript"),
+        # closed: an unclosed one is invalid JSON too, which a machine whose parser holds
+        # 100000 levels reports first
+        pytest.param(
+            b"[" * 100_000 + b"]" * 100_000,
+            "JSON nested too deeply to be a transcript",
+            id="100000 deep",
+        ),
+        pytest.param(
+            b"[" * 1001 + b"]" * 1001, "JSON nested too deeply to be a transcript", id="1001 deep"
+        ),
+        pytest.param(b"[" * 1000 + b"]" * 1000, _NOT_A_TRANSCRIPT, id="1000 deep"),
+        (b"[]", _NOT_A_TRANSCRIPT),
         (b'{"transcription": [{"tokens": [{"text": 5}]}]}', "unreadable whisper-cli -ojf JSON"),
     ],
 )
 def test_a_json_not_a_transcript_is_refused(data: bytes, message: str) -> None:
     with pytest.raises(subverter.Error, match=f"^{re.escape(message)}: a\\.json$"):
         _ = subverter.read("json", data, "a.json")
+
+
+def test_json_past_the_parsers_stack_is_refused_as_too_deep(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # the machine's limit, wherever it falls: a RecursionError from json.loads itself
+    def out_of_stack(*_args: object, **_kwargs: object) -> object:
+        raise RecursionError
+
+    monkeypatch.setattr(json, "loads", out_of_stack)
+    message = "JSON nested too deeply to be a transcript: a.json"
+    with pytest.raises(subverter.Error, match=f"^{re.escape(message)}$"):
+        _ = subverter.read("json", b"[]", "a.json")
 
 
 # --- whisper-cli: offsets in ms; with -ojf, words from tokens, DTW times where they hold
