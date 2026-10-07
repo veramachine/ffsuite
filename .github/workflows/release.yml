@@ -31,6 +31,6 @@ jobs:
           uv build --package "$package" --no-sources
           # the first section, up to the second `## ` heading: the tag's own, or no release
           awk '/^## /{n++} n==1' "packages/$package/CHANGELOG.md" > notes.md
-          [[ $(head -n 1 notes.md) == "## ${GITHUB_REF_NAME##*-v} - "* ]]
+          [[ $(head -n 1 notes.md) == "## [${GITHUB_REF_NAME##*-v}]("* ]]  # its compare link
           gh release create "$GITHUB_REF_NAME" dist/* --verify-tag \
             --title "$package ${GITHUB_REF_NAME##*-v}" --notes-file notes.md

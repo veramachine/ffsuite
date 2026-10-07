@@ -2330,7 +2330,12 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       through the environment (a `$(...)` title runs nothing, measured); git-cliff's call, a
       script no workflow ran, is the `changelog` recipe the hook calls; `release.yml` clones
       shallow, its notes no history's; the PR template names `just checks`. Proven again: the
-      release flow on a clone, `just checks` (uv 0.11.21) as above.*
+      release flow on a clone, `just checks` (uv 0.11.21) as above. Against
+      rust-template (the owner's): `CODE_OF_CONDUCT.md` as its own, rendered;
+      `SECURITY.md` adapted (each package's latest tag, Python's and ffmpeg's
+      versions in a report); each changelog heading links its compare view
+      (`cliff.toml`'s `[remote.github]`, read offline), `release.yml`'s check
+      following -- measured on a clone with two tags.*
 
 - [ ] The owner's, outside any file: the GitHub repository and its settings
       (auto-merge allowed, branch protection requiring the checks, a `pypi`
