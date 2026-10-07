@@ -4,7 +4,7 @@
 # 2. Settings > Actions > General > Workflow permissions > Read and write permissions
 # 3. Settings > Actions > General > Allow GitHub Actions to create and approve pull requests
 # 4. Settings > Branches > a protection rule on main: a pull request before merging, and the
-#    status checks (Checks, Nix) required to pass
+#    checks required to pass -- Checks' and Nix's flake check jobs, not the outcome report
 name: Dependabot Auto-Merge
 
 on:

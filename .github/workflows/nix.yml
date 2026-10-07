@@ -52,10 +52,11 @@ jobs:
         uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
 
       - name: Compare with the base
-        # in the dev shell (nix/shell.nix): its uv on its Python, the runtime tools on PATH
+        # in the dev shell (nix/shell.nix): its uv on its Python, the runtime tools on PATH; the
+        # report needs the workspace's packages alone, not the dev group (measured)
         working-directory: packages/ffman
         env:
           BASE: ${{ github.event.pull_request.base.sha }}
         run: |
-          nix develop ../.. --command uv sync --locked
+          nix develop ../.. --command uv sync --locked --no-dev
           nix develop ../.. --command uv run --no-sync python -m tests.outcome compare "$BASE"

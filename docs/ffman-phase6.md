@@ -2179,18 +2179,27 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       box's); pip-audit pinned in an `audit` group (2.10.1; the lock grew by it), run
       `--isolated`. Proven, `checks.yml`'s steps as written, on uv's 3.13 and 3.14 with a
       `PATH` lacking ffmpeg and metaflac, as the runner's image (its software list): lock
-      checked, ruff, basedpyright 0 errors, vulture, pytest 1411 passed and 94 skipped -- with
-      an apt ffmpeg 6.1 on `PATH` instead, 83 errors, the fixtures holding the pin: the tests
-      taking the `ffmpeg` fixture are not all marked, and skip only for want of one. The
-      outcome job's command (uv in place of the dev shell) against `HEAD`, with ffmpeg 8.1.2:
-      427 identical. `nix develop ../..` from `packages/ffman` resolves to the repository's
-      flake; its checks evaluate on x86_64-linux and aarch64-darwin, 11 each. pip-audit over
-      the exported lock (45 packages): no known vulnerabilities, `.venv` untouched. On test
-      tags: a match prints the package, a version or a package not the tree's is refused; the
-      notes start after the package's own previous tag; `uv build --package --no-sources`
-      builds that package alone, twice byte for byte alike. actionlint 1.7.12 with ShellCheck:
-      clean. Not reachable here: a run on GitHub (after the push); `style-check-dprint.yml`
-      passes only with the third box's `dprint.json`; macOS's flake check is 6.7.10's.*
+      checked, ruff, basedpyright 0 errors, vulture, pytest 1411 passed, the same with an apt
+      ffmpeg 6.1 on `PATH` instead. The outcome job's command (uv in place of the dev shell)
+      against `HEAD`, with ffmpeg 8.1.2: 427 identical; again from an environment of the
+      workspace's packages alone (`--no-dev`), against the commit before. `nix develop ../..`
+      from `packages/ffman` resolves to the repository's flake; its checks evaluate on
+      x86_64-linux and aarch64-darwin, 11 each. pip-audit over the exported lock (45
+      packages): no known vulnerabilities, `.venv` untouched. On test tags: a match prints the
+      package, a version or a package not the tree's is refused; the notes start after the
+      package's own previous tag; `uv build --package --no-sources` builds that package alone,
+      twice byte for byte alike. actionlint 1.7.12 with ShellCheck: clean. Not reachable here:
+      a run on GitHub (after the push); `style-check-dprint.yml` passes only with the third
+      box's `dprint.json`; macOS's flake check is 6.7.10's. Reviewed (owner's request): `-m
+      "not ffmpeg"` left 94 tests needing a pin -- taking the `ffmpeg` or `metaflac` fixture
+      unmarked, they skipped only for want of a tool, and an apt ffmpeg 6.1 on `PATH` made 83
+      of them errors; both conftests now mark `ffmpeg` every test taking either fixture,
+      directly or through another (a hook, `tryfirst`, before `-m` deselects; ffmeta's and
+      ffman's held identical by `test_workspace`; the marker's text names both pins, ffmeta's
+      pyproject declaring it as the root's does) -- now 1087 deselected, 993 before; removing
+      a hook brings the errors back (76 in ffman's own run). `uv publish --trusted-publishing
+      always`: a missing publisher fails as one. The outcome job syncs `--no-dev`. Dependabot
+      moves a commit pin and its comment on the same line (its documentation).*
 - [ ] `dependabot.yml`: `uv` and `github-actions` (imi's schedule, groups,
       cooldown, labels, `chore` prefix). Issue templates (bug, feature,
       documentation, `config.yml`) and the PR template, imi's, adapted.

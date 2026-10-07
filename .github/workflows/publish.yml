@@ -33,4 +33,5 @@ jobs:
           uv build --package "$package" --no-sources
 
       - name: Publish
-        run: uv publish
+        # always: a publisher missing fails as such, not as credentials asked for
+        run: uv publish --trusted-publishing always

@@ -86,6 +86,6 @@ xfail_strict = true
 filterwarnings = ["error"]
 timeout = 600
 markers = [
-  "ffmpeg: runs ffmpeg (integration)",
+  "ffmpeg: needs a pinned tool, ffmpeg 8.1 or metaflac 1.5 (integration)",
   "slow: the combination matrix",
 ]

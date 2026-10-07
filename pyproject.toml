@@ -114,7 +114,7 @@ xfail_strict = true
 filterwarnings = ["error"]  # a warning fails the suite: a leaked pipe went unseen for long
 timeout = 600
 markers = [
-  "ffmpeg: runs ffmpeg (integration)",
+  "ffmpeg: needs a pinned tool, ffmpeg 8.1 or metaflac 1.5 (integration)",
   "slow: the combination matrix",
 ]
 

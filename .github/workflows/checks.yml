@@ -1,7 +1,7 @@
 # csan's checks.yml, adapted: the dev group (ruff, basedpyright, ty advisory, vulture, pytest) on
 # both supported Pythons, without ffmpeg -- the runner image has none (actions/runner-images'
-# Ubuntu 24.04 list), so the tests needing the pinned ffmpeg 8.1 or FLAC 1.5 skip here and run in
-# nix.yml, where Nix provides both.
+# Ubuntu 24.04 list). The tests needing the pinned ffmpeg 8.1 or FLAC 1.5 -- marked `ffmpeg`, by
+# hand or by the fixture they take (the conftests) -- are left out here and run in nix.yml.
 name: Checks
 
 on:

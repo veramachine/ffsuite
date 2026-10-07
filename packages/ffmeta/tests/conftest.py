@@ -2,6 +2,7 @@
 
 import shutil
 from pathlib import Path
+from typing import Final
 
 import pytest
 from ffmeta_support.media import CD_SECONDS, tool
@@ -10,6 +11,19 @@ from hypothesis import settings
 # Reproducible everywhere, the Nix sandbox included: the same examples each run, no database.
 settings.register_profile("ffmeta", derandomize=True, database=None)
 settings.load_profile("ffmeta")
+
+# The pinned tools' fixtures: a test taking one (ffprobe's takes ffmpeg's) is marked ``ffmpeg``
+# however it asks, so ``-m "not ffmpeg"`` leaves no test needing a pin -- CI's checks.yml, where
+# a runner's own ffmpeg would fail the pin's check rather than skip.
+_PINNED: Final = frozenset({"ffmpeg", "metaflac"})
+
+
+@pytest.hookimpl(tryfirst=True)  # before -m deselects
+def pytest_collection_modifyitems(items: list[pytest.Item]) -> None:
+    """Mark ``ffmpeg`` each test taking a pinned tool's fixture, directly or through another."""
+    for item in items:
+        if isinstance(item, pytest.Function) and _PINNED.intersection(item.fixturenames):
+            item.add_marker(pytest.mark.ffmpeg)
 
 
 @pytest.fixture(scope="session")
