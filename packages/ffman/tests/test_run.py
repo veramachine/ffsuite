@@ -214,7 +214,8 @@ def test_a_signal_stops_the_tree_and_cleans_up(
             assert gone_within(marker, 1.0) is honours_term
             assert job.wait(timeout=10) == status
             elapsed = time.monotonic() - start
-            assert elapsed <= 4.0, elapsed
+            # 3 s of polls, and room for a loaded builder (macOS CI's took 4.009 s)
+            assert elapsed <= 6.0, elapsed
             if not honours_term:
                 assert elapsed >= 2.8, elapsed
             assert marked(marker) == []  # the job is gone: anything left is a leak
@@ -226,6 +227,27 @@ def test_a_signal_stops_the_tree_and_cleans_up(
                 with contextlib.suppress(ProcessLookupError):  # gone since the listing
                     os.kill(pid, signal.SIGKILL)
             job.kill()
+
+
+def test_a_stop_survives_macos_refusing_a_group_of_zombies(monkeypatch: pytest.MonkeyPatch) -> None:
+    # macOS's killpg gives EPERM where Linux signals a zombie; here every call does. The tool
+    # signals ffman (this process) once it is surely waited on, then exits: the stop that
+    # follows polls a group that killpg refuses, and still ends in Interrupted
+    def refused(_group: int, _sig: int) -> None:
+        raise PermissionError(1, "Operation not permitted")
+
+    monkeypatch.setattr(os, "killpg", refused)
+    monkeypatch.setattr(run_module, "_POLL_SECONDS", 0.01)
+    previous = {sig: signal.getsignal(sig) for sig in SIGNALS}
+    try:
+        install_signal_handlers()
+        with Runner(dry_run=False, cores=1) as runner, pytest.raises(Interrupted) as stop:
+            _ = runner.run(["sh", "-c", "sleep 0.2; kill -TERM $PPID"])
+        assert stop.value.status == 143
+    finally:
+        for sig, handler in previous.items():
+            if handler is not None:
+                _ = signal.signal(sig, handler)
 
 
 def test_the_first_signal_resets_the_handlers() -> None:

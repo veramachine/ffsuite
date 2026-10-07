@@ -139,23 +139,21 @@ def test_sigterm_leaves_nothing(here: Path, ffmpeg: str, tmp_path: Path) -> None
         "-w",
         "630",
     ]
-    job = subprocess.Popen(  # noqa: S603 -- ffman itself
-        [*command, "--video-codec", "av1", "-y"],
-        env=env,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-    )
-    time.sleep(2)
-    job.send_signal(signal.SIGTERM)
-    status = job.wait(timeout=30)
+    log = tmp_path / "stderr"  # a file, not a pipe: ffmpeg's -stats would fill a pipe unread
+    with log.open("w") as stderr:
+        job = subprocess.Popen(  # noqa: S603 -- ffman itself
+            [*command, "--video-codec", "av1", "-y"],
+            env=env,
+            stdout=subprocess.DEVNULL,
+            stderr=stderr,
+        )
+        time.sleep(2)
+        job.send_signal(signal.SIGTERM)
+        status = job.wait(timeout=30)
     time.sleep(0.5)
     reading = marked("zqslow")
-    assert (status, reading, list(here.rglob(".ffman.*")), list(tmp_path.glob("ffman.*"))) == (
-        143,
-        [],
-        [],
-        [],
-    )
+    left = (status, reading, list(here.rglob(".ffman.*")), list(tmp_path.glob("ffman.*")))
+    assert left == (143, [], [], []), log.read_text()[-2000:]
 
 
 THREAD_OPTIONS: Final = re.compile(

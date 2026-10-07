@@ -228,14 +228,20 @@ def _stop(process: subprocess.Popen[str]) -> None:
     _ = process.wait()
 
 
+# killpg: ESRCH, the group is gone; EPERM, on macOS, members left that are all zombies (Linux
+# signals a zombie; macOS refuses it, as Mozilla's bug 1329528 found). Uncaught, that EPERM ended
+# a stopped job with "Operation not permitted", exit 1, not 128 + signum (macOS CI, 2026-10).
 def _signal_group(group: int, sig: int) -> None:
-    with contextlib.suppress(ProcessLookupError):
+    with contextlib.suppress(ProcessLookupError, PermissionError):
         os.killpg(group, sig)
 
 
 def _group_alive(group: int) -> bool:
+    """Whether the group has members, zombies counted (on macOS, the EPERM they give)."""
     try:
         os.killpg(group, 0)
     except ProcessLookupError:
         return False
+    except PermissionError:
+        return True
     return True
