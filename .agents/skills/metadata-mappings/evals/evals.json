@@ -3,20 +3,20 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "I put my album's chapters into an Opus file with ffmpeg (-i album.ffmeta -map_metadata 1 -map_chapters 1); the second chapter, at 4:17.693, now starts at 4:18.693. Why?",
-      "expected_output": "ffmpeg writes a Vorbis chapter's time with its whole seconds rounded, not truncated (vorbiscomment.c), so a start half a second or more past a second comes out a second late: 257.693 s as CHAPTER001=00:04:18.693. Write the comments from whole milliseconds by division -- ffmeta or ffman convert --metadata do. Run: ffmpeg's Opus chapter at 258.693 s; ffman convert's at 257.693 s.",
+      "prompt": "I put a talk's chapters into an Opus file with ffmpeg (-i talk.wav -i talk.ffmeta -map 0:a -map_metadata 1 -map_chapters 1 -c:a libopus). Its chapters start at 0, 0:10.25 and 1:02.75; the first two are right, but the third now starts at 1:03.75. Why, and how do I fix it?",
+      "expected_output": "ffmpeg writes a Vorbis chapter's time with its whole seconds rounded, not truncated (vorbiscomment.c): a start half a second or more past a second comes out a second late, so 62.75 s becomes CHAPTER002=00:01:03.750 while 10.25 s stays right. Write the comments from whole milliseconds by division -- ffmeta, or ffman convert --metadata talk.ffmeta. Run: ffmpeg's chapters at 0, 10.25 and 63.75 s; ffman's at 0, 10.25 and 62.75 s.",
       "files": []
     },
     {
       "id": 2,
-      "prompt": "Make a cue sheet for album.flac from this ffmetadata: album=The Album, album_artist=My Band, artist=My Band, genre=Alternative Rock, date=1991, comment=Ripped in 2026; chapters 'Opening' at 30 s (performer=Guest) and 'The Road' at 257.693 s.",
-      "expected_output": "Disc TITLE and PERFORMER from album and album_artist; REM GENRE quoted (it holds a space), REM DATE unquoted; artist and comment have no cue field (stated); FILE \"album.flac\" WAVE; track 1 INDEX 00 00:00:00 then INDEX 01 00:30:00, with PERFORMER \"Guest\"; track 2 INDEX 01 04:17:52, the nearest frame (19,326.975); the last chapter's end left to the media. Run: libcue reads track 1 at 2250 frames (30 s); metaflac's block, read by ffmpeg, gives chapters at 0 and 257.693 s.",
+      "prompt": "Turn these Vorbis comments into a cue sheet for notes.flac: ALBUM=Field Notes, ARTIST=Ana Lima, GENRE=Spoken Word, DATE=2024, and chapters Prologue at 00:00:00.000, Part \"One\" at 00:07:41.010, Part Two at 00:19:02.400.",
+      "expected_output": "Disc TITLE \"Field Notes\"; REM GENRE \"Spoken Word\" quoted (a space), REM DATE 2024 unquoted; ARTIST has no cue field (only ALBUMARTIST is the disc PERFORMER): stated lost; FILE \"notes.flac\" WAVE; tracks 01-03 AUDIO, INDEX 01 at 00:00:00, 07:41:01 (461.010 s to the nearest frame, 34,576: 3.33 ms late) and 19:02:30 (exact); track 2's title holds a quote, which no cue string can: dropped and stated. Run: libcue reads the disc's TITLE, GENRE and DATE and tracks at frames 0, 34576 and 85680; metaflac's block, read by ffmpeg, gives chapters at 0, 461.013 and 1142.4 s.",
       "files": []
     },
     {
       "id": 3,
-      "prompt": "My EAC cue sheet has REM COMMENT, SONGWRITER, CATALOG and a PERFORMER and an ISRC on track 1. Which of these survive as the Vorbis comments of the single album FLAC?",
-      "expected_output": "CATALOG as BARCODE (Picard's, a release's barcode); disc TITLE, PERFORMER, REM GENRE and REM DATE as ALBUM, ALBUMARTIST, GENRE, DATE. Lost: REM COMMENT and SONGWRITER (none maps them), and track 1's PERFORMER and ISRC -- a Vorbis chapter holds its title alone; only a file a track keeps them (cuetag.sh: ARTIST, PERFORMER, ISRC). Run: ffmeta's notes name each loss; cuetag.sh's track files hold ARTIST=Guest and ISRC, nothing from REM or CATALOG.",
+      "prompt": "My string quartet rip's cue sheet has REM DISCID 7A0B1C09, REM REPLAYGAIN_ALBUM_GAIN -4.10 dB, a disc TITLE, PERFORMER and SONGWRITER, a REM REPLAYGAIN_TRACK_GAIN on track 1 and a PERFORMER on track 2. What survives as the single FLAC's Vorbis comments, and what in an ffmetadata file instead?",
+      "expected_output": "Both: the disc PERFORMER as the album artist (ALBUMARTIST, album_artist), TITLE as the album, REPLAYGAIN_ALBUM_GAIN whole (-4.10 dB); SONGWRITER and REM DISCID lost (none maps them; DISCID is CDDB's). Vorbis also loses track 1's gain and track 2's PERFORMER -- a Vorbis chapter holds a title and a URL alone -- while ffmetadata keeps them as chapter tags (REPLAYGAIN_TRACK_GAIN, performer). Run: ffmeta's outputs and notes as stated for both targets.",
       "files": []
     }
   ]

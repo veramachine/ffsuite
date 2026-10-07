@@ -511,7 +511,19 @@ target holds it otherwise. In order:
       finding measured and fixed: `-map 0` fails into Opus on a FLAC with a cover
       (`-map 0:a`); `ffman meta` takes no media length (the last chapter's end
       noted, a cue over several files refused); a `"` lost only in a quoted cue
-      value; ffmeta not yet on PyPI; an eval's ISRC unnamed in its prompt.*
+      value; ffmeta not yet on PyPI; an eval's ISRC unnamed in its prompt.
+      Reviewed again end to end (the owner's: efficient-skill-review), to
+      convergence in four passes -- two independent, one cold run of the evals
+      from the skill alone. Found and fixed: the three evals were the skill's
+      own examples (answer keys: new instances, each measured), and an example's
+      ISRC and title the cue skill's eval keys; a Vorbis chapter holds a URL
+      too, which ffmeta maps and ffmpeg reads as the file's tag; where ffmeta
+      departs from ffmpeg (`COMMENT` with `DESCRIPTION` joined, chapter tags
+      left out); ffmeta's time bases; both ffman commands refuse a multi-file
+      cue; the real reason for `-map 0:a`; a final `\` lost into a cue; the
+      description at 1024 characters after an edit (976 now), and given its
+      negative scope. Found in ffmeta: a quoted `REM GENRE` ending in `\`
+      written, libcue then unable to read the sheet -- fixed, tested.*
 
 *6.6.3 The converters* (pure: no ffmpeg; from the skills)
 

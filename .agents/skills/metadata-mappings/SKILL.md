@@ -1,6 +1,6 @@
 ---
 name: metadata-mappings
-description: Field-by-field mappings between FFmpeg's ffmetadata, Vorbis comments and cue sheets, in every direction - album, album artist, genre, date, disc, ReplayGain, CATALOG as BARCODE, ISRC; chapters as [CHAPTER], CHAPTERxxx and CHAPTERxxxNAME, TRACK and INDEX 01; times between TIMEBASE, milliseconds and 75 frames a second; ffmpeg's renames (album_artist ALBUMARTIST, track TRACKNUMBER, disc DISCNUMBER, comment DESCRIPTION) - and what cannot cross (chapter ends, pregaps, SONGWRITER, REM COMMENT, stream tags, a track's performer in Vorbis). Use this whenever converting tags or chapters from one of the three to another - a cue sheet into chapters or a FLAC's or Opus' tags, chapters into a cue sheet, ffmpeg's ffmetadata into Vorbis comments or back; explaining a tag or a chapter renamed or lost on the way; or working on ffmeta's convert.py or fields.py - even when the request only says tags, chapters, .cue to .txt, or metadata conversion.
+description: Field-by-field mappings between FFmpeg's ffmetadata, Vorbis comments and cue sheets, every direction - album, album artist, genre, date, disc, ReplayGain, CATALOG as BARCODE, ISRC; chapters as [CHAPTER], CHAPTERxxx and CHAPTERxxxNAME, TRACK and INDEX 01; times between TIMEBASE, milliseconds and 75 frames a second; ffmpeg's renames (album_artist ALBUMARTIST, track TRACKNUMBER, disc DISCNUMBER, comment DESCRIPTION) - and what cannot cross (chapter ends, pregaps, SONGWRITER, REM COMMENT, stream tags, a track's performer in Vorbis). Use this whenever converting tags or chapters between the three - a cue sheet into chapters or a FLAC's or Opus' tags, chapters into a cue sheet, ffmpeg's ffmetadata into Vorbis comments or back; explaining a tag or a chapter renamed, moved or lost on the way; or working on ffmeta's convert.py or fields.py - even when the request only says .cue to .txt, cue to chapters, or metadata conversion. Each format's own syntax is its own skill's.
 ---
 
 # ffmetadata, Vorbis comments, cue sheets: the mappings
@@ -9,20 +9,23 @@ How each format's fields and chapters map to the others', every direction, and
 what cannot cross. The formats themselves are their skills' --
 [ffmetadata](../ffmetadata/SKILL.md), [vorbiscomment](../vorbiscomment/SKILL.md),
 [cue](../cue/SKILL.md): read by one, map by this one, write by the other.
-Everything here is read in the readers' and writers' sources and measured with
+Everything here is read in the readers' and writers' sources or measured with
 the versions ffsuite pins (FFmpeg n8.1.2, metaflac 1.5.0, vorbis-tools 1.4.3,
 cuetools 1.4.1, libcue 2.3.0; mpv 0.41.0 and Kodi 21.2 by source). The full
 tables, a row per element with its source, are in
-[references/mappings.md](references/mappings.md);
+[references/mappings.md](references/mappings.md) -- read it for a row's source or
+measurement, or an element not here;
 [scripts/measure.py](scripts/measure.py) re-measures them (`python3
 scripts/measure.py FFMPEG CUETAG VORBISCOMMENT METAFLAC CUEDUMP`, CUEDUMP the
-cue skill's `cuedump.c` built against libcue; the vorbiscomment skill beside
-this one, whose readers it imports).
+cue skill's `cuedump.c` built against libcue, ffprobe beside FFMPEG, cueprint
+beside CUETAG; the vorbiscomment skill beside this one, whose readers it
+imports).
 
-No common tool converts a cue sheet: ffmpeg reads and writes none, metaflac
-keeps its layout without text, cuetools' `cuetag.sh` tags one file a track.
-ffmpeg converts ffmetadata and Vorbis only through a media file. ffmeta does all
-six directions (below).
+No common tool converts a cue sheet to or from a file's tags and chapters:
+ffmpeg reads and writes none, metaflac keeps its layout without text, cuetools'
+`cuetag.sh` tags one file a track. ffmpeg converts ffmetadata and Vorbis only
+through a media file. ffmeta does all six directions (below); where it departs
+from ffmpeg, the bullets say so.
 
 ## The fields
 
@@ -46,29 +49,32 @@ which its tests hold this one to:
 | track | `REPLAYGAIN_TRACK_GAIN` | --                      | `REM REPLAYGAIN_TRACK_GAIN` |
 | track | `REPLAYGAIN_TRACK_PEAK` | --                      | `REM REPLAYGAIN_TRACK_PEAK` |
 
-- A Vorbis chapter holds its title alone (`CHAPTERxxxNAME`), so a track's `--`
-  fields have no place there -- unless the album is split one file a track, as
-  `cuetag.sh` does (`TITLE`, `ALBUM`, `TRACKNUMBER`, `TRACKTOTAL`,
-  `ARTIST` and `PERFORMER`, `ISRC`; nothing from `REM` or `CATALOG`).
+- A Vorbis chapter holds a title and a URL alone (the Chapter Extension's
+  `NAME`, `URL`; a cue has no URL), so a track's `--` fields have no place
+  there -- unless the album is split one file a track, as `cuetag.sh` does
+  (`TITLE`, `ALBUM`, `TRACKNUMBER`, `TRACKTOTAL`, `ARTIST` and `PERFORMER`,
+  `ISRC`; nothing from `REM` or `CATALOG`).
 - A disc's `PERFORMER` is the album artist (Kodi; mpv shows it as the file's
-  performer); `artist` alone has no disc field. A track's `PERFORMER` is mpv's
-  chapter `performer`.
+  performer); `artist` maps to none, even without an `album_artist`. A track's
+  `PERFORMER` is mpv's chapter `performer`.
 - `CATALOG` is the release's barcode (MusicBrainz Picard's `BARCODE`, not
   `CATALOGNUMBER`, the label's); back into a cue only as 13 digits.
 - `REM` values: `REM GENRE` quoted when it holds a space; `REM DATE`, `REM
   DISCNUMBER` and gains never -- Kodi reads a number only when its first
   character is a digit, a gain from a fixed column. A gain crosses whole
   (`-7.03 dB`); libcue keeps its first word.
-- Lost from a cue: `SONGWRITER` (none maps it; at most Picard's `WRITER`, not
-  `COMPOSER`), `REM COMMENT` (EAC's version), `REM DISCID` (CDDB's, not
+- Lost from a cue: `SONGWRITER` (none maps it; Picard's nearest is `WRITER`,
+  not `COMPOSER`), `REM COMMENT` (EAC's version), `REM DISCID` (CDDB's, not
   MusicBrainz'), every other `REM`, `CDTEXTFILE`, `FILE`'s name and type,
   `FLAGS`, a data track's mode. libcue's own `COMPOSER`, `ARRANGER`, `MESSAGE`
   and `GENRE` commands make mpv refuse the whole sheet.
-- Lost into a cue: every tag not in the table (`artist`, `title`, `composer`,
-  `comment`, ...), the streams' tags, a chapter's other tags; any value with a
-  line break; a `"` in a quoted value -- `TITLE`, `PERFORMER`, a `REM GENRE`
-  with a space (a `REM DATE 19"91` is written as is). A quoted string past 80
-  characters is kept, but noted.
+- Lost into a cue: every tag not in the table (`artist`, a file's `title`,
+  `composer`, `comment`, ...), the streams' tags, a chapter's other tags. A
+  field is dropped whole when its value holds a line break, or when a quoted
+  one -- `TITLE`, `PERFORMER`, a `REM GENRE` with a space -- holds `"` or ends
+  in `\` (libcue's escape); `REM DATE 19"91` is written as is. A quoted string
+  past 80 characters, CD-Text's limit, is kept and noted: ffmeta's choice, as
+  the readers in use keep more.
 
 ## ffmetadata and Vorbis: ffmpeg's renames
 
@@ -85,7 +91,8 @@ kept -- `title=T` stays lower case in Vorbis, `ARTIST` upper case in ffmetadata.
 
 - A Vorbis name repeated (`ARTIST=A`, `ARTIST=B`) is one ffmetadata key,
   joined: `ARTIST=A\;B` -- a `;` in a value and two values then read alike.
-- `COMMENT` with `DESCRIPTION`: ffmpeg keeps the first in order, drops the other.
+- `COMMENT` with `DESCRIPTION`: ffmpeg keeps the first in order, drops the other;
+  ffmeta, reading both as `comment`, joins them (noted).
 - `ENCODEDBY` and `ENCODED_BY` stay apart from `encoded_by`; ffmpeg replaces
   `encoder` with its own.
 - `[STREAM]` sections: into Ogg the global tags merge into the stream's
@@ -101,14 +108,18 @@ kept -- `title=T` stays lower case in Vorbis, `ARTIST` upper case in ffmetadata.
 
 ## Chapters
 
-|            | ffmetadata          | Vorbis                                                       | Cue                                     |
-| ---------- | ------------------- | ------------------------------------------------------------ | --------------------------------------- |
-| A chapter  | `[CHAPTER]`         | `CHAPTERxxx`, `000`-`999` by position                        | `TRACK nn`, `01`-`99`                   |
-| Its start  | `TIMEBASE`, `START` | `CHAPTERxxx=HH:MM:SS.mmm`                                    | `INDEX 01 mm:ss:ff`                     |
-| Its end    | `END`               | none: the next start, or the media's end                     | none: the next `INDEX 01`, or the media |
-| Its title  | `title`             | `CHAPTERxxxNAME`                                             | the track's `TITLE`                     |
-| Other tags | any                 | `CHAPTERxxx<KEY>`: ffmpeg reads it back as a tag of the file | the track fields above                  |
+|            | ffmetadata          | Vorbis                                   | Cue                                     |
+| ---------- | ------------------- | ---------------------------------------- | --------------------------------------- |
+| A chapter  | `[CHAPTER]`         | `CHAPTERxxx`, `000`-`999` by position    | `TRACK nn`, `01`-`99`                   |
+| Its start  | `TIMEBASE`, `START` | `CHAPTERxxx=HH:MM:SS.mmm`                | `INDEX 01 mm:ss:ff`                     |
+| Its end    | `END`               | none: the next start, or the media's end | none: the next `INDEX 01`, or the media |
+| Its title  | `title`             | `CHAPTERxxxNAME`                         | the track's `TITLE`                     |
+| Other tags | any                 | `CHAPTERxxxURL` alone (below)            | the track fields above                  |
 
+- A chapter's URL: ffmeta maps `CHAPTERxxxURL` to the chapter's `URL` and
+  back; ffmpeg reads it as the file's tag. ffmpeg writes any other chapter tag
+  as `CHAPTERxxx<key>`, the key as given (`CHAPTER000artist`), and reads it
+  back the same way; ffmeta leaves them out, noted.
 - Neither Vorbis nor a cue holds an end: a gap or an overlap between chapters
   does not cross, nor the last chapter's end -- the media's duration, which a
   writer of ffmetadata needs from the media.
@@ -129,16 +140,18 @@ kept -- `title=T` stays lower case in Vorbis, `ARTIST` upper case in ffmetadata.
 ## Times
 
 - A cue's `mm:ss:ff` counts 75 frames a second. Into ffmetadata exactly:
-  `TIMEBASE=1/75`, `START` in frames (ffmpeg keeps both).
+  `TIMEBASE=1/75`, `START` in frames (ffmpeg keeps both). ffmeta writes each
+  chapter in `TIMEBASE=1/1000` when that holds both its times exactly, else in
+  the coarsest one that does: for a cue's frames `1/3`, `1/15` or `1/75`.
 - Into Vorbis' milliseconds: `frames * 40 / 3` to the nearest -- at most 1/3 ms
   off, never a tie; back to frames exactly.
 - Milliseconds into a cue: `frames = (ms * 75 + 500) // 1000`, at most 20/3 ms
   (6.67 ms) off; then `mm = frames // 4500`, `ss = frames // 75 % 60`,
   `ff = frames % 75`. Only 7.5% of milliseconds survive ms to frames to ms.
 - ffmpeg writes a Vorbis chapter's time (into Opus) with its whole seconds
-  **rounded** (`vorbiscomment.c`): a start half a second or more past a second
-  comes out a second late -- 113/75 s (1.507 s) as `00:00:02.507`, 257.693 s as
-  `00:04:18.693`. Write them from whole milliseconds by division (the
+  **rounded** (`vorbiscomment.c`): a start whose fraction of a second is a half
+  or more comes out a second late -- 113/75 s (1.507 s) as `00:00:02.507`,
+  257.693 s as `00:04:18.693`. Write them from whole milliseconds by division (the
   vorbiscomment skill), as ffmeta and ffman do; keep times as fractions until
   that last step.
 
@@ -158,19 +171,19 @@ print(written.text, *converted.notes, *written.notes, sep="\n")
 ```
 
 A cue over several files needs `durations=` (each file's length in seconds, but
-the last's). ffman's commands convert by ffmeta, each note printed; `ffman meta`
-knows no media length, so it refuses a cue over several files and ends the last
-chapter where it starts (noted); `convert --metadata` ends it with the media:
+the last's). ffman's commands convert by ffmeta, each note printed, and both
+refuse a cue over several files; `ffman meta` knows no media length, so it ends
+the last chapter where it starts (noted), `convert --metadata` with the media:
 
 ```sh
 ffman meta -i album.cue -o album.ffmeta                  # or -o album.txt -p vorbiscomment
 ffman meta -i album.ffmeta --file album.flac -o album.cue
-ffman convert -i album.flac --metadata album.cue -o album.opus --audio-codec opus
+ffman convert -i album.flac --metadata album.cue -o album.opus --audio-codec opus  # .ffmeta, .txt too
 ```
 
 ffmpeg alone, between ffmetadata and Vorbis, through media -- the last
-command's chapters a second late past half a second (Times); `-map 0:a`, since
-a FLAC's cover is a picture stream that Opus cannot hold:
+command's chapters off by ffmpeg's rounded second (Times); `-map 0:a`, as
+`-map 0` fails on a FLAC's cover (a picture stream, no encoder for Opus):
 
 ```sh
 ffmpeg -i in.flac -f ffmetadata in.ffmeta                         # FLAC's comments
@@ -193,10 +206,10 @@ FILE "album.flac" WAVE
   TRACK 01 AUDIO
     TITLE "Opening"
     PERFORMER "Guest"
-    ISRC GBAYE7900001
+    ISRC DEA620500123
     INDEX 01 00:00:00
   TRACK 02 AUDIO
-    TITLE "The Road"
+    TITLE "Crossing"
     INDEX 00 04:15:00
     INDEX 01 04:17:52
 ```
@@ -216,12 +229,12 @@ START=0
 END=19327
 title=Opening
 performer=Guest
-ISRC=GBAYE7900001
+ISRC=DEA620500123
 [CHAPTER]
 TIMEBASE=1/75
 START=19327
 END=45000
-title=The Road
+title=Crossing
 ```
 
 As Vorbis comments:
@@ -235,7 +248,7 @@ BARCODE=0123456789012
 CHAPTER000=00:00:00.000
 CHAPTER000NAME=Opening
 CHAPTER001=00:04:17.693
-CHAPTER001NAME=The Road
+CHAPTER001NAME=Crossing
 ```
 
 Lost into both: `REM COMMENT` and track 2's pregap (`INDEX 00 04:15:00`); into
@@ -262,7 +275,7 @@ performer=Guest
 TIMEBASE=1/1000
 START=257693
 END=600000
-title=The Road
+title=Crossing
 ```
 
 As a cue sheet, its media `album.flac`:
@@ -279,7 +292,7 @@ FILE "album.flac" WAVE
     INDEX 00 00:00:00
     INDEX 01 00:30:00
   TRACK 02 AUDIO
-    TITLE "The Road"
+    TITLE "Crossing"
     INDEX 01 04:17:52
 ```
 
@@ -289,8 +302,9 @@ Lost: `artist` and `comment` (no cue field) and the last chapter's end; track
 ## Sources
 
 FFmpeg n8.1.2 (`vorbiscomment.c`, `oggparsevorbis.c`, `oggenc.c`, `flacenc.c`,
-`metadata.c`, `fftools/ffmpeg_mux_init.c`); mpv 0.41.0 (`demux/demux_cue.c`,
-`demux/demux.c`, `misc/charset_conv.c`); Kodi 21.2 (`xbmc/CueDocument.cpp`);
+`metadata.c`, `fftools/ffmpeg_mux_init.c`); mpv 0.41.0 (`demux/cue.c`,
+`demux/demux_cue.c`, `demux/demux.c`, `misc/charset_conv.c`); Kodi 21.2
+(`xbmc/CueDocument.cpp`);
 cuetools 1.4.1 (`cuetag.sh`, `cueprint.c`); libcue 2.3.0; MusicBrainz Picard's
 tag definitions (`picard-docs`, `variables/tags_*.rst`); the three formats'
 skills. Measurements: `scripts/measure.py`, parts A-H of
