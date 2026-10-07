@@ -50,6 +50,7 @@ that ffman's behaviour is its contract.
 just checks   # the lock, ruff, types, dead code, the suite and the matrix, dprint, cog, pip-audit
 just nix      # the flake's checks, as nix.yml
 just format   # ruff and dprint, in place
+just build    # each package's sdist and wheel, into dist/ (the root itself is no package)
 ```
 
 `just` alone lists every recipe.

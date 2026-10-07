@@ -108,6 +108,11 @@ nix:
     nix flake check --no-build --all-systems
     nix flake check
 
+[doc("Every package's sdist and wheel into dist/, as publish.yml builds them (--no-sources)")]
+[group("Misc")]
+build:
+    uv build --all-packages --no-sources
+
 [doc("Release a package from main: just release ffmeta minor (major, minor or patch)")]
 [group("Misc")]
 release package semver:
