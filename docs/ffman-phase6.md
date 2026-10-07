@@ -2201,9 +2201,35 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       for a host's own tools. `uv publish --trusted-publishing always`: a missing publisher
       fails as one. The outcome job syncs `--no-dev`. Dependabot moves a commit pin and its
       comment on the same line (its documentation).*
-- [ ] `dependabot.yml`: `uv` and `github-actions` (imi's schedule, groups,
+- [x] `dependabot.yml`: `uv` and `github-actions` (imi's schedule, groups,
       cooldown, labels, `chore` prefix). Issue templates (bug, feature,
       documentation, `config.yml`) and the PR template, imi's, adapted.
+      *Done, `github-actions` alone (the owner asked whether uv belongs): every pin in the
+      dependency groups is the pinned nixpkgs' version (all thirteen evaluated equal;
+      pip-audit moved to nixpkgs' 2.10.0 to join them), so uv's verdict is Nix's -- a
+      Dependabot bump would break that, and `dependabot-automerge.yml` would merge it. They
+      move at a nixpkgs bump instead (`docs/upgrading.md`, a new 22), held there by a new
+      check, `pins` (`nix/checks.nix`: each pin against `python3Packages`, or nixpkgs'
+      application -- basedpyright, ruff, ty, pip-audit; a spec not `name==version` refused at
+      evaluation): empty now on x86_64-linux and aarch64-darwin; three pins moved, three
+      named; its script failing on any, passing on none. nixos-config re-exports it not (its
+      filter: the system's Python and `lint`, evaluated), so its channel never fails on
+      ffsuite's dev pins. `security.yml` still audits them daily. imi's schedule, group (minor
+      and patch together, which the auto-merge takes -- fetch-metadata gives a group its
+      highest update type -- a major alone), labels (created if missing), `chore(deps)`
+      commits (conventional, scoped) and cooldown (`default-days` alone: GitHub Actions takes
+      no semver keys). Templates from imi's, their fields ffsuite's: the package and version,
+      the install, ffmpeg's version, `--dry-run`'s commands, ffprobe's view of the input; a
+      feature against the spec; the pull request's checks by AGENTS.md's -- its contract
+      (CHANGELOG, a failing test, a decision) and the outcome report. `dependabot.yml` and
+      `config.yml` valid by SchemaStore's schemas (a wrong value refused); the three
+      templates' front matter parsed. Asked too: whether CI could take apt's ffmpeg -- no: the
+      tests hold ffmpeg 8.1 and FLAC 1.5, and Ubuntu has 6.1.1 and 1.4.3 (24.04,
+      `ubuntu-latest`), 8.0.1 and 1.5.0 (26.04) (packages.ubuntu.com) -- nor its build
+      (nixpkgs' `ffmpeg-full` is what the suite measures); nix.yml runs them on the pin. Found
+      on the way: AGENTS.md's markers rule still said `ffmpeg` runs ffmpeg (the last box's
+      hook) -- now the pinned tool, by hand or by fixture; and `package-tag.sh` joins `lint`'s
+      shellcheck.*
 - [ ] `CONTRIBUTING.md` imi's, its tools ffman's (uv, just, Nix); `cog.toml`
       imi's with `[packages]` for the three (their own tags); `dprint.json`
       imi's, excluding `docs/ffman-python.md` (a finished record it cannot
@@ -2214,7 +2240,8 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
 
 - [ ] The owner's, outside any file: the GitHub repository and its settings
       (auto-merge allowed, branch protection requiring the checks, a `pypi`
-      environment); on PyPI, a pending Trusted Publisher per project
+      environment, private vulnerability reporting -- `config.yml`'s link); on PyPI, a pending
+      Trusted Publisher per project
       (`ffman`, `ffmeta`, `subverter`: repository, workflow, environment).
 
 *6.7.10 Proven*

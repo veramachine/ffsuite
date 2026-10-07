@@ -3,9 +3,9 @@
 # group, and the tools' configuration for all three.
 
 [dependency-groups]
-# exactly the pinned nixpkgs' versions (evaluated): CI's verdict and Nix's one -- with floors,
-# the lock took newer ones, and ruff 0.16 (its ALL grown) and numpy 2.5's stubs disagreed with
-# them on the same code (measured)
+# exactly the pinned nixpkgs' versions, as every pin here (nix/checks.nix's `pins` holds them):
+# CI's verdict and Nix's one -- with floors, the lock took newer ones, and ruff 0.16 (its ALL
+# grown) and numpy 2.5's stubs disagreed with them on the same code (measured)
 dev = [
     "basedpyright==1.39.3",
     "coverage==7.14.1",  # pytest-cov's, floating otherwise: the 100% gate is its verdict
@@ -20,9 +20,9 @@ dev = [
     "ty==0.0.38",
     "vulture==2.14",
 ]
-# security.yml's: pip-audit over the lock, exported (`uv export`); not the dev group's, so not in
+# security.yml's: pip-audit over the lock, exported (`uv export`); not the dev group, so not in
 # `uv sync`'s default environment
-audit = ["pip-audit==2.10.1"]
+audit = ["pip-audit==2.10.0"]
 
 [tool.uv.workspace]
 members = ["packages/*"]

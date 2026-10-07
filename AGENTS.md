@@ -28,7 +28,7 @@ with their rules; ffmeta's tests read them as oracles.
 | `packages/ffman/tests/support/`                                | ffman's shared measures (numpy), media helpers, Hypothesis strategies                                                                                                                                                                                                                                                                                                                                                                                                         |
 | `packages/*/tests/`                                            | each library's own tests, no package (`--import-mode=importlib`): ffmeta's with `ffmeta_support` (strategies, examples, its oracles' tools) and the pinned-tool fixtures; subverter's; `test_imports.py` in each: itself and the standard library alone. One run from the root takes all three trees; each sdist runs its own                                                                                                                                                 |
 | `flake.nix`, `nix/`                                            | the flake (Linux, Apple silicon): the packages (`packages.nix`: the runtime, the wrapper), the image (`image.nix`, Linux's: FDK's ffmpeg, never published), the checks (`checks.nix`; `installed.sh`, the installed binary's), the dev shell (`shell.nix`)                                                                                                                                                                                                                    |
-| `.github/`                                                     | the workflows, each from its source (csan's, imi's), and `package-tag.sh`: a package's tag read as its package, release's and publish's                                                                                                                                                                                                                                                                                                                                       |
+| `.github/`                                                     | the workflows, each from its source (csan's, imi's); `package-tag.sh`, a package's tag read as its package (release's and publish's); Dependabot (GitHub Actions alone); the issue and pull request templates                                                                                                                                                                                                                                                                 |
 
 ## The checks
 
@@ -56,8 +56,9 @@ fixture). `nix fmt` formats the Nix files.
 `nix flake check` runs the same, each on Python 3.13 and 3.14 (pytest against the installed
 packages): `tests-*`, `matrix-*`, `types-*`, `vulture-*`, and `installed-*` -- the built binary
 through its wrapper alone (`nix/installed.sh`), which nothing else reaches: the suite calls
-`main()` in-process; `lint` once (ruff, nixfmt, shellcheck: no interpreter). At a nixpkgs bump,
-the tools' behaviour ffman holds to, re-checked: [`docs/upgrading.md`](docs/upgrading.md).
+`main()` in-process; `lint` once (ruff, nixfmt, shellcheck: no interpreter); `pins`, every pin
+in the dependency groups this nixpkgs' version -- Dependabot moves none of them. At a nixpkgs
+bump, the tools' behaviour ffman holds to, re-checked: [`docs/upgrading.md`](docs/upgrading.md).
 
 GitHub runs them too (`.github/workflows/`): `checks.yml`, the dev group's tools on 3.13 and 3.14
 without ffmpeg (`-m "not ffmpeg and not slow"`; ty advisory) and `uv lock --check`; `nix.yml`,
@@ -124,5 +125,6 @@ conditional expression) is invisible to coverage: find its cases by their output
 - **Tests run in the Nix sandbox**: no network, no writable `HOME`, no
   `/usr/bin/env` -- a script a test writes begins `#!/bin/sh`, or is bypassed
   silently.
-- **Markers**: `ffmpeg` runs ffmpeg; `slow`, the combination matrix (its own
+- **Markers**: `ffmpeg`, a pinned tool needed (ffmpeg, metaflac) -- by hand, or by the fixture a
+  test takes (the conftests); `slow`, the combination matrix (its own
   check). A marked test's parameter ids are the bash checks they port.

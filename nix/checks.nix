@@ -1,6 +1,7 @@
 # The flake's checks. On each Python ffman supports: the tests (pytest from the root over its
 # three trees, against the installed packages), the matrix, the installed binary
-# (nix/installed.sh), types and dead code; once, interpreter-free: ruff, nixfmt, shellcheck.
+# (nix/installed.sh), types and dead code; once, interpreter-free: ruff, nixfmt, shellcheck, and
+# the dependency groups' pins held to this nixpkgs.
 { pkgs }:
 let
   inherit (pkgs) lib;
@@ -8,7 +9,8 @@ let
   # What the Python checks read: the workspace's configuration, its three packages -- their
   # trees and the sources they read themselves (test_architecture, test_imports, test_outcome),
   # their files (test_workspace, against the root's licences) -- and the skills (test_skills).
-  # Lint reads the Nix files too; the Python checks do not, so an edit here reruns lint, not them.
+  # Lint reads the Nix files and the workflows' script too; the Python checks do not, so an edit
+  # there reruns lint, not them.
   pythonFiles = [
     ../pyproject.toml
     ../LICENSE-MIT
@@ -28,6 +30,7 @@ let
     ++ [
       ../flake.nix
       ../nix
+      ../.github/package-tag.sh
     ]
   );
 
@@ -133,7 +136,49 @@ onPython "py313" pkgs.python313Packages
         ruff check --no-cache .
         ruff format --check --no-cache .
         nixfmt --check flake.nix nix/*.nix
-        shellcheck nix/*.sh
+        shellcheck nix/*.sh .github/package-tag.sh
+        touch $out
+      '';
+
+  # Every pin in pyproject.toml's dependency groups is this nixpkgs' version, so uv's verdict is
+  # Nix's; no Dependabot moves them (.github/dependabot.yml): a nixpkgs bump that leaves one
+  # behind fails here (docs/upgrading.md). Each from python3Packages, but nixpkgs' applications.
+  pins =
+    let
+      applications = {
+        inherit (pkgs)
+          basedpyright
+          ruff
+          ty
+          pip-audit
+          ;
+      };
+      nixpkgsVersion = name: (applications.${name} or pkgs.python3Packages.${name}).version;
+      pin =
+        spec:
+        let
+          parts = lib.splitString "==" spec;
+        in
+        lib.throwIfNot (lib.length parts == 2) "pyproject.toml: ${spec} is no name==version" {
+          name = lib.head parts;
+          version = lib.last parts;
+        };
+      groups = (lib.importTOML ../pyproject.toml).dependency-groups;
+      stale = lib.filter (p: nixpkgsVersion p.name != p.version) (
+        map pin (lib.concatLists (lib.attrValues groups))
+      );
+    in
+    pkgs.runCommand "pins"
+      {
+        stale = lib.concatMapStringsSep "\n" (
+          p: "${p.name}: pinned ${p.version}, nixpkgs ${nixpkgsVersion p.name}"
+        ) stale;
+      }
+      ''
+        if [ -n "$stale" ]; then
+          printf '%s\n' "$stale" >&2
+          exit 1
+        fi
         touch $out
       '';
 }
