@@ -215,7 +215,7 @@ chapters -- so ffmpeg's `-metadata` can carry them where its muxer writes none.
 A whole cue sheet kept as a `CUESHEET` comment (`--set-tag-from-file`) is
 text only to ffmpeg; mpv reads it as chapters (6.6.1, cue: source).
 What crosses between the three, and what does not:
-[`ffman-mappings.md`](ffman-mappings.md). Pictures it imports are covers to ffmpeg.
+the [`metadata-mappings`](../.agents/skills/metadata-mappings/SKILL.md) skill. Pictures it imports are covers to ffmpeg.
 
 ## 3. Target architecture
 
@@ -453,8 +453,9 @@ target holds it otherwise. In order:
       the next index or the duration, `PERFORMER`/`TITLE`/`SONGWRITER` and
       their keys, `REM` and the rest, 1/75 s rounding). A table, each row
       sourced; what cannot cross stated, so a conversion notes it. *Done:
-      [`ffman-mappings.md`](ffman-mappings.md) (two tables, each row sourced, its
-      loss stated) and [`ffman-mappings.py`](ffman-mappings.py) (parts A-E, run;
+      [`ffman-mappings.md`](../.agents/skills/metadata-mappings/references/mappings.md)
+      (two tables, each row sourced, its loss stated) and
+      [`ffman-mappings.py`](../.agents/skills/metadata-mappings/scripts/measure.py) (parts A-E, run;
       the vorbiscomment skill's readers imported -- its script now takes its
       tools in `main()`, output unchanged). Sources: FFmpeg's converters both
       ways, mpv's and Kodi's cue mappings (source), cuetools' `cuetag.sh` (built,
@@ -484,13 +485,33 @@ target holds it otherwise. In order:
       hold spaces" was wrong for numbers and gains (`-7.03 dB`) -- corrected
       there and in its record, the skill re-checked and re-packaged; a cue-born
       first chapter after 0 comes back at 0 from FLAC's block (ffmpeg's `INDEX
-      00` rule).*
+      00` rule). Both since moved into the `metadata-mappings` skill (6.6.2).*
 
 *6.6.2 Skills* (§5; validated, packaged, presented -- before any code)
 
 - [x] `ffmetadata`: the specification, every key and value, examples, sources. *Done: `.agents/skills/ffmetadata/` -- `SKILL.md` (218 lines: the grammar and ffmpeg's reading of every edge, the rules for a writer whose files read back exactly, the 21 keys with meanings and values, chapters, streams, what each container keeps, examples, sources), `references/format.md`, `scripts/measure.py` (which reads and checks the skill's own example). `quick_validate.py`: valid; packaged (`ffmetadata.skill`: those three files). Three test prompts (`evals/evals.json`, not packaged) answered by the skill and run: an audiobook's file into `.m4b` (tags, three chapters exact, an escaped `;`), a custom tag kept into MP4 by `use_metadata_tags`, an Ogg's tags exported by `-map_metadata 0:s:0`.*
 - [x] `vorbiscomment`: the same, its text form as decided. *Done: `.agents/skills/vorbiscomment/` -- `SKILL.md` (203 lines: the format by its specifications, names and values, the chapter extension with the rules to write it exactly and ffmpeg's two faults -- its seconds rounded, its order not kept --, what ffmpeg does with comments, the two tools' text forms and ffman's decided grammar, examples, sources), `references/format.md`, `scripts/measure.py` (its part F checks the skill from its own text: the example file read as described and equal through `vorbiscomment -e`, the metaflac and ffmpeg chapter commands). `quick_validate.py`: valid; packaged (three files, each identical to the committed one). Three test prompts (`evals/evals.json`) answered by the skill and run: FLAC chapter titles lost to ffmpeg's order (metaflac keeps it), multi-line lyrics into `.ogg`, a chapter at 1:30.5 into `.opus` (ffmpeg's own: 91.5 s; the comments: 90.5).*
 - [x] `cue`: the same. *Done: `.agents/skills/cue/` -- `SKILL.md` (158 lines: the format with every command, practice, how the four readers disagree, FLAC's block and the `CUESHEET` tag, rules to write a sheet every reader accepts -- times by integer arithmetic to the nearest frame, at most 6.67 ms off -- and to read one correctly, examples, sources), `references/format.md`, `scripts/measure.py` (its last part checks the skill from its own text: the example through libcue, metaflac and ffmpeg -- chapters at 0, 255 and 542.987 s --, the three commands as written, the `CUESHEET` tag byte-equal, the time rule over every millisecond to an hour), `scripts/cuedump.c`. `quick_validate.py`: valid; packaged (four files, each identical to the committed one). Three test prompts (`evals/evals.json`) run: a FLAC's block lost through ffmpeg and carried by metaflac; a podcast's sheet with half-frame times (12:30.5 -> `12:30:38`); a chapter titled with its ISRC.*
+- [x] `metadata-mappings` (the owner's, at 6.7.9): the mappings, a skill. *Done:
+      `.agents/skills/metadata-mappings/` -- `SKILL.md` (the fields' table,
+      ffmpeg's four renames, chapters, times, the losses each way, converting by
+      ffmeta, ffman and ffmpeg, two examples, sources); `references/mappings.md`
+      and `scripts/measure.py`, 6.6.1's record and script moved (`git mv`), its
+      citations repointed. The script imported the vorbiscomment readers from no
+      file (`parents[2]`, measured) -- fixed, its eight parts re-run and matching
+      the record (ffmpeg 8.1.2, metaflac 1.5.0; vorbis-tools 1.4.3, cuetools
+      1.4.1, libcue 2.3.0 built from their tags). `test_skills` holds the tables
+      to `fields.py` and the examples to ffmeta's conversions, each note its loss.
+      `quick_validate.py`: valid; packaged. Three test prompts
+      (`evals/evals.json`) run: ffmpeg's Opus chapter a second late (258.693 s;
+      ffman's 257.693), an ffmetadata into a cue (libcue's track 1 at 30 s, FLAC's
+      block at 0), an EAC sheet's fields into Vorbis. Found: ffmpeg's rounded
+      second (the vorbiscomment skill's) reaches `-map_chapters` into Opus, stated
+      where the skill gives that command. Reviewed (an independent pass), each
+      finding measured and fixed: `-map 0` fails into Opus on a FLAC with a cover
+      (`-map 0:a`); `ffman meta` takes no media length (the last chapter's end
+      noted, a cue over several files refused); a `"` lost only in a quoted cue
+      value; ffmeta not yet on PyPI; an eval's ISRC unnamed in its prompt.*
 
 *6.6.3 The converters* (pure: no ffmpeg; from the skills)
 
@@ -2366,7 +2387,7 @@ words, integer ms) and writes SRT (`subs/srt.py`) and its burn's styled ASS.
       `words`, WebVTT's inline `<hh:mm:ss.ttt>`, ASS's `\k`); a chunk's words
       from none (impossible: noted), chunks from words (by segment); what a
       by-word output is in each (a cue a word, or timed within the chunk).
-- [ ] The mappings, every direction (a record as `ffman-mappings.md`): what
+- [ ] The mappings, every direction (a record as `metadata-mappings`'): what
       crosses, what is lost, ffmpeg's or ffman's -- measured, each row sourced.
 
 *6.8.2 Skills* (validated, packaged, presented -- before any code)

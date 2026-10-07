@@ -2,7 +2,7 @@
 
 Pure: text in, text out -- no ffmpeg, no file. The formats are ffman's skills'
 (``.agents/skills/ffmetadata``, ``vorbiscomment``, ``cue``); what crosses between them is
-``docs/ffman-mappings.md`` -- both in ffman's repository.
+``metadata-mappings``'s -- all in ffman's repository.
 """
 
 from ffmeta._errors import Error

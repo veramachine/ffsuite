@@ -1,10 +1,10 @@
 """The mappings between ffmetadata, Vorbis comments and cue sheets, measured.
 
-Usage: python3 ffman-mappings.py FFMPEG CUETAG VORBISCOMMENT METAFLAC CUEDUMP  (ffprobe beside
-ffmpeg; CUETAG is cuetools' cuetag.sh, its cueprint beside it; CUEDUMP the cue skill's cuedump.c,
-built against libcue). Prints what it found; ffman-mappings.md's measured rows are
-this output (ffmpeg n8.1.2, cuetools 1.4.1). Comments are read as bytes, in order, by the
-vorbiscomment skill's readers.
+Usage: python3 measure.py FFMPEG CUETAG VORBISCOMMENT METAFLAC CUEDUMP  (ffprobe beside ffmpeg;
+CUETAG is cuetools' cuetag.sh, its cueprint beside it; CUEDUMP the cue skill's cuedump.c, built
+against libcue). Prints what it found; references/mappings.md's measured parts (A-H) are this
+output (ffmpeg n8.1.2, cuetools 1.4.1, metaflac 1.5.0, vorbis-tools 1.4.3, libcue 2.3.0).
+Comments are read as bytes, in order, by the vorbiscomment skill's readers, beside this skill.
 """
 
 import base64
@@ -19,9 +19,7 @@ from pathlib import Path
 FFMPEG, CUETAG, VORBISCOMMENT, METAFLAC, CUEDUMP = sys.argv[1:6]
 FFPROBE = str(Path(FFMPEG).with_name("ffprobe"))
 
-_READERS = (
-    Path(__file__).resolve().parents[2] / "skills/vorbiscomment/scripts/measure.py"
-)
+_READERS = Path(__file__).resolve().parents[2] / "vorbiscomment/scripts/measure.py"
 _spec = importlib.util.spec_from_file_location("vorbiscomment_measure", _READERS)
 vc = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(vc)
@@ -394,8 +392,8 @@ def to_cue(
     tags: dict[str, str], chapters: list[tuple[int, int, str, str]]
 ) -> tuple[str, list[str]]:
     """ffmetadata's or Vorbis' tags and chapters (start ms, end ms, title, performer) into a cue
-    sheet, by ffman-mappings.md's rows and the cue skill's writing rules only; returns the sheet
-    and its losses."""
+    sheet, by references/mappings.md's rows and the cue skill's writing rules only; returns the
+    sheet and its losses."""
     notes: list[str] = []
 
     def quoted(value: str, what: str) -> str | None:

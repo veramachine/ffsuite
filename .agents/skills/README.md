@@ -14,5 +14,6 @@ it reads and writes lives here, not in nixos-config (the owner's decision).
   [`ffman-phase6.md`](../../docs/ffman-phase6.md) §4.
 - **Oracles**: `cue`, `ffmetadata` and `vorbiscomment` are ffmeta's tests'
   references too -- its tests (`packages/ffmeta/tests/`) hold the code to each
-  `SKILL.md`'s own text, and `test_skills.py` its examples, word for word: a
-  change to a skill is a change to a test.
+  `SKILL.md`'s own text, and `test_skills.py` its examples, word for word;
+  `metadata-mappings`' tables are `fields.py`'s and its examples ffmeta's
+  conversions (`test_skills.py`): a change to a skill is a change to a test.

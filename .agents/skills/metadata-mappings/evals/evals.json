@@ -1,0 +1,23 @@
+{
+  "skill_name": "metadata-mappings",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I put my album's chapters into an Opus file with ffmpeg (-i album.ffmeta -map_metadata 1 -map_chapters 1); the second chapter, at 4:17.693, now starts at 4:18.693. Why?",
+      "expected_output": "ffmpeg writes a Vorbis chapter's time with its whole seconds rounded, not truncated (vorbiscomment.c), so a start half a second or more past a second comes out a second late: 257.693 s as CHAPTER001=00:04:18.693. Write the comments from whole milliseconds by division -- ffmeta or ffman convert --metadata do. Run: ffmpeg's Opus chapter at 258.693 s; ffman convert's at 257.693 s.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Make a cue sheet for album.flac from this ffmetadata: album=The Album, album_artist=My Band, artist=My Band, genre=Alternative Rock, date=1991, comment=Ripped in 2026; chapters 'Opening' at 30 s (performer=Guest) and 'The Road' at 257.693 s.",
+      "expected_output": "Disc TITLE and PERFORMER from album and album_artist; REM GENRE quoted (it holds a space), REM DATE unquoted; artist and comment have no cue field (stated); FILE \"album.flac\" WAVE; track 1 INDEX 00 00:00:00 then INDEX 01 00:30:00, with PERFORMER \"Guest\"; track 2 INDEX 01 04:17:52, the nearest frame (19,326.975); the last chapter's end left to the media. Run: libcue reads track 1 at 2250 frames (30 s); metaflac's block, read by ffmpeg, gives chapters at 0 and 257.693 s.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "My EAC cue sheet has REM COMMENT, SONGWRITER, CATALOG and a PERFORMER and an ISRC on track 1. Which of these survive as the Vorbis comments of the single album FLAC?",
+      "expected_output": "CATALOG as BARCODE (Picard's, a release's barcode); disc TITLE, PERFORMER, REM GENRE and REM DATE as ALBUM, ALBUMARTIST, GENRE, DATE. Lost: REM COMMENT and SONGWRITER (none maps them), and track 1's PERFORMER and ISRC -- a Vorbis chapter holds its title alone; only a file a track keeps them (cuetag.sh: ARTIST, PERFORMER, ISRC). Run: ffmeta's notes name each loss; cuetag.sh's track files hold ARTIST=Guest and ISRC, nothing from REM or CATALOG.",
+      "files": []
+    }
+  ]
+}

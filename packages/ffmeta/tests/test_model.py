@@ -202,7 +202,7 @@ def test_nearest_rounds_a_half_up() -> None:
     assert nearest(Fraction(1, 150), FRAMES) == 1  # half a frame
     assert nearest(Fraction(1, 151), FRAMES) == 0
     assert nearest(Fraction(1, 2000), MILLISECONDS) == 1
-    assert nearest(Fraction(257693, 1000), FRAMES) == 19327  # ffman-mappings.md, H
+    assert nearest(Fraction(257693, 1000), FRAMES) == 19327  # metadata-mappings' record, H
     assert nearest(Fraction(750500, 1000), FRAMES) == 56288  # 56287.5 frames: up
 
 
@@ -224,7 +224,7 @@ def test_nearest_is_half_a_unit_off_at_most(seconds: Fraction, per_second: int) 
 
 
 def test_a_cues_frames_cross_milliseconds_and_back_every_one_to_an_hour() -> None:
-    # ffman-mappings.md, D: a frame to the nearest millisecond (never a tie), and back
+    # metadata-mappings' record, D: a frame to the nearest millisecond (never a tie), and back
     for frames in range(FRAMES * 3600 + 1):
         ms = nearest(exact(frames, FRAMES), MILLISECONDS)
         assert nearest(exact(ms, MILLISECONDS), FRAMES) == frames

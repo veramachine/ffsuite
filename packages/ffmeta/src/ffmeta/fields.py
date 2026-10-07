@@ -1,6 +1,6 @@
 """The three formats' words for one field: ffmetadata's key, Vorbis' name, a cue's command.
 
-One table, the mappings' (``docs/ffman-mappings.md``), which the converter maps by and the
+One table, the mappings' (the ``metadata-mappings`` skill), which the converter maps by and the
 editor (``edit.py``) resolves a key with -- so the two cannot drift.
 """
 

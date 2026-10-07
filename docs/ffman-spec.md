@@ -264,7 +264,7 @@ note: `attachments are not carried into .EXT (another container family)`
 
 `.ffmeta`, `.txt` and `.cue` are metadata files: ffmetadata, Vorbis comments in
 ffman's text form, cue sheets -- the formats are the skills' (`.agents/skills`),
-what crosses between them `ffman-mappings.md` (`packages/ffmeta/src/ffmeta`).
+what crosses between them `metadata-mappings`' (`packages/ffmeta/src/ffmeta`).
 
 | Input, output      | The job                                                                                                                                                                                                                                                                                       |
 | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

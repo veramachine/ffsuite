@@ -1,4 +1,4 @@
-"""Conversions between the three formats' words, through the model (``docs/ffman-mappings.md``).
+"""Conversions between the three formats' words, through the model (``metadata-mappings``).
 
 A reader gives a model in its format's words -- names as written; a conversion renames and
 reshapes it into another's, a row of the mappings an entry of the tables here, each loss noted.

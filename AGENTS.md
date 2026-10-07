@@ -7,8 +7,9 @@ ffman, the command line, and its libraries ffmeta and subverter. Read ffman's
 line's contract, and [`docs/decisions.md`](docs/decisions.md) for
 why each behaviour is what it is -- each row names the module it lives in.
 The agent skills for the formats ffman reads and writes -- cue sheets,
-ffmetadata, Vorbis comments -- are in [`.agents/skills/`](.agents/skills/README.md),
-with their rules; ffmeta's tests read them as oracles.
+ffmetadata, Vorbis comments -- and the mappings between them are in
+[`.agents/skills/`](.agents/skills/README.md), with their rules; ffmeta's tests
+read them as oracles.
 
 ## Layout
 

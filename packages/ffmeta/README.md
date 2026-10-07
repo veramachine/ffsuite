@@ -15,7 +15,7 @@ dropped in silence.
 | Cue sheet      | the CDRWIN format: an album's tracks, their times and fields         |
 
 What crosses between them, field by field and with its reasons, is
-[ffman's mappings](https://github.com/veramachine/ffsuite/blob/main/docs/ffman-mappings.md).
+[ffsuite's mappings skill](https://github.com/veramachine/ffsuite/blob/main/.agents/skills/metadata-mappings/SKILL.md).
 
 ## Installing
 

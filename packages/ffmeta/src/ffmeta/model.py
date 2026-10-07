@@ -2,7 +2,7 @@
 
 - **Tags** are kept as written -- order, repeats, a name's case -- so a format reads back as it
   was; what a name means (``DESCRIPTION`` is ffmpeg's ``comment``) is a conversion's to decide
-  (``docs/ffman-mappings.md``).
+  (the ``metadata-mappings`` skill).
 - **Times** are exact seconds, as fractions: an ffmetadata ``TIMEBASE`` times its ``START``,
   Vorbis' milliseconds and a cue's frames (1/75 s) all fit without rounding.
 - **A cue's disc** keeps its own shape -- files, tracks, indexes -- since a track's start needs
@@ -234,7 +234,7 @@ def nearest(seconds: Fraction, per_second: int) -> int:
     """``seconds`` in units of ``1/per_second``, to the nearest, a half rounded up.
 
     A cue's frames to milliseconds are never a half (a frame is 40/3 ms) and come back exactly;
-    milliseconds to frames are off by 20/3 ms at most (docs/ffman-mappings.md, D).
+    milliseconds to frames are off by 20/3 ms at most (metadata-mappings' record, D).
     """
     return round_half_up(seconds * per_second)
 
