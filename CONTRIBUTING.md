@@ -6,8 +6,9 @@ Thank you for considering contributing to ffsuite: ffman, ffmeta and subverter.
 
 - **Nix** with flakes. `nix develop` gives every tool at the flake's pin: Python, uv, ruff,
   basedpyright, just, dprint, cocogitto, pre-commit, and ffman's runtime (ffmpeg 8.1, FLAC
-  1.5, which the tests hold it to). On NixOS, the wheels uv installs need
-  `programs.nix-ld.enable`.
+  1.5, which the tests hold it to). Run the checks in it. On NixOS, the wheels' executables
+  (ruff, ty, basedpyright's node) need `programs.nix-ld.enable`; numpy's libraries come from the
+  shell.
 - **Without Nix**: uv 0.11.21 (`pyproject.toml`'s `required-version`: nixpkgs', as every pin
   here), just, dprint, cocogitto and pre-commit on your `PATH`. The tests marked
   `ffmpeg` need ffmpeg 8.1 and metaflac 1.5, which `just checks` runs. Without them, run the

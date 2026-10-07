@@ -51,11 +51,11 @@ just checks        # all of these, and the lock, dprint, cog and pip-audit: the 
 Each recipe's command is in the `justfile`. `pre-commit install` adds the hooks: ruff, dprint
 and the lock before a commit, and its message conventional (`cog.toml`).
 
-On NixOS, the wheels uv installs (numpy, basedpyright's node) need the common C++ runtime:
-`programs.nix-ld.enable`. Without Nix, `uv sync --locked` gives the same tools, and ffmpeg and
-the runtime are the host's (the tests that run ffmpeg and metaflac hold them to the pins' 8.1
-and 1.5; `-m "not ffmpeg"` leaves each out, the conftests marking every test that takes either
-fixture). `nix fmt` formats the Nix files.
+On NixOS, the wheels' executables (ruff, ty, basedpyright's node) need `programs.nix-ld.enable`,
+and numpy's libraries the dev shell's `LD_LIBRARY_PATH`: run the checks in it. Without Nix,
+`uv sync --locked` gives the same tools, and ffmpeg and the runtime are the host's (the tests that
+run ffmpeg and metaflac hold them to the pins' 8.1 and 1.5; `-m "not ffmpeg"` leaves each out, the
+conftests marking every test that takes either fixture). `nix fmt` formats the Nix files.
 
 `nix flake check` (`just nix`) runs the same, each on Python 3.13 and 3.14 (pytest against the
 installed packages): `tests-*`, `matrix-*`, `types-*`, `vulture-*`, and `installed-*` -- the built
@@ -90,7 +90,8 @@ ffman writes) -- not pixels, which are the suite's. "Same graph": a filtergraph
 whose text differs where ffmpeg reads it the same. Exit 1 on any change, each
 one's diff printed; `report SRC OUT` and `diff OLD NEW` are its halves. It
 fails, never records, when it cannot vouch for a case: a work directory printed
-but not captured, a capture that fails, a `src` without its `pyproject.toml`.
+but not captured, a capture that fails, a `src` without its `pyproject.toml`, a path it cannot
+name (beyond `[A-Za-z0-9._/-]`: a checkout's `ffsuite (1)`).
 Its burns measure their lines by ffman's own fonts, copied from `ffman/fonts`:
 the same on every machine.
 
