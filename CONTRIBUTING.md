@@ -26,9 +26,8 @@ pre-commit install   # ruff, dprint, the lock; the commit message
 
 ## Architecture and Guidelines
 
-Read [AGENTS.md](AGENTS.md) first: the layout, the checks, and the rules. Behaviour is the
-contract: a change to what ffman does needs a line in its `CHANGELOG.md`, a test that fails on
-the old behaviour, and a row in [`docs/decisions.md`](docs/decisions.md).
+Read [AGENTS.md](AGENTS.md) first: the layout, the checks, and the rules -- the first of them,
+that ffman's behaviour is its contract.
 
 ## Testing Strategy
 
@@ -40,7 +39,9 @@ the old behaviour, and a row in [`docs/decisions.md`](docs/decisions.md).
 ## Development Workflow
 
 1. [Conventional Commits](https://www.conventionalcommits.org/) are enforced: by the
-   `commit-msg` hook and by CI (`cog.toml`).
+   `commit-msg` hook and by CI (`cog.toml`). A commit's subject is its changelog entry --
+   git-cliff writes each package's `CHANGELOG.md` from the commits touching it, at its release
+   -- so write it for that package's users.
 2. Run the checks. The `justfile` runs the workflows' commands:
 
 ```sh
@@ -62,9 +63,11 @@ just format   # ruff and dprint, in place
 
 Each package is released on its own: `just release <ffman|ffmeta|subverter> <major|minor|patch>`,
 from a clean `main` up to date with `origin`. It refuses a version below the package's own, runs
-`just checks`, and lets cocogitto set the version (`uv version`, the lock) and commit it. It then
-tags `<package>-v<version>` and pushes the commit and the tag together. The tag runs
-`release.yml` (the GitHub release) and `publish.yml` (PyPI).
+`just checks`, and lets cocogitto set the version (`uv version`, the lock), write the package's
+`CHANGELOG.md` (git-cliff, `cliff.toml`) and commit both. It then tags `<package>-v<version>`
+and pushes the commit and the tag together. The tag runs `release.yml` (the GitHub release, its
+notes the changelog's new section) and `publish.yml` (PyPI).
+`just changelog <package>` shows that section before the release.
 
 - A first release is `minor`: cocogitto counts from 0.0.0, so it gives 0.1.0, the version each
   package carries.

@@ -1,6 +1,8 @@
 # csan's release.yml for the workspace: a package's tag makes its GitHub release -- its sdist
 # and wheel, as publish.yml builds them (byte for byte alike, measured, on one hatchling), and
-# as notes the commits that touched the package since its previous tag.
+# as notes the release's section of its CHANGELOG.md, which the bump wrote (cog.toml, git-cliff):
+# read from the tag, so a re-run gives the same notes (git-cliff's --current fails on a tag once a
+# later one exists, measured).
 name: Release
 
 on:
@@ -29,10 +31,8 @@ jobs:
         run: |
           package=$(.github/package-tag.sh "$GITHUB_REF_NAME")
           uv build --package "$package" --no-sources
-          # the package's previous tag, if any: the notes start after it
-          previous=$(git describe --tags --abbrev=0 --match "$package-v*" "$GITHUB_REF_NAME^" \
-            2>/dev/null || true)
-          git log --format='- %s (%h)' "${previous:+$previous..}$GITHUB_REF_NAME" \
-            -- "packages/$package" > notes.md
+          # the first section, up to the second `## ` heading: the tag's own, or no release
+          awk '/^## /{n++} n==1' "packages/$package/CHANGELOG.md" > notes.md
+          [[ $(head -n 1 notes.md) == "## ${GITHUB_REF_NAME##*-v} - "* ]]
           gh release create "$GITHUB_REF_NAME" dist/* --verify-tag \
             --title "$package ${GITHUB_REF_NAME##*-v}" --notes-file notes.md

@@ -3,7 +3,7 @@
 They read what the readers found, typed (a time not read is None). One
 difference from bash, a correction: a word's share of a gap is by
 characters, as bash's gawk gave it under a UTF-8 locale; under C it counted
-bytes (CHANGELOG.md).
+bytes (docs/ffman-from-bash.md).
 """
 
 from collections.abc import Sequence

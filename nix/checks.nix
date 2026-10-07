@@ -9,7 +9,7 @@ let
   # What the Python checks read: the workspace's configuration, its three packages -- their
   # trees and the sources they read themselves (test_architecture, test_imports, test_outcome),
   # their files (test_workspace, against the root's licences) -- and the skills (test_skills).
-  # Lint reads the Nix files and the workflows' script too; the Python checks do not, so an edit
+  # Lint reads the Nix files and the release's scripts too; the Python checks do not, so an edit
   # there reruns lint, not them.
   pythonFiles = [
     ../pyproject.toml
@@ -31,6 +31,7 @@ let
       ../flake.nix
       ../nix
       ../.github/package-tag.sh
+      ../.github/changelog.sh
     ]
   );
 
@@ -136,7 +137,7 @@ onPython "py313" pkgs.python313Packages
         ruff check --no-cache .
         ruff format --check --no-cache .
         nixfmt --check flake.nix nix/*.nix
-        shellcheck nix/*.sh .github/package-tag.sh
+        shellcheck nix/*.sh .github/*.sh
         touch $out
       '';
 
@@ -151,6 +152,7 @@ onPython "py313" pkgs.python313Packages
           ruff
           ty
           pip-audit
+          git-cliff
           ;
       };
       nixpkgsVersion = name: (applications.${name} or pkgs.python3Packages.${name}).version;

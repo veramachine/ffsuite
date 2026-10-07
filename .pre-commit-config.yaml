@@ -1,6 +1,6 @@
-# The checks a commit can fail fast on, each the tool `nix develop` gives (local hooks: no second
-# pin to keep): ruff, dprint, the lock, and the message, conventional (cog.toml). The rest is
-# `just checks`. Install both hooks with `pre-commit install`.
+# The checks a commit can fail fast on: ruff, dprint, the lock, and the message, conventional
+# (cog.toml). Local hooks, each a tool pinned already -- ruff the lock's, the rest the dev shell's
+# -- so no second pin to keep. The rest is `just checks`. `pre-commit install` installs both.
 default_install_hook_types: [pre-commit, commit-msg]
 default_stages: [pre-commit] # a hook runs at every stage otherwise, the message's too
 repos:

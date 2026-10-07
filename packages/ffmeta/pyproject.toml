@@ -46,6 +46,7 @@ classifiers = [
 dependencies = [] # the standard library alone
 
 [project.urls]
+Changelog = "https://github.com/veramachine/ffsuite/blob/main/packages/ffmeta/CHANGELOG.md"
 Homepage = "https://github.com/veramachine/ffsuite/tree/main/packages/ffmeta"
 Issues = "https://github.com/veramachine/ffsuite/issues"
 Repository = "https://github.com/veramachine/ffsuite"

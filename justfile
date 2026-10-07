@@ -124,4 +124,10 @@ release package semver:
     fi
     just checks
     cog bump --package "{{ package }}" --{{ semver }} --annotated "{{ package }} {{{{version}}"
+    # made, the commit and the tag: a failed push is retried as it is, never the bump
     git push --atomic --follow-tags origin main
+
+[doc("A package's next changelog section, from its commits since its last release")]
+[group("Misc")]
+changelog package:
+    .github/changelog.sh "{{ package }}" --unreleased --strip all

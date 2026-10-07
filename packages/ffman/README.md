@@ -118,13 +118,14 @@ The rules, each measured:
   [`ffman-spec.md`](https://github.com/veramachine/ffsuite/blob/main/docs/ffman-spec.md).
 - Every decision, with its evidence and the module it lives in:
   [`docs/decisions.md`](https://github.com/veramachine/ffsuite/blob/main/docs/decisions.md).
-- Changes to behaviour:
+- Changes, release by release:
   [`CHANGELOG.md`](https://github.com/veramachine/ffsuite/blob/main/packages/ffman/CHANGELOG.md).
 - Working on it: [`AGENTS.md`](https://github.com/veramachine/ffsuite/blob/main/AGENTS.md).
 
 It replaced a bash ffman (retired in phase 5 of
 [`ffman-python.md`](https://github.com/veramachine/ffsuite/blob/main/docs/ffman-python.md)),
-after equalling it on every invocation of the bash suites.
+after equalling it on every invocation of the bash suites; what it changed on purpose:
+[`ffman-from-bash.md`](https://github.com/veramachine/ffsuite/blob/main/docs/ffman-from-bash.md).
 
 ## Licence
 

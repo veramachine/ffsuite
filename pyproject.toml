@@ -23,6 +23,8 @@ dev = [
 # security.yml's: pip-audit over the lock, exported (`uv export`); not the dev group, so not in
 # `uv sync`'s default environment
 audit = ["pip-audit==2.10.0"]
+# the changelogs' (.github/changelog.sh), run as `audit` is
+release = ["git-cliff==2.13.1"]
 
 [tool.uv.workspace]
 members = ["packages/*"]

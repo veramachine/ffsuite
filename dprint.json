@@ -12,7 +12,9 @@
   "toml": { "indentWidth": 4 },
   "excludes": [
     // a finished record it cannot round-trip: a line's `>=` read as a quote, `> =`
-    "docs/ffman-python.md"
+    "docs/ffman-python.md",
+    // git-cliff's (cliff.toml): regenerated at each release, never edited
+    "packages/*/CHANGELOG.md"
   ],
   "plugins": [
     "https://plugins.dprint.dev/markdown-0.22.1.wasm",

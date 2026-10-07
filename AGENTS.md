@@ -28,8 +28,8 @@ with their rules; ffmeta's tests read them as oracles.
 | `packages/ffman/tests/support/`                                | ffman's shared measures (numpy), media helpers, Hypothesis strategies                                                                                                                                                                                                                                                                                                                                                                                                         |
 | `packages/*/tests/`                                            | each library's own tests, no package (`--import-mode=importlib`): ffmeta's with `ffmeta_support` (strategies, examples, its oracles' tools) and the pinned-tool fixtures; subverter's; `test_imports.py` in each: itself and the standard library alone. One run from the root takes all three trees; each sdist runs its own                                                                                                                                                 |
 | `flake.nix`, `nix/`                                            | the flake (Linux, Apple silicon): the packages (`packages.nix`: the runtime, the wrapper), the image (`image.nix`, Linux's: FDK's ffmpeg, never published), the checks (`checks.nix`; `installed.sh`, the installed binary's), the dev shell (`shell.nix`)                                                                                                                                                                                                                    |
-| `justfile` `cog.toml` `dprint.json` `.pre-commit-config.yaml`  | the tooling (CONTRIBUTING.md): the checks and the release as recipes; Conventional Commits and the packages' tags; Markdown and TOML formatting; the hooks                                                                                                                                                                                                                                                                                                                    |
-| `.github/`                                                     | the workflows, each from its source (csan's, imi's); `package-tag.sh`, a package's tag read as its package (release's and publish's); Dependabot (GitHub Actions alone); the issue and pull request templates                                                                                                                                                                                                                                                                 |
+| `justfile` `cog.toml` `dprint.json` `.pre-commit-config.yaml`  | the tooling (CONTRIBUTING.md): the checks and the release as recipes; Conventional Commits and the packages' tags; their changelogs, `cliff.toml` (git-cliff's); Markdown and TOML formatting; the hooks                                                                                                                                                                                                                                                                      |
+| `.github/`                                                     | the workflows, each from its source (csan's, imi's); `package-tag.sh`, a package's tag read as its package (release's and publish's); `changelog.sh`, git-cliff over one package (the bump's, `just changelog`'s); Dependabot (GitHub Actions alone); the issue and pull request templates                                                                                                                                                                                    |
 
 ## The checks
 
@@ -69,8 +69,8 @@ without ffmpeg (`-m "not ffmpeg and not slow"`; ty advisory) and `uv lock --chec
 `nix flake check` built on x86_64 and aarch64 Linux and Apple silicon and evaluated for all three
 at once, and on a pull request the outcome report against its base; `security.yml`, pip-audit over
 the lock, daily; on a package's tag (`ffmeta-v0.2.0`), `release.yml` and `publish.yml`: its GitHub
-release, and PyPI through Trusted Publishing. `just release` cuts that tag
-(CONTRIBUTING.md).
+release, and PyPI through Trusted Publishing. `just release` cuts that tag, the package's
+`CHANGELOG.md` written by git-cliff (CONTRIBUTING.md).
 
 ## The outcome report
 
@@ -104,9 +104,11 @@ conditional expression) is invisible to coverage: find its cases by their output
 
 ## Rules
 
-- **Behaviour is the contract.** A change to what ffman does needs a
-  `CHANGELOG.md` line (ffman's), a test that fails on the old behaviour, and a
-  `docs/decisions.md` row (the plan's G4).
+- **Behaviour is the contract.** A change to what ffman does needs a `feat` or
+  `fix` commit whose subject states it -- its changelog entry: git-cliff writes
+  each package's `CHANGELOG.md` from its commits at a release, never by hand --
+  a test that fails on the old behaviour, and a `docs/decisions.md` row (the
+  plan's G4). The port's own changes from the bash ffman: `docs/ffman-from-bash.md`.
 - **Layers** (plan §3): imports point down, never in a cycle; only the media
   layer starts processes; planners and graphs touch no file --
   `packages/ffman/tests/test_architecture.py` holds them; a new module gets a layer there, and

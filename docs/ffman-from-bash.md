@@ -4,6 +4,9 @@ Intended changes only: everything else is the bash ffman's behaviour, checked
 against it (docs/ffman-python.md, G1-G5). Each entry has a test that fails on
 the bash behaviour and a row in docs/decisions.md.
 
+A finished record, kept as written: ffman's changes since are its changelog's,
+which git-cliff writes at each release from the commits (`packages/ffman/CHANGELOG.md`).
+
 ## Corrected (stage A: proven, G4)
 
 - **Sizes are computed exactly.** Resize targets follow the rule docs/decisions.md

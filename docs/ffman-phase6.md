@@ -10,8 +10,9 @@ phase-6 list (§6 carries its items). Reviewed once (findings applied: §8).
 ## 1. Principles
 
 - **Every change to behaviour follows G4** (the main plan, §8): a
-  `CHANGELOG.md` entry, a test that fails on the old behaviour and passes on
-  the new, a `07-tools.md` row. A change of form only (a move, a type, a
+  `CHANGELOG.md` entry -- since 6.7.9 a `feat` or `fix` commit stating it,
+  git-cliff writing the changelog at a release -- a test that fails on the old
+  behaviour and passes on the new, a `07-tools.md` row. A change of form only (a move, a type, a
   split) changes no output, which the outcome report shows (6.0).
 - **Proof without an oracle.** The bash comparison is gone; a change is proven
   against its stated rule, as phase 3's corrections were: the rule written
@@ -28,7 +29,8 @@ phase-6 list (§6 carries its items). Reviewed once (findings applied: §8).
 - **Decide before doing.** Every refusal comes from the options and the probe,
   before any work: bash's order kept work ahead of refusals (§2, F6).
 - **The contract moves with the code.** `ffman-spec.md` is the command line's
-  contract (grammar, messages); `CHANGELOG.md` gains a "Stage B" section; a
+  contract (grammar, messages); `CHANGELOG.md` gains a "Stage B" section
+  (closed at 6.7.9 in `docs/ffman-from-bash.md`; since, the commit says it); a
   box that changes either changes it in the same commit.
 - **Effects are researched before they are changed** (§4).
 - **One box at a time**, reviewed with the efficient-reason and
@@ -115,8 +117,8 @@ normalisers and placement, every commented literal and every floor in
 - **Provenance as justification**: 182 lines in 24 modules cite bash ("as
   bash", "bash's ...") as the reason for code -- 44 comments, 138 docstrings,
   none in code (parsed). Stage B states each rule
-  and its source instead; bash stays in the history (`CHANGELOG.md`,
-  `07-tools.md`).
+  and its source instead; bash stays in the history (`CHANGELOG.md`, since
+  6.7.9 `docs/ffman-from-bash.md`; `07-tools.md`).
 
 ### F4. Architecture
 
@@ -1476,16 +1478,18 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
                                 members = ["packages/*"], the dev group, the
                                 tools' configuration (6.7.5; virtual: below)
         uv.lock                 (6.7.5)
-        justfile  cog.toml  dprint.json  .pre-commit-config.yaml
-                                CONTRIBUTING.md (6.7.9)
+        justfile  cog.toml  cliff.toml  dprint.json
+                                .pre-commit-config.yaml  CONTRIBUTING.md (6.7.9)
         flake.nix  flake.lock  nix/      (6.7.7)
         LICENSE-MIT  LICENSE-APACHE (6.7.5)
         README.md  AGENTS.md  .gitignore     the repository's (here)
         docs/                   the spec, the plans, decisions.md (here),
-                                upgrading.md (6.7.8)
+                                upgrading.md (6.7.8), ffman-from-bash.md
+                                (ffman's curated changes, 6.7.9)
         .agents/skills/         cue, ffmetadata, vorbiscomment: ffmeta's
                                 tests' oracles (here)
-        packages/ffman/         pyproject.toml, README.md, CHANGELOG.md,
+        packages/ffman/         pyproject.toml, README.md, CHANGELOG.md (each
+                                package's, git-cliff's at its release: 6.7.9),
                                 LICENSE-MIT, LICENSE-APACHE, src/ffman/ (cli,
                                 jobs, plan, graph, effects, media, subs -- the
                                 burn pipeline -- fonts/: Plex Sans, Plex Mono
@@ -1501,8 +1505,9 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
                                 src/subverter/
                                 (+ py.typed), tests/ (the readers' tests)
                                 (6.7.5, 6.7.6)
-        .github/                workflows/, package-tag.sh, dependabot.yml,
-                                ISSUE_TEMPLATE/, PULL_REQUEST_TEMPLATE.md (6.7.9)
+        .github/                workflows/, package-tag.sh, changelog.sh,
+                                dependabot.yml, ISSUE_TEMPLATE/,
+                                PULL_REQUEST_TEMPLATE.md (6.7.9)
 
       *Done: the design, checked; its files are its boxes'. uv's own
       documentation: "Every workspace needs a root, which is also a
@@ -2243,30 +2248,46 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       `justfile` (csan's groups and aliases, imi's `checks`, `cog`,
       `dprint-check`, `audit`, `release`); `.pre-commit-config.yaml` (ruff,
       dprint, `uv lock --check`, cocogitto's commit-message check).
-      *Done, on nixpkgs' tools (just 1.51.0, cocogitto 7.0.0, pre-commit 4.5.1, dprint 0.54.0).
-      `dprint.json`: imi's plugins (markdown 0.26.0 and toml 0.9.0 re-wrap a line opening `--`
-      and re-indent arrays, measured), asterisk emphasis (the repository's), four-space TOML
-      (uv's); the four pyproject files re-indented, their data equal; clean on dprint 0.54.0 and
-      on 0.60.1 (the action's); the exclusion holds for a path given (pre-commit's).
-      `cog.toml`: cocogitto's tables are strict, so `[monorepo.packages]` (`[packages]` refused);
-      `from_latest_tag` off (no tag: `cog check` stops); no global tag; no changelog (ffman's is
-      curated, notes are git log's); bumps from `main`; the bump's hooks `uv version --no-sync`
-      (it re-locks) and `test_workspace`. Found: uv locks a workspace member without ffman's
-      specifier, so ffmeta bumped past ffman's `<0.2` locked (measured). `test_workspace` now
-      holds ffman's range to each library's version (three mutations); a failing hook stashes
-      its changes, nothing committed. `justfile`: csan's groups and aliases (its `lintr`, a typo,
-      and `ruff` for `format` dropped), the workflows' commands under `uv run --locked`; `checks`
-      as `checks.yml`, the matrix, dprint, cog, pip-audit: 1730 and 770 passed, 100%, 400 s;
-      `nix` all systems evaluated, then this one's built. `release PACKAGE major|minor|patch`
-      refuses, before the checks, off `main`, dirty, behind `origin`, or below the package's
-      version (cog counts from 0.0.0: a first `patch` gave 0.0.1, measured), then bumps, tags
-      annotated (`--follow-tags` skips lightweight tags) and pushes atomically. Proven on a clone
-      with a bare remote: ffmeta's first `minor` 0.1.0 (its tag `package-tag.sh`'s), `patch`
-      0.1.1 (pyproject and lock committed), `minor` refused by `test_workspace`.
-      `.pre-commit-config.yaml`: local hooks, the dev shell's tools (no second pin);
+      *Done, on nixpkgs' tools (just 1.51.0, cocogitto 7.0.0, pre-commit 4.5.1, dprint 0.54.0,
+      git-cliff 2.13.1). `dprint.json`: imi's plugins (markdown 0.26.0 and toml 0.9.0 re-wrap a
+      line opening `--` and re-indent arrays, measured), asterisk emphasis (the repository's),
+      four-space TOML (uv's); the four pyproject files re-indented, their data equal; clean on
+      dprint 0.54.0 and 0.60.1 (the action's); an exclusion holds for a path given
+      (pre-commit's). `cog.toml`: cocogitto's tables are strict, so `[monorepo.packages]`
+      (`[packages]` refused); `from_latest_tag` off (no tag: `cog check` stops); no global tag;
+      cog's changelog off; bumps from `main`; the bump's hooks, run in the package's folder, their
+      changes in its commit: `uv version --no-sync` (it re-locks), the changelog, and
+      `test_workspace`. Found: uv locks a workspace member without ffman's specifier, so ffmeta
+      bumped past ffman's `<0.2` locked (measured); `test_workspace` now holds ffman's range to
+      each library's version (three mutations); a failing hook stashes its changes, nothing
+      committed. `justfile`: csan's groups and aliases (its `lintr`, a typo, and `ruff` for
+      `format` dropped), the workflows' commands under `uv run --locked`; `checks` as
+      `checks.yml`, the matrix, dprint, cog, pip-audit; `nix` all systems evaluated, then this
+      one's built; `release PACKAGE major|minor|patch` refuses, before the checks, off `main`,
+      dirty, behind `origin`, or below the package's version (cog counts from 0.0.0: a first
+      `patch` gave 0.0.1, measured), then bumps, tags annotated (`--follow-tags` skips
+      lightweight tags) and pushes atomically; `changelog PACKAGE` previews the next section.
+      `.pre-commit-config.yaml`: local hooks on tools pinned already (no second pin);
       `default_stages` (unset, every hook also ran at the message's stage); each hook failed by
-      its mutation, a merge message passed. `CONTRIBUTING.md` imi's sections with the release's
-      rules; AGENTS.md's checks through `just`; the README links it.*
+      its mutation; a message from the editor, git's comments in it, verified; a merge's passed.
+      `CONTRIBUTING.md` imi's sections with the release's rules; AGENTS.md's checks through
+      `just`; the README links it. Changelogs, the owner's (review): generated by git-cliff,
+      never written. `cliff.toml` (csan's grouping by type, imi's header): one per package,
+      `.github/changelog.sh` giving its paths and tags; breaking changes first (`!` or a
+      `BREAKING CHANGE` footer, a mutation each), chores, CI, formatting and cog's ignored commits
+      (merges, fixups) skipped, a scope kept, no case changed (`ffmeta's` stays). The file is
+      regenerated whole at each bump: a function of the history. git-cliff is a `release` group's
+      pin, nixpkgs' version (`pins`, a mutation); `changelog.sh` joins `lint`'s shellcheck.
+      `release.yml`'s notes are the tag's own section of its `CHANGELOG.md`, refused if its
+      heading is not the tag's version -- not git-cliff's `--current`, which fails on a tag once a
+      later one exists, nor `git log`. ffman's curated CHANGELOG, the port's record, is
+      `docs/ffman-from-bash.md`, finished; the contract's changelog line is now a `feat` or `fix`
+      commit (AGENTS.md, the PR template, §1 here); `dprint.json` excludes the generated files;
+      the libraries name their changelog. Proven on a clone with a bare remote: ffmeta's first
+      `minor` 0.1.0, its `CHANGELOG.md` new in the bump's commit; `patch` 0.1.1, its section
+      first, `chore(version)` and merges absent; ffman's 0.1.0, cog writing no changelog of its
+      own; `minor` refused by `test_workspace`; each refusal before the checks. `just checks`:
+      1730 and 770 passed, 100%; `nix flake check --no-build --all-systems` and actionlint clean.*
 
 - [ ] The owner's, outside any file: the GitHub repository and its settings
       (auto-merge allowed, branch protection requiring the checks, a `pypi`
