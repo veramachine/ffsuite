@@ -46,12 +46,14 @@ jobs:
           uv run --no-sync ruff format --check
 
       - name: Types (basedpyright)
-        run: uv run --no-sync basedpyright
+        # the matrix's Python: pyproject.toml's pythonVersion (the floor) would override the
+        # environment's, analysing 3.13 on both
+        run: uv run --no-sync basedpyright --pythonversion ${{ matrix.python-version }}
 
       - name: Types (ty, advisory)
         # never failing the build until ty is 1.0 in the pin and runs clean (ffman-python.md §6)
         continue-on-error: true
-        run: uv run --no-sync ty check --output-format=github
+        run: uv run --no-sync ty check --python-version ${{ matrix.python-version }} --output-format=github
 
       - name: Dead code
         run: uv run --no-sync vulture
