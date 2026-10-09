@@ -35,7 +35,7 @@ SPECS: Final = (
 FLAGS: Final = {"w": "-w", "h": "-H", "a": "-a"}
 
 
-def oracle_dims(video: bool, spec: str) -> tuple[int, int]:
+def oracle_dims(spec: str, *, video: bool) -> tuple[int, int]:
     """matrix.sh's oracle: the planner's rules restated (source 320x180, 16:9)."""
     sw, sh = 320, 180
     kv = dict(p.split("=") for p in spec.split(","))
@@ -57,7 +57,9 @@ def oracle_dims(video: bool, spec: str) -> tuple[int, int]:
         h = w * sh / sw
     elif h and not w:
         w = h * sw / sh
-    assert w is not None and h is not None  # noqa: PT018 -- every spec sizes both
+    # every spec sizes both
+    assert w is not None
+    assert h is not None
     if video:
         return max(2, int(w / 2 + 0.5) * 2), max(2, int(h / 2 + 0.5) * 2)
     return int(w + 0.5), int(h + 0.5)
@@ -100,7 +102,7 @@ def test_a_resize_outcome(
     size = [arg for part in spec.split(",") for arg in (FLAGS[part[0]], part[2:])]
     out = f"m3_{kind}_{mode}_{spec.replace(',', '_').replace(':', '-').replace('=', '')}.{ext}"
     assert main(["convert", "-i", source, "-o", out, *size, *MODES[mode], "-y"]) == 0
-    want = oracle_dims(kind == "video", spec)
+    want = oracle_dims(spec, video=kind == "video")
     shown = tool(
         ffprobe,
         "-v",
@@ -133,4 +135,6 @@ def test_a_resize_outcome(
     if mode == "fit" and bar >= 3:
         assert r < 30, f"fit bars not black (corner {r},{g},{b})"
     else:
-        assert r > 200 and g < 40, f"corner not red ({r},{g},{b})"  # noqa: PT018
+        not_red = f"corner not red ({r},{g},{b})"
+        assert r > 200, not_red
+        assert g < 40, not_red

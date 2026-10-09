@@ -465,8 +465,10 @@ def test_youtube_copies_compliant_audio(
     said = capsys.readouterr()
     assert "ffman: H.264 High 320x180 @ 25.000000 fps, GOP 12, 1000 kbps two-pass" in said.err
     first, second = [line for line in said.out.splitlines() if " -pass " in line]
-    assert " -pass 1 " in first and "-an -f null /dev/null" in first  # noqa: PT018
-    assert "-map 0:a:0" in second and "-c:a copy" in second  # noqa: PT018
+    assert " -pass 1 " in first
+    assert "-an -f null /dev/null" in first
+    assert "-map 0:a:0" in second
+    assert "-c:a copy" in second
 
 
 def test_youtube_normalises_other_audio(

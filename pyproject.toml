@@ -46,18 +46,12 @@ extend-exclude = [".agents", "docs"]
 [tool.ruff.lint]
 select = ["ALL"]
 ignore = [
-    # The formatter owns trailing commas and string concatenation (ruff's docs:
-    # these two conflict with ruff format).
+    # The formatter owns trailing commas: ruff's docs advise against this rule beside it.
     "COM812",
-    "ISC001",
-    # Long strings are joined with an explicit +: basedpyright refuses implicit concatenation
-    # (reportImplicitStringConcatenation -- a missing comma merges two strings unseen), which
-    # ISC003 would ask for instead.
+    # Long strings are joined with an explicit +: basedpyright's reportImplicitStringConcatenation
+    # (a missing comma merges two strings unseen) refuses implicit concatenation outside its own
+    # parentheses -- a call's argument, a list's item -- where ISC003 asks for it.
     "ISC003",
-    # Refusals are user-facing sentences, specified in ffman-spec.md, raised as
-    # the one error type (errors.FfmanError); TRY003's remedy, a class per
-    # message, would scatter the spec's text. EM101/EM102 still apply.
-    "TRY003",
 ]
 
 [tool.ruff.lint.pydocstyle]
@@ -65,9 +59,11 @@ convention = "google"
 
 [tool.ruff.lint.per-file-ignores]
 # Tests, all three trees (ruff applies every pattern a file matches): assert is the tool;
-# literal expectations are the point; a docstring per test would repeat its name; pytest
-# passes parameters positionally (FBT001); expected messages are exact and read best whole
-# (E501).
+# literal expectations are the point; a docstring per test would repeat its name, and one
+# written is a note on the case, not an API's (D); pytest fills a test's parameters, by keyword:
+# no call passes a bare bool (FBT001), and their number is the case's fixtures and fields, as a
+# helper building a case takes one a field (PLR0913); expected messages are exact and read best
+# whole (E501).
 "**/tests/**" = ["S101", "PLR2004", "D", "FBT001", "E501", "PLR0913"]
 # The libraries' test trees are no packages -- an __init__.py would make another `tests`
 # (pytest's importlib mode needs none; pythonpath makes each helper package importable).
