@@ -2210,7 +2210,8 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       diagnostics, `fonts.py:44` and the outcome driver's `fsdecode`, left, `[tool.ty.src]`
       excluding `.agents` and `docs` as ruff does); `dependency-review.yml` watches the
       workflows alone (GitHub's dependency graph reads no `uv.lock`: its ecosystems list pip,
-      pipenv and Poetry files), the lock pip-audit's; cocogitto checks a push's whole history,
+      pipenv and Poetry files; corrected after 6.7.11: Dependabot's graph jobs submit it since
+      2026-04-23, GitHub's changelog -- seen on `main` alone, a pull request's change unmeasured), the lock pip-audit's; cocogitto checks a push's whole history,
       not `--from-latest-tag` (no tag yet: cog 7.0.0, the action's, stops "unable to get any
       tag", measured; every commit is conventional); a release's notes are the commits
       touching its package since its previous tag (`git log`; cog's changelogs are the third
@@ -2371,6 +2372,11 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       `<0.3`; then ffman's lower bound raised to `>=0.2` -- found by 6.7.11's review: HEAD's ffman
       imports `subverter.markup.decoded`, which 0.1.0 lacks, and `>=0.1` let pip install it
       (measured, an `ImportError`; CONTRIBUTING.md's new rule) -- and ffman `patch`.*
+      *Progress (2026-10-09), as seen from here: `main` pushed (3d908be), every workflow run on it,
+      macOS's flake check among them; the labels exist; private vulnerability reporting is on (the
+      Security page's "Report a vulnerability"). The owner reports the settings, the environment and
+      PyPI's publishers done -- not visible without signing in. Not yet: the 0.1.0 tags (none on
+      the remote), so the releases (PyPI holds 0.1.0 alone), and nixos-config's update.*
 
 *6.7.10 Proven*
 
@@ -2396,6 +2402,8 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       `--preset youtube`; with `env`, its own line naming ffmpeg-normalize, then the refusal).
       Left, the owner's: `nix flake check` built on Linux and on a Mac (nix.yml, after the push:
       no binary cache reachable here), and the image.*
+      *The owner's (2026-10-09): `nix flake check` and `just checks` clean on their NixOS machine.
+      Left: the Mac's -- nix.yml ran it on 3d908be, its result not visible here -- and the image.*
 
 *6.7.11 Review*
 
