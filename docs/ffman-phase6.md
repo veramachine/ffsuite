@@ -2459,6 +2459,18 @@ ASS (`.ass`), whisper-cli's and WhisperX's JSON (`.json`: `-oj`'s
 them, by word. Today ffman reads all but ASS (`subs/readers`: chunks and
 words, integer ms) and writes SRT (`subs/srt.py`) and its burn's styled ASS.
 
+Decided too (the owner's, 2026-10-09; each tool's writer its source: whisper.cpp's
+`examples/cli/cli.cpp`, WhisperX's and OpenAI whisper's `utils.py`):
+
+- CSV, TSV and LRC, sources and targets. ffman reads all three already: whisper-cli writes
+  `-ocsv` (ms) and `-olrc`; WhisperX and OpenAI whisper write TSV (ms). CSV and TSV writers
+  round-trip a chunk exactly; LRC keeps no end time, so its writer comes last.
+- Plain text, a target alone: whisper's `-otxt`, a transcript's words without times.
+- OpenAI whisper's JSON: WhisperX's `segments[]` shape, read already -- named by the research.
+- SSA (v4): read through the ASS reader, as ffmpeg's `ass` demuxer reads both; never written.
+- Left out unless a need comes: TTML/DFXP, SCC, SAMI, SubViewer, MicroDVD, SBV, WhisperX's
+  Audacity labels.
+
 *6.8.1 Research* (no code; each box's findings the next boxes' sources)
 
 - [x] Measured first, before choosing (the owner's question): ffmpeg 8.1.2
@@ -2502,14 +2514,17 @@ words, integer ms) and writes SRT (`subs/srt.py`) and its burn's styled ASS.
       unread, any format character is estimated at 0.55 em (`ass.py`).
 - [ ] Each format from its source: SubRip (no standard: as ffmpeg's
       `subrip` reads and writes it -- libass renders ASS alone, SubRip once
-      converted), WebVTT (W3C), ASS (v4.00+, Aegisub and libass),
-      whisper.cpp's `-oj`/`-ojf` writer (`output_json`), WhisperX's writer --
-      every field, its times' precision, what styling, position and word
-      timing each holds.
-- [ ] What ffmpeg converts between them (its `subrip`, `webvtt`, `ass`
+      converted), WebVTT (W3C), ASS (v4.00+, Aegisub and libass) and SSA (v4,
+      as the ASS reader takes it), whisper.cpp's writers (`output_json` for
+      `-oj`/`-ojf`, `output_csv`, `output_lrc`, `output_txt`), WhisperX's and
+      OpenAI whisper's (`WriteJSON`, `WriteTSV`, `WriteTXT`), LRC (no standard:
+      as ffmpeg's `lrc` and whisper-cli write it) -- every field, its times'
+      precision, what styling, position and word timing each holds.
+- [ ] What ffmpeg converts between them (its `subrip`, `webvtt`, `ass`, `lrc`
       demuxers, muxers, decoders, encoders), measured both ways -- text,
       markup, positions, overlaps, empty cues, word timing -- against what
-      ffman's readers already do; JSON: none in ffmpeg, so ffman's.
+      ffman's readers already do; JSON, CSV, TSV, plain text: none in ffmpeg,
+      so ffman's.
 - [ ] Words and chunks: how each holds word times (`-ojf`'s tokens, WhisperX's
       `words`, WebVTT's inline `<hh:mm:ss.ttt>`, ASS's `\k`); a chunk's words
       from none (impossible: noted), chunks from words (by segment); what a
@@ -2519,19 +2534,22 @@ words, integer ms) and writes SRT (`subs/srt.py`) and its burn's styled ASS.
 
 *6.8.2 Skills* (validated, packaged, presented -- before any code)
 
-- [ ] Skills for the formats the research finds no skill covers (ASS; WebVTT;
-      whisper JSON), as 6.6.2's.
+- [ ] Skills for the formats the research finds no skill covers (ASS and SSA; WebVTT;
+      whisper JSON; the tables -- CSV, TSV -- LRC and plain text, one skill or apart, as
+      the research finds), as 6.6.2's.
 
 *6.8.3 The converters* (pure, from the skills)
 
 - [ ] The model: `Transcript` kept or grown (ASS's styles and positions?) --
       decided from the research.
-- [ ] Readers and writers each format lacks (an ASS reader; WebVTT, plain ASS,
-      `-oj`, `-ojf` and WhisperX writers): round trip exact where the
-      formats meet, each loss noted; ffmpeg where it measured equal or better.
+- [ ] Readers and writers each format lacks (an ASS reader, SSA through it; WebVTT, plain
+      ASS, `-oj`, `-ojf`, WhisperX, CSV, TSV and plain-text writers): round trip exact where
+      the formats meet, each loss noted; ffmpeg where it measured equal or better.
+- [ ] The LRC writer, last: no end times -- each line's start, the loss noted.
 - [ ] By word or by chunk: an output that holds either takes the choice (its
       flag decided in the spec), refused where the input times no words.
-- [ ] Every conversion between the five: property tests, corpus cases.
+- [ ] Every conversion between the sources and targets above: property tests, corpus
+      cases.
 
 *6.8.4 The command line* (`ffman-spec.md` first)
 
