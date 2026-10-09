@@ -68,16 +68,20 @@ just build    # each package's sdist and wheel, into dist/ (the root itself is n
 ## Releasing (maintainers)
 
 Each package is released on its own: `just release <ffman|ffmeta|subverter> <major|minor|patch>`,
-from a clean `main` up to date with `origin`. It refuses a version below the package's own, runs
+from a clean `main` up to date with `origin`. It refuses a version not above the package's own, runs
 `just checks`, and lets cocogitto set the version (`uv version`, the lock), write the package's
 `CHANGELOG.md` (git-cliff, `cliff.toml`) and commit both. It then tags `<package>-v<version>`
 and pushes the commit and the tag together. The tag runs `release.yml` (the GitHub release, its
 notes the changelog's new section) and `publish.yml` (PyPI).
 `just changelog <package> --unreleased` shows that section before the release.
 
-- A first release is `minor`: cocogitto counts from 0.0.0, so it gives 0.1.0, the version each
-  package carries.
+- Each package's 0.1.0 was published by hand (from 89d5487) and is tagged at the last commit
+  touching its folder before it, which builds the same files byte for byte: ffman 33b6f55, ffmeta
+  71688f8, subverter 6827d02. cocogitto counts from a package's latest tag, and git-cliff's
+  `--include-path` sees only commits touching the package: a tag elsewhere is lost.
 - Release a library before an ffman that needs it: ffman's wheel requires both libraries.
 - ffman's range for each library must admit that library's version (`test_workspace`, which
   the bump runs). A library's minor release in 0.x leaves ffman's `<0.2`, so widen ffman's range
   first, in its own commit.
+- Its lower bound is the first release with what ffman uses: once ffman uses a library's new
+  name, raise it to that release (after it), or pip installs an ffman that cannot import.

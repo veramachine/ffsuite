@@ -129,15 +129,19 @@ release package semver:
         echo "error: main is behind origin/main: pull first" >&2; exit 1
     fi
     # cog names the tag, the package and the bump checked: it counts from the package's latest
-    # tag, 0.0.0 before its first, so never below the version the package carries
+    # tag, 0.0.0 before its first, so always above the version the package carries -- that version
+    # is on PyPI (each package's 0.1.0 too, published by hand: CONTRIBUTING.md)
     tag=$(cog bump --package "{{ package }}" --{{ semver }} --dry-run)
     current=$(uv version --package "{{ package }}" --short)
-    if ! printf '%s\n' "$current" "${tag#"{{ package }}-v"}" | sort -C -V; then
-        echo "error: $tag is below {{ package }} $current" >&2; exit 1
+    next=${tag#"{{ package }}-v"}
+    if [ "$next" = "$current" ] || ! printf '%s\n' "$current" "$next" | sort -C -V; then
+        echo "error: $tag is not above {{ package }} $current" >&2; exit 1
     fi
     just checks
     cog bump --package "{{ package }}" --{{ semver }} --annotated "{{ package }} {{{{version}}"
-    # made, the commit and the tag: a failed push is retried as it is, never the bump
+    # made, the commit and the tag: a failed push is retried as it is, never the bump -- unless
+    # origin moved meanwhile (refused, not a fast-forward): then drop the tag and the bump's
+    # commit, pull, and release again
     git push --atomic --follow-tags origin main
 
 [doc("git-cliff over a package's commits (cliff.toml); --unreleased: its next section")]
