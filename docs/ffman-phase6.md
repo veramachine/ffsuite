@@ -2483,6 +2483,10 @@ from 6.7.9)
       GitHub release the same files and its notes the changelog's section, and a clean venv's `pip
       install ffman` importing. Until each package's release, its `Changelog` link (PyPI's 0.1.0
       page, the README) finds no file: git-cliff writes it then -- ffmeta's at its first release.
+      *Progress (2026-10-09): the three 0.1.0 tags on `origin` at those commits; `Publish` ran
+      for none (disabled), `Release` -- gone from `main`, so not disabled -- ran for each and
+      failed at its notes, as expected (no changelog at those commits): no GitHub release, PyPI
+      unchanged (0.1.0 alone). Next: subverter's release, then ffman's.*
 
 **6.8 Subtitle formats** (each into each other; research and skills before code, as 6.6; G4 each)
 
