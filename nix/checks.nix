@@ -76,7 +76,8 @@ let
         );
       };
       # basedpyright resolves the workspace from the tree (pyproject's extraPaths); the tests'
-      # third-party imports from this interpreter
+      # third-party imports from this interpreter, analysed as its version -- pyproject's
+      # pythonVersion is the floor, which `just static` checks
       python = python3Packages.python.withPackages (ps: [
         ps.pytest
         ps.hypothesis
@@ -84,12 +85,11 @@ let
       ]);
     in
     lib.mapAttrs' (name: lib.nameValuePair "${name}-${suffix}") {
+      # each on the build's cores: pytest-xdist's setup hook adds --numprocesses=$NIX_BUILD_CORES
+      # to a pytestCheckHook run that has it (nixpkgs' pytest-xdist/setup-hook.sh)
       tests = pytest "tests" [ "--cov" ] { disabledTestMarks = [ "slow" ]; };
-      # each case renders: in parallel; a slice of the tests, so no coverage floor
-      matrix = pytest "matrix" [
-        "-n"
-        "auto"
-      ] { enabledTestMarks = [ "slow" ]; };
+      # a slice of the tests, so no coverage floor
+      matrix = pytest "matrix" [ ] { enabledTestMarks = [ "slow" ]; };
       installed =
         pkgs.runCommand "installed-${suffix}"
           {
@@ -107,7 +107,7 @@ let
       types = pkgs.runCommand "types-${suffix}" { nativeBuildInputs = [ pkgs.basedpyright ]; } ''
         export HOME=$TMPDIR
         cd ${source}
-        basedpyright --pythonpath ${python}/bin/python
+        basedpyright --pythonpath ${python}/bin/python --pythonversion ${python3Packages.python.pythonVersion}
         touch $out
       '';
       vulture =

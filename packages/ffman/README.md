@@ -20,8 +20,15 @@ for your own use: ffmpeg's own build calls such an ffmpeg "nonfree and unredistr
 binary cache holds it either (it builds from source). Docker, from the folder of your files:
 
 ```sh
-nix build github:veramachine/ffsuite#image && ./result | docker load
+nix build github:veramachine/ffsuite#image && docker load < result
 docker run --rm --user "$(id -u):$(id -g)" -v "$PWD:/work" ffman:0.1.0 convert -i in.mp4 -w 1280
+```
+
+`#image` is the gzipped archive, kept in the store; `#image.stream` streams the same image
+uncompressed, keeping no second copy of it:
+
+```sh
+nix build github:veramachine/ffsuite#image.stream && ./result | docker load
 ```
 
 `ffman convert --help` lists every option; `ffman effects`, the effects and

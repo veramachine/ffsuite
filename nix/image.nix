@@ -1,11 +1,13 @@
-# ffman as an OCI image, on whatever ffmpeg-full `pkgs` holds: `nix build .#image`, then
-# `./result | docker load` (a stream: no tarball kept in the store). Linux's alone.
+# ffman as an OCI image, on whatever ffmpeg-full `pkgs` holds; Linux's alone.
+#   nix build .#image          the gzipped docker-archive: `docker load < result`
+#   nix build .#image.stream   the script that streams it uncompressed: `./result | docker load`,
+#                              no second copy of the closure in the store
 { pkgs }:
 let
   inherit (pkgs) lib;
   inherit (import ./packages.nix { inherit pkgs; }) ffman;
 in
-pkgs.dockerTools.streamLayeredImage {
+pkgs.dockerTools.buildLayeredImage {
   name = "ffman";
   tag = ffman.version;
   # /tmp: the work directory's (TMPDIR unset); the sticky bit, as any /tmp, for any --user
