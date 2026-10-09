@@ -46,7 +46,9 @@ def frames(ffmpeg: str, *args: str) -> str:
     lines = [
         line.rsplit(",", 1)[-1].strip() for line in out.splitlines() if not line.startswith("#")
     ]
-    return hashlib.md5("".join(f"{x}\n" for x in lines).encode()).hexdigest()  # noqa: S324 -- run.sh's md5sum
+    # run.sh's md5sum: a fingerprint to compare, no security
+    digest = hashlib.md5("".join(f"{x}\n" for x in lines).encode(), usedforsecurity=False)
+    return digest.hexdigest()
 
 
 type Seen = tuple[
