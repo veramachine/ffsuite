@@ -75,10 +75,12 @@ and pushes the commit and the tag together. The tag runs `release.yml` (the GitH
 notes the changelog's new section) and `publish.yml` (PyPI).
 `just changelog <package> --unreleased` shows that section before the release.
 
-- Each package's 0.1.0 was published by hand (from 89d5487) and is tagged at the last commit
-  touching its folder before it, which builds the same files byte for byte: ffman 33b6f55, ffmeta
-  71688f8, subverter 6827d02. cocogitto counts from a package's latest tag, and git-cliff's
-  `--include-path` sees only commits touching the package: a tag elsewhere is lost.
+- Each package's 0.1.0 was published by hand (from 89d5487). Before the first `just release`,
+  tag it `<package>-v0.1.0`, annotated, with `release.yml` and `publish.yml` disabled meanwhile,
+  at the last commit touching its folder before 89d5487, which builds the same files byte for
+  byte: ffman 33b6f55, ffmeta 71688f8, subverter 6827d02. cocogitto counts from a package's latest
+  tag (untagged, from 0.0.0: a `major` would give 1.0.0), and git-cliff's `--include-path` sees
+  only commits touching the package: a tag elsewhere is lost.
 - Release a library before an ffman that needs it: ffman's wheel requires both libraries.
 - ffman's range for each library must admit that library's version (`test_workspace`, which
   the bump runs). A library's minor release in 0.x leaves ffman's `<0.2`, so widen ffman's range

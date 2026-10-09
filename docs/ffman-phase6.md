@@ -2339,7 +2339,7 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       (`cliff.toml`'s `[remote.github]`, read offline), `release.yml`'s check
       following -- measured on a clone with two tags.*
 
-- [ ] The owner's, outside any file: the GitHub repository and its settings
+- [x] The owner's, outside any file: the GitHub repository and its settings
       (auto-merge allowed, branch protection requiring the checks, a `pypi`
       environment, private vulnerability reporting -- `config.yml`'s link; squash merging's
       default message the pull request's title, checked conventional); on PyPI, a pending
@@ -2377,6 +2377,8 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       Security page's "Report a vulnerability"). The owner reports the settings, the environment and
       PyPI's publishers done -- not visible without signing in. Not yet: the 0.1.0 tags (none on
       the remote), so the releases (PyPI holds 0.1.0 alone), and nixos-config's update.*
+      *Closed (the owner's decision): publishing through the workflows waits for the next release
+      -- the tags, the release order and its proof are 6.7.12's box.*
 
 *6.7.10 Proven*
 
@@ -2404,6 +2406,9 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       no binary cache reachable here), and the image.*
       *The owner's (2026-10-09): `nix flake check` and `just checks` clean on their NixOS machine.
       Left: the Mac's -- nix.yml ran it on 3d908be, its result not visible here -- and the image.*
+      *Again at 35c1760 (6.7.11's changes in), on 3.14 with the pins: lock, ruff, basedpyright,
+      vulture clean; 1768 passed at 100%; the matrix, 770; dprint, cog and the evaluation of all
+      three systems clean. macOS stays "not yet tested" in both READMEs until its result is seen.*
 
 *6.7.11 Review*
 
@@ -2431,7 +2436,19 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       locks ffsuite at dd0e31a (the owner's `nix flake update ffsuite`). Not changed: the
       GitHub release and PyPI each build their own files (hatchling floating; reproducible at
       one version, measured), a library's own tree's coverage held by no check (100% measured).
-      Open until 6.7.9's and 6.7.10's owner parts are done.*
+      Open until 6.7.10's owner parts are done.*
+
+*6.7.12 The first release through the workflows* (the owner's, at the next release: deferred
+from 6.7.9)
+
+- [ ] Each package's 0.1.0 tagged (annotated, Release and Publish disabled meanwhile) at the last
+      commit touching its folder before 89d5487 -- ffman 33b6f55, ffmeta 71688f8, subverter
+      6827d02 (CONTRIBUTING.md); then subverter `minor` (0.2.0: 72310dc's `feat`), ffman's range
+      widened to `<0.3` before it and raised to `>=0.2` after -- HEAD's ffman imports
+      `subverter.markup.decoded`, which 0.1.0 lacks -- then ffman's release; ffmeta has nothing
+      new. Proven: each run of `release.yml` and `publish.yml` green, the GitHub release's notes
+      its changelog section, PyPI's files the tag's build, and a clean venv's `pip install ffman`
+      importing.
 
 **6.8 Subtitle formats** (each into each other; research and skills before code, as 6.6; G4 each)
 
