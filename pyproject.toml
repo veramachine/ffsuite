@@ -50,7 +50,7 @@ ignore = [
     "COM812",
     # Long strings are joined with an explicit +: basedpyright's reportImplicitStringConcatenation
     # (a missing comma merges two strings unseen) refuses implicit concatenation outside its own
-    # parentheses -- a call's argument, a list's item -- where ISC003 asks for it.
+    # parentheses -- a call's argument, a tuple's item -- where ISC003 asks for it.
     "ISC003",
 ]
 
@@ -60,10 +60,11 @@ convention = "google"
 [tool.ruff.lint.per-file-ignores]
 # Tests, all three trees (ruff applies every pattern a file matches): assert is the tool;
 # literal expectations are the point; a docstring per test would repeat its name, and one
-# written is a note on the case, not an API's (D); pytest fills a test's parameters, by keyword:
-# no call passes a bare bool (FBT001), and their number is the case's fixtures and fields, as a
-# helper building a case takes one a field (PLR0913); expected messages are exact and read best
-# whole (E501).
+# written is a note on the case, not an API's (D); pytest and Hypothesis fill a test's
+# parameters: no call written passes a bare bool (FBT001, FBT003 still checking the calls), and
+# their number is the case's fixtures and fields -- as a helper building a case takes one a
+# field, and an oracle's port its original's arguments (PLR0913); expected messages are exact
+# and read best whole (E501).
 "**/tests/**" = ["S101", "PLR2004", "D", "FBT001", "E501", "PLR0913"]
 # The libraries' test trees are no packages -- an __init__.py would make another `tests`
 # (pytest's importlib mode needs none; pythonpath makes each helper package importable).
