@@ -17,7 +17,7 @@ updates:
     commit-message:
       prefix: "chore"
       include: "scope"
-    labels:
+    labels: # each created once (Issues > Labels): one the repository lacks is ignored
       - "dependencies"
       - "actions"
     groups:
