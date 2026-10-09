@@ -41,7 +41,7 @@ def test_the_root_is_the_workspaces_alone() -> None:
 
 @pytest.mark.parametrize("package", PACKAGES)
 def test_a_packages_licences_are_the_roots(package: str) -> None:
-    # a copy each: license-files is the package's own folder's (6.7.4, measured)
+    # a copy each: license-files is the package's own folder's (6.7.5, measured)
     for name in LICENSES:
         assert (ROOT / "packages" / package / name).read_bytes() == (ROOT / name).read_bytes()
 
@@ -108,12 +108,12 @@ def _definitions(module: Path) -> dict[str, str]:
     ],
 )
 def test_ffmetas_oracle_tools_are_ffmans(ours: str, theirs: str) -> None:
-    # both trees run the pinned tools (each sdist its own copy): a definition both carry is one --
-    # the pins, the CD FLAC, what ffprobe sees -- or the oracles describe two ffmpegs
+    # both trees run the pinned tools (each sdist its own copy): each definition ffmeta's carries is
+    # ffman's -- the pins, the CD FLAC, what ffprobe sees -- or the oracles describe two ffmpegs; a
+    # name renamed in either tree fails here
     mine, its = _definitions(ROOT / ours), _definitions(ROOT / theirs)
-    shared = sorted(mine.keys() & its.keys())
-    assert shared  # nothing shared proves nothing
-    assert {name: its[name] for name in shared} == {name: mine[name] for name in shared}
+    assert its  # nothing carried proves nothing
+    assert its == {name: mine.get(name) for name in its}
 
 
 @pytest.mark.parametrize("package", PACKAGES)
