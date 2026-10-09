@@ -88,7 +88,7 @@ shell, from `packages/ffman`:
 uv run python -m tests.outcome compare HEAD   # HEAD's src and this tree's: identical, same graph, or changed
 ```
 
-It runs a fixed corpus (`packages/ffman/tests/outcome/corpus.py`: 427 cases, every flow, effect,
+It runs a fixed corpus (`packages/ffman/tests/outcome/corpus.py`: 429 cases, every flow, effect,
 transcript and refusal) under `--dry-run` and records each case's exit status,
 stdout (the commands), stderr (notes, refusals) and work files (the ASS and SRT
 ffman writes) -- not pixels, which are the suite's. "Same graph": a filtergraph

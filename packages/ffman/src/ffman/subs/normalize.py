@@ -16,15 +16,16 @@ from subverter.transcript import Chunk, Cue, Timing, Word
 from ffman.subs.markup import clean
 
 
-def cues(raw: Sequence[Cue]) -> tuple[Chunk, ...]:
+def cues(raw: Sequence[Cue], *, references: bool) -> tuple[Chunk, ...]:
     """Cues to chunks: ordered by start (stably, before clamping), cleaned, clamped at 0.
 
     The untimed, the empty and the reversed are dropped; each ends where the next starts.
+    ``references``: the texts' HTML character references, decoded (``clean``).
     """
     timed = [(c.start, c.end, c) for c in raw if c.start is not None and c.end is not None]
     kept: list[tuple[int, int, str, str]] = []
     for start, end, cue in sorted(timed, key=lambda t: t[0]):
-        text = clean(cue.text)
+        text = clean(cue.text, references=references)
         if text:
             a, b = max(start, 0), max(end, 0)
             if b > a:
@@ -37,13 +38,18 @@ def cues(raw: Sequence[Cue]) -> tuple[Chunk, ...]:
     return tuple(chunks)
 
 
-def words(chunks: tuple[Chunk, ...], raw: Sequence[Timing]) -> tuple[tuple[Word, ...], int, int]:
-    """The words placed in their sentences (_place); how many placed, how many sentences bare."""
+def words(
+    chunks: tuple[Chunk, ...], raw: Sequence[Timing], *, references: bool
+) -> tuple[tuple[Word, ...], int, int]:
+    """The words placed in their sentences (_place); how many placed, how many sentences bare.
+
+    ``references``: the texts' HTML character references, decoded (``clean``).
+    """
     window = {c.segment: (c.start, c.end) for c in chunks if c.segment != ""}
     kept = [
         Timing(t.segment, t.start, t.end, text)
         for t in raw
-        if (text := clean(t.text)) and t.segment in window
+        if (text := clean(t.text, references=references)) and t.segment in window
     ]
     out: list[Word] = []
     placed = bare = 0

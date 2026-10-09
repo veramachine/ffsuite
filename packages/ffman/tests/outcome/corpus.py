@@ -744,6 +744,16 @@ def _attach() -> list[Case]:
         _conv("attach/language", *srt, "--language", "por", "-o", "x.mkv"),
         _conv("attach/bad-language", *srt, "--language", "english"),
         _conv("attach/two", *two),
+        # a decoded reference into SubRip, which escapes none (6.8.1)
+        _conv(
+            "attach/references",
+            "-i",
+            "v.mp4",
+            "--add-subs",
+            "hostile/references.vtt",
+            "-o",
+            "x.mkv",
+        ),
         _conv("attach/onto-track", "-i", "tracks.mkv", "--add-subs", "wx.srt"),
         _conv("attach/language-alone", "-i", "v.mp4", "--language", "por"),
         # the SRT clip: the duration in whole ms, floored (bash's float made 1.005 s 1004)

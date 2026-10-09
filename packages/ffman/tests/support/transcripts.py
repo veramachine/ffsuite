@@ -46,4 +46,8 @@ HOSTILE: Final = {
     "fractions.json": '{"transcription": [{"offsets": {"from": 1000, "to": 2000}, "text": " u v", "tokens": [{"text": " u", "offsets": {"from": 1000.5, "to": 1499.25}, "t_dtw": 90}, {"text": " v", "offsets": {"from": 1500, "to": 1999}, "t_dtw": 95}]}]}',
     "bounds.json": '{"transcription": [{"offsets": {"from": false, "to": [1]}, "text": " w", "tokens": [{"text": " w", "offsets": {"from": 0, "to": 10}, "t_dtw": 1}]}, {"offsets": {"from": 0, "to": 500}, "text": " x", "tokens": [{"text": " x", "offsets": {"from": 0, "to": 500}}]}]}',
     "spaces.srt": "1\n00:00:01,000 --> 00:00:04,000\nno\xa0break and\u3000ideographic spaces here in one quite long line of text to wrap\n",
+    # WebVTT's character references (6.8.1, bash's as written): each run between tags
+    # decoded -- a decoded tag text, a decoded break a space, an unknown reference as written;
+    # inside the corpus's 0.4 s, so the attached SRT holds it too
+    "references.vtt": "WEBVTT\n\n00:00.000 --> 00:00.300\nA &amp; B &lt;b&gt;&#10;C &bogus;\n",
 }

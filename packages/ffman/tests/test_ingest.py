@@ -248,6 +248,55 @@ def test_a_backslash_is_one_in_every_format(tmp_path: Path, name: str) -> None:
     assert "\na\\b\n" in srt(t.chunks, None)
 
 
+REFERENCED: Final = (
+    "A &amp; B &lt; C &gt; D &nbsp;E &#x263A; &copy; <b>bold</b> &lt;b&gt; &bogus; &"
+)
+
+
+def test_a_vtts_character_references_are_decoded_once_its_tags_are_off(tmp_path: Path) -> None:
+    """WebVTT's cue text: HTML's references (W3C); a decoded tag is text, an unknown one kept."""
+    t = ingested(put(tmp_path, "a.vtt", f"WEBVTT\n\n00:01.000 --> 00:02.000\n{REFERENCED}\n"))
+    shown = "A & B < C > D \u00a0E \u263a \u00a9 bold <b> &bogus; &"
+    assert [c.text for c in t.chunks] == [shown]
+    assert f",{shown}\n" in script(t, 1920, 1080, Style())[0]  # the burn's ASS: as shown
+
+
+def test_a_break_a_reference_decodes_to_is_a_space(tmp_path: Path) -> None:
+    vtt = "WEBVTT\n\n00:01.000 --> 00:02.000\na&#10;b&Tab;c&#13;d&#12;e\n"
+    assert [c.text for c in ingested(put(tmp_path, "a.vtt", vtt)).chunks] == ["a b c d e"]
+
+
+@pytest.mark.parametrize(
+    ("text", "shown"),
+    [
+        ("&am<b>p;", "&amp;"),  # a reference a tag splits: none (WebVTT's tokens)
+        ("&am{\\b1}p;", "&"),  # an override is no WebVTT token: gone, then decoded
+        ("C:&bsol;new &bsol;table", "C:\\new \\table"),  # a decoded backslash: no escape
+        ("&#123;&#92;an8&#125; up", "{\\an8} up"),  # a decoded override: text
+        ("{<b>\\an8}up", "up"),  # an override a tag splits: gone, as without references
+    ],
+)
+def test_each_run_between_tags_is_decoded_alone(tmp_path: Path, text: str, shown: str) -> None:
+    t = ingested(put(tmp_path, "a.vtt", f"WEBVTT\n\n00:01.000 --> 00:02.000\n{text}\n"))
+    assert [c.text for c in t.chunks] == [shown]
+
+
+def test_a_highlighted_vtts_words_are_decoded_too(tmp_path: Path) -> None:
+    cues = "".join(
+        f"00:00:0{i}.000 --> 00:00:0{i + 1}.000\n{text}\n\n"
+        for i, text in enumerate(["<u>Tom</u> &amp;", "Tom <u>&amp;</u>"], 1)
+    )
+    t = ingested(put(tmp_path, "h.vtt", f"WEBVTT\n\n{cues}"))
+    assert [c.text for c in t.chunks] == ["Tom &"]
+    assert [w.text for w in t.words] == ["Tom", "&"]
+
+
+def test_a_srts_ampersands_are_its_text(tmp_path: Path) -> None:
+    """SubRip holds no references: ffmpeg's subrip decodes none."""
+    t = ingested(put(tmp_path, "a.srt", "1\n00:00:01,000 --> 00:00:02,000\nA &amp; B\n"))
+    assert [c.text for c in t.chunks] == ["A &amp; B"]
+
+
 PAST_LIMITS: Final = {  # past what Python's float, int and csv hold, or JSON's depth: never a crash
     "a huge integer time": (
         "x.json",
@@ -332,16 +381,27 @@ BOUNDLESS: Final = {  # a number no reader may expand: an exponent, or digits pa
             ]
         }
     ),
+    "x.vtt": "WEBVTT\n\n00:01.000 --> 00:02.000\na&#" + "9" * 5000 + ";b\n",  # a reference
 }
 
 
 @pytest.mark.parametrize(
-    ("name", "texts"), [("x.csv", ["b"]), ("x.lrc", ["b"]), ("x.json", ["c"]), ("y.json", ["b"])]
+    ("name", "texts"),
+    [
+        ("x.csv", ["b"]),
+        ("x.lrc", ["b"]),
+        ("x.json", ["c"]),
+        ("y.json", ["b"]),
+        ("x.vtt", ["a\ufffdb"]),
+    ],
 )
 def test_a_huge_or_long_number_is_read_in_bounded_work(
     tmp_path: Path, name: str, texts: list[str]
 ) -> None:
-    """Past a double, no time; under one, zero; 5000 digits read as 400 and a sticky 1 -- at once."""
+    """Past a double, no time; under one, zero; 5000 digits read as 400 and a sticky 1 -- at once.
+
+    A reference of 5000 digits: U+FFFD, unread.
+    """
     began = time.monotonic()
     assert [c.text for c in ingested(put(tmp_path, name, BOUNDLESS[name])).chunks] == texts
     assert time.monotonic() - began < 2  # 10**999999999 never built

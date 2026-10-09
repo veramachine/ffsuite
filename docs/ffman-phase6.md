@@ -2386,10 +2386,28 @@ words, integer ms) and writes SRT (`subs/srt.py`) and its burn's styled ASS.
       ffman must parse every input to note what is lost, its VTT writer
       must be its own, the transcripts need its readers; ffmpeg the oracle
       where it is right. Skills first: SRT, WebVTT, ASS.*
-- [ ] Found by that measurement, an older defect: a burned VTT shows its
+- [x] Found by that measurement, an older defect: a burned VTT shows its
       escapes -- `A &amp; B &lt; C` on screen (shown: the job's own ASS).
       ffman's VTT reader decodes no character reference, nor does anything
       after it. To fix first, its own box: proven by a burned frame's ASS.
+      *Done: the W3C spec's tokenizer reads `&` as HTML's character reference
+      (not a list; ffmpeg 8.1.2's decoder knows six), in the runs between
+      tags. subverter's `Reading.has_references` (`.vtt` alone: SubRip has
+      none, ffmpeg's subrip decoding none) and `decoded` (`html.unescape`,
+      a decimal of more than 7 significant digits U+FFFD unread -- Python's
+      int refuses past 4300 digits); ffman's `clean` decodes each run once the overrides are off: a
+      decoded `<b>` text, a decoded break a space. Proven: the outcome report,
+      427 identical, `burn/hostile/references.vtt` and `attach/references`
+      changed -- the ASS and the SRT `A & B <b> C &bogus;`; a burned frame
+      shows it; the tests, the decoding ones failing on the old code. Reviewed
+      (independent): a 5000-digit reference crashed (bounded now), a decoded
+      `&bsol;n` read as a break (now text), a reference a tag split glued (each
+      run alone now). An SRT from it (`--add-subs`) holds the decoded text as it is
+      (SubRip has no escape): 6.8's writers.*
+- [ ] Found by 6.8.1's review: LRM and RLM (`&lrm;`, `&rlm;`), absent from
+      the fonts, are measured an em (`subs/metrics.py`'s unknown glyph) and
+      rendered as none -- a decoded one breaks a line early; with the font
+      unread, any format character is estimated at 0.55 em (`ass.py`).
 - [ ] Each format from its source: SubRip (no standard: as ffmpeg's
       `subrip` reads and writes it -- libass renders ASS alone, SubRip once
       converted), WebVTT (W3C), ASS (v4.00+, Aegisub and libass),
