@@ -16,14 +16,14 @@ read them as oracles.
 | Path                                                           | What                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `packages/ffman/src/ffman/cli.py`, `options.py`, `__main__.py` | the command line: the option registry and its parser; the entry, Windows refused first                                                                                                                                                                                                                                                                                                                                                                                        |
-| `packages/ffman/src/ffman/jobs/`                               | `convert/`: one module a flow, chosen by `dispatch.py`; the effects' `passes.py`, the `render.py`, the `output.py` they share; `carried.py` the folders the package carries (fonts, presets); `options.py` validates the command line                                                                                                                                                                                                                                         |
+| `packages/ffman/src/ffman/jobs/`                               | `convert/`: one module a flow, chosen by `dispatch.py`; the effects' `passes.py`, the `render.py`, the `output.py` they share; what flows share (`subtitles.py`, `tagging.py`, `covers.py`, `cuesheet.py`, `fonts.py`); `carried.py` the folders the package carries (fonts, presets); `options.py` validates the command line. `meta/`: `ffman meta` -- its options, its run, the IO it shares with convert                                                                  |
 | `packages/ffman/src/ffman/plan/`                               | the pure decisions: the flow, the outputs, the streams, YouTube; sizes (`geometry.py`), encoders (`encode.py`); what a job asks (`request.py`)                                                                                                                                                                                                                                                                                                                                |
 | `packages/ffman/src/ffman/effects/`                            | the effects: the registry (`__init__.py`), one module an effect, their stages (`stages.py`)                                                                                                                                                                                                                                                                                                                                                                                   |
 | `packages/ffman/src/ffman/subs/`                               | transcripts in (`ingest.py`, through subverter's readers; `normalize.py`), placement (`layout.py`), ASS and SRT out                                                                                                                                                                                                                                                                                                                                                           |
 | `packages/ffmeta/src/ffmeta/`                                  | ffmeta, its own package: metadata files (ffmetadata, Vorbis comments, cue sheets): their one model (`model.py`: tags as written, exact times, a cue's disc); one module a format (`ffmetadata.py`, `vorbis.py`, `cue.py`), `convert.py` between them, `fields.py` the one table both map by, `files.py` a file's format by its name, `edit.py` `meta`'s edits, `chapters.py` its chapters, `time.py` its one time syntax; `_errors.py` its refusal, `_values.py` its rounding |
 | `packages/subverter/src/subverter/`                            | subverter, its own package: transcripts read into one model -- `readers/` one module a format, `transcript.py` the types, `markup.py` `untagged`; `_errors.py` its refusal, `_values.py` its rounding                                                                                                                                                                                                                                                                         |
 | `packages/ffman/src/ffman/graph/`                              | filtergraphs, as data: the model, the resize, light, GIF; the sizes they read (`sizes.py`)                                                                                                                                                                                                                                                                                                                                                                                    |
-| `packages/ffman/src/ffman/media/`                              | ffprobe's JSON (`probe.py`), running tools (`run.py`), paths (`paths.py`: file URLs, the partial file)                                                                                                                                                                                                                                                                                                                                                                        |
+| `packages/ffman/src/ffman/media/`                              | ffprobe's JSON (`probe.py`), a FLAC's Vorbis comment block (`flac.py`), running tools (`run.py`), paths (`paths.py`: file URLs, the partial file)                                                                                                                                                                                                                                                                                                                             |
 | `packages/ffman/src/ffman/errors.py`, `values.py`, `fmt.py`    | what all may use: the one error and `PROG`, `REFUSALS` (ffman's and its libraries': each worded `ffman: error:`), a refusal at a file's line, value checks, stage A's number text                                                                                                                                                                                                                                                                                             |
 | `packages/ffman/tests/`                                        | ffman's unit and property tests; `suite/`, the bash suites ported (ids `S…`: run.sh's, `M…`: matrix.sh's); `test_workspace.py` and the outcome harness, the repository's own                                                                                                                                                                                                                                                                                                  |
 | `packages/ffman/tests/support/`                                | ffman's shared measures (numpy), media helpers, Hypothesis strategies                                                                                                                                                                                                                                                                                                                                                                                                         |
@@ -31,6 +31,7 @@ read them as oracles.
 | `flake.nix`, `nix/`                                            | the flake (Linux, Apple silicon): the packages (`packages.nix`: the runtime, the wrapper), the image (`image.nix`, Linux's: FDK's ffmpeg, never published), the checks (`checks.nix`; `installed.sh`, the installed binary's), the dev shell (`shell.nix`)                                                                                                                                                                                                                    |
 | `justfile` `cog.toml` `dprint.json` `.pre-commit-config.yaml`  | the tooling (CONTRIBUTING.md): the checks and the release as recipes; Conventional Commits and the packages' tags; their changelogs, `cliff.toml` (git-cliff's); Markdown and TOML formatting; the hooks                                                                                                                                                                                                                                                                      |
 | `.github/`                                                     | the workflows, each from its source (csan's, imi's); `package-tag.sh`, a package's tag read as its package (release's and publish's); Dependabot (GitHub Actions alone); the issue and pull request templates                                                                                                                                                                                                                                                                 |
+| `docs/`                                                        | the spec, `decisions.md` (a row a behaviour), `upgrading.md` (a nixpkgs bump's re-checks), the port's records (`ffman-python.md`, the plan; `ffman-phase6.md`; `ffman-from-bash.md`)                                                                                                                                                                                                                                                                                          |
 
 ## The checks
 
@@ -44,7 +45,7 @@ numpy 2.4's differ from 2.5's; ruff's `ALL` grows with each release). Then:
 just ruff-checks   # lint and format
 just vulture       # dead code: src only, [tool.vulture]
 just static        # types: basedpyright blocks, ty advisory (never blocking)
-just pytest        # the suite but the matrix: 100% line and branch
+just pytest        # the suite but the matrix, covered: line and branch, 95% the floor
 just matrix        # the matrix, in parallel
 just checks        # all of these, the lock, dprint, cog, pip-audit and, last, `just nix`
 ```
@@ -72,7 +73,10 @@ without ffmpeg (`-m "not ffmpeg and not slow"`; ty advisory) and `uv lock --chec
 at once, and on a pull request the outcome report against its base; `security.yml`, pip-audit over
 the lock, daily; on a package's tag (`ffmeta-v0.2.0`), `release.yml` and `publish.yml`: its GitHub
 release, and PyPI through Trusted Publishing. `just release` cuts that tag, the package's
-`CHANGELOG.md` written by git-cliff (CONTRIBUTING.md).
+`CHANGELOG.md` written by git-cliff (CONTRIBUTING.md). The commit messages and the Markdown and
+TOML formatting: `style-check-cocogitto.yml`, `style-check-dprint.yml`; a pull request's new
+actions, `dependency-review.yml`; auto-merge for Dependabot's patch and minor updates,
+`dependabot-automerge.yml`.
 
 ## The outcome report
 
@@ -96,7 +100,8 @@ name (beyond `[A-Za-z0-9._/-]`: a checkout's `ffsuite (1)`).
 Its burns measure their lines by ffman's own fonts, copied from `ffman/fonts`:
 the same on every machine.
 
-Its reach, measured (coverage over every case): 96% of `src`. The rest is what
+Its reach, measured (coverage over every case): 96% of `src`, at 341 cases (phase 6, §7) --
+the corpus has grown since: measure it again. The rest is what
 `--dry-run` cannot reach -- real writes and partial files, signals and process
 groups, a tool that fails, an ffmpeg without an encoder, ffprobe's non-JSON --
 internal invariants, and the camcorder's clock fallback (a case there would
@@ -111,20 +116,23 @@ conditional expression) is invisible to coverage: find its cases by their output
   `fix` commit whose subject states it -- its changelog entry: git-cliff writes
   each package's `CHANGELOG.md` from its commits at a release, never by hand --
   a test that fails on the old behaviour, and a `docs/decisions.md` row (the
-  plan's G4). The port's own changes from the bash ffman: `docs/ffman-from-bash.md`.
-- **Layers** (plan §3): imports point down, never in a cycle; only the media
-  layer starts processes; planners and graphs touch no file --
+  plan's G4: [`ffman-python.md`](docs/ffman-python.md)). The port's own changes
+  from the bash ffman: `docs/ffman-from-bash.md`.
+- **Layers** ([phase 6](docs/ffman-phase6.md) §3): imports point down, never in a cycle; only
+  the media layer starts processes; planners and graphs touch no file --
   `packages/ffman/tests/test_architecture.py` holds them; a new module gets a layer there, and
   a move that closes an exception strikes it.
 - **Runtime: the standard library only.** External tools come through
   `PATH`, which the wrapper sets to `runtime` (`nix/packages.nix`) and
   nothing else: a new tool joins that list, and a job in `nix/installed.sh`.
 - **Types are complete** (`typeCheckingMode = "all"`, failing on warnings).
-  `Any` stays at a boundary and is narrowed at once: ffprobe's and the
-  transcripts' JSON (`media/probe.py`, `subverter/readers/whisper.py`), and typeshed's own (one, in
-  `cli.py`).
-- **Constants carry provenance**: a measured or sourced number is a named
-  constant with its source.
+  `Any` stays at a boundary: narrowed at once where the data is foreign -- ffprobe's and the
+  transcripts' JSON (`media/probe.py`, `subverter/readers/whisper.py`), typeshed's own (one, in
+  `cli.py`) -- and cast where it is the repository's own: `pyproject.toml`, read when no
+  metadata is installed (`__init__.py`).
+- **Numbers carry provenance**: a measured or sourced number is a named constant with its
+  source, or has its source where it stands -- its comment (a `noqa: PLR2004` one's reason), its
+  module's docstring, or its `docs/decisions.md` row.
 - **NumPy is for the tests.** Its stubs (2.4) type a reduction, an index and a
   power as `Any`: cast where the value is made, or use the typed helpers in
   `packages/ffman/tests/support/measures.py`.
@@ -132,7 +140,8 @@ conditional expression) is invisible to coverage: find its cases by their output
   `pyproject.toml` is 95).
 - **A warning fails the suite** (`filterwarnings = ["error"]`): a pipe or file a
   test opens is closed -- `subprocess.Popen` as a context manager. A leaked pipe
-  went unseen until it was made so.
+  went unseen until it was made so. pytest is strict too (`strict = true`): an unknown marker or
+  option, an xfail that passes, a repeated parametrize id each fail.
 - **Tests run in the Nix sandbox**: no network, no writable `HOME`, no
   `/usr/bin/env` -- a script a test writes begins `#!/bin/sh`, or is bypassed
   silently.
