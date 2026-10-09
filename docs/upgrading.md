@@ -2,10 +2,14 @@
 
 ffman holds to behaviour of the tools nixpkgs pins -- whisper-cli's and WhisperX's outputs,
 ffmpeg's filters and encoders, libass, mpv's defaults -- each read in its source or measured,
-then held by the suite. At every bump of `flake.lock`, and of nixos-config's channel (its
-input follows it), re-check these, then run the checks: `nix flake check` (the suite, the
-matrix, the installed binary, on each Python). Moved from nixos-config's channel run-book (its
-11.49); nixos-config's own couplings stay there.
+then held by the suite. `flake.lock` holds nixpkgs alone, at nixos-config's node: its `ffsuite`
+input follows that nixpkgs, so the system builds ffman on its channel, and ffsuite tests the
+same. The two move together, a tool ffsuite needs sooner included; here, `nix flake lock
+--override-input nixpkgs github:NixOS/nixpkgs/<its rev>`. At every bump, re-check these, then
+run the checks: `nix flake check` (the suite, the matrix, the installed binary, on each Python).
+nixos-config builds the same checks on its own channel, the system's Python alone and `pins` left
+out (its run-book 11.49), and takes ffsuite's changes by `nix flake update ffsuite`. Moved from
+that run-book; nixos-config's own couplings stay there.
 
 1. whisper-cli still prints a leading space and has no option to drop it, `-ojf` still turns on
    token timestamps, and `t_dtw` is still in 10 ms units (`cli.cpp`, `whisper.cpp`).
@@ -54,3 +58,7 @@ matrix, the installed binary, on each Python). Moved from nixos-config's channel
     collection, may be one.
 23. the image, which no check builds (the FDK ffmpeg, from source): `nix build .#image.stream &&
     ./result | docker load`, then a conversion in it (ffman's README).
+24. ffmpeg's or FLAC's version moved: the conftests hold both (their pin checks); the `ffmpeg`
+    marker's text and the documents name them (`git grep -niE '8\.1\.2|ffmpeg 8\.1|flac 1\.5'`); the
+    skills' tables were measured on them, and ffmeta's tests read them as oracles -- re-measure
+    each (`.agents/skills/*/scripts/measure.py`).

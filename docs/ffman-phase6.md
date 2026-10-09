@@ -2209,14 +2209,15 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       (`ffman-python.md` §6: never failing the build until 1.0 is in the pin; its two
       diagnostics, `fonts.py:44` and the outcome driver's `fsdecode`, left, `[tool.ty.src]`
       excluding `.agents` and `docs` as ruff does); `dependency-review.yml` watches the
-      workflows alone (GitHub's dependency graph reads no `uv.lock`: its ecosystems list pip,
-      pipenv and Poetry files; corrected after 6.7.11: Dependabot's graph jobs submit it since
-      2026-04-23, GitHub's changelog -- seen on `main` alone, a pull request's change unmeasured), the lock pip-audit's; cocogitto checks a push's whole history,
-      not `--from-latest-tag` (no tag yet: cog 7.0.0, the action's, stops "unable to get any
-      tag", measured; every commit is conventional); a release's notes are the commits
-      touching its package since its previous tag (`git log`; cog's changelogs are the third
-      box's); pip-audit pinned in an `audit` group (2.10.1, nixpkgs' 2.10.0 in the next box;
-      the lock grew by it), run `--isolated`. Proven, `checks.yml`'s steps as written, on uv's
+      workflows alone (GitHub's dependency graph reads no `uv.lock`: its ecosystems list pip, pipenv
+      and Poetry files; corrected after 6.7.11: Dependabot's graph jobs submit it since 2026-04-23,
+      GitHub's changelog -- seen on `main` alone, a pull request's change unmeasured), the lock
+      pip-audit's; cocogitto checks a push's whole history, not `--from-latest-tag` (no tag yet: cog
+      7.0.0, the action's, stops "unable to get any tag", measured; every commit is conventional); a
+      release's notes are the commits touching its package since its previous tag (`git log`; cog's
+      changelogs are the third box's -- superseded there: the tag's changelog section); pip-audit
+      pinned in an `audit` group (2.10.1, nixpkgs' 2.10.0 in the next box; the lock grew by it), run
+      `--isolated`. Proven, `checks.yml`'s steps as written, on uv's
       3.13 and 3.14 with a `PATH` lacking ffmpeg and metaflac, as the runner's image (its
       software list): lock checked, ruff, basedpyright 0 errors, vulture, pytest 1411 passed,
       the same with an apt ffmpeg 6.1 on `PATH` instead. The outcome job's command (uv in
@@ -2252,7 +2253,8 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       *Done, `github-actions` alone (the owner asked whether uv belongs): every pin in the
       dependency groups is the pinned nixpkgs' version (all thirteen evaluated equal;
       pip-audit moved to nixpkgs' 2.10.0 to join them), so uv's verdict is Nix's -- a
-      Dependabot bump would break that, and `dependabot-automerge.yml` would merge it. They
+      Dependabot bump would break that, and `dependabot-automerge.yml` would merge it (since the
+      owner's branch protection, the required flake check fails it at `pins`: 6.7.11). They
       move at a nixpkgs bump instead (`docs/upgrading.md`, a new 22), held there by a new
       check, `pins` (`nix/checks.nix`: each pin against `python3Packages`, or nixpkgs'
       application -- basedpyright, ruff, ty, pip-audit; a spec not `name==version` refused at
@@ -2412,7 +2414,7 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
 
 *6.7.11 Review*
 
-- [ ] The section reviewed whole.
+- [x] The section reviewed whole.
       *Done (three independent reviews -- 6.7.1-6.7.5, 6.7.6-6.7.8, 6.7.9 -- each claim against
       the repositories, findings re-verified, then fixed or recorded). Release: each package's
       0.1.0 published by hand left the release flow re-issuing 0.1.0 (the owner box, corrected
@@ -2421,9 +2423,10 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       the owner's release order. Packaging: `hatchling>=1.27.0` in the three (1.26.x wrote
       metadata 2.3, no `License-Expression`: measured); subverter's summary names whisper-cli's
       and WhisperX's JSON. CI: `dependabot-automerge.yml`'s settings (two unneeded, approvals
-      none, a merge by its token runs no workflow), the commits' check required, a run on
-      `main` never cancelled, dependency review in effect a licence check (commit-pinned
-      actions get no advisories), dprint's CLI the action's latest -- each said where it lives.
+      none, a merge by its token runs no workflow), the commits' check required, a run on `main`
+      never cancelled (a pending one could still give way: the second note), dependency review in
+      effect a licence check (commit-pinned actions get no advisories), dprint's CLI the action's
+      latest -- each said where it lives.
       Tests: ffmeta's oracle tools held to ffman's by every name it carries (a rename now fails:
       mutation). Documents: `decisions.md`'s floor (100% measured, 95% the floor) and `pins`;
       AGENTS.md's library-tests row; `image.nix`'s comment (the overlay's `ffman-image` refused,
@@ -2432,23 +2435,54 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       wording, hatchling, Dependabot's labels (the owner's to create), the home presets (their
       values unchanged), three citations 6.7.4 that are 6.7.5's. Since, unrecorded until now:
       `syrupy` left the dev group (7987ee3); `types-py314` checked 3.13 until `--pythonversion`
-      (56324b0, the image `buildLayeredImage` with `.#image.stream` there too); nixos-config
-      locks ffsuite at dd0e31a (the owner's `nix flake update ffsuite`). Not changed: the
-      GitHub release and PyPI each build their own files (hatchling floating; reproducible at
-      one version, measured), a library's own tree's coverage held by no check (100% measured).
-      Open until 6.7.10's owner parts are done.*
+      (56324b0, the image `buildLayeredImage` with `.#image.stream` there too). nixos-config still
+      locks ffsuite at dd0e31a (6.7.8, by hand): its update is the owner's. Not changed: the
+      GitHub release and PyPI each build their own files (hatchling floating; reproducible at one
+      version, measured -- one build since: the second note), a library's own tree's coverage held
+      by no check (100% measured).*
+      *Reviewed again, to convergence: four independent reviews at 099dfc8 -- the fixes above;
+      packaging and the release, simulated end to end on a clone with a bare remote; CI and
+      Dependabot; Nix, tests and documents -- then two reviews of their fixes; each finding re-verified,
+      then fixed or recorded. Release: `release.yml` merged into `publish.yml` -- the package built
+      once, without a credential to write or to mint (PyPI's security model, "Limit the scope of
+      your publishing job"), published by PyPA's action with its attestations, then its GitHub
+      release of the same files, ffman's alone the latest. `just release` pushes `main` and its
+      own tag alone (`--follow-tags` took the local 0.1.0 tags too, and more than three tags at
+      once start no workflow: GitHub's push event), and refuses a package whose current version's
+      tag is not on `origin` (untagged, a `major` gave 1.0.0) and, for ffman, a library whose
+      source is not its latest release's or a floor below that release's minor -- each refusal
+      measured on the clone; a bump rewrites the README's `ffman:<version>` (an ffman release
+      failed `test_readme` on `main`, measured); `packaging` declared in the dev group, nixpkgs'
+      26.1. CI: a pull request's runs one concurrency group, every other run its own (a pending run
+      on `main` gave way to the newest, and fork branches of one name shared a group); comments
+      made exact -- `github.actor`, a PAT or an App's token, the cooldown's default, Dependabot's
+      uv (0.12.19 in its image) refused by `required-version`, a schedule disabled after 60 days
+      without activity. Dependabot, the owner's question: GitHub Actions alone -- the packages
+      need nothing at run time, and every dev pin is nixpkgs', which `pins` holds against any bump;
+      Dependabot alerts recommended on (the owner's setting), its graph jobs reading `uv.lock`.
+      Documents: `upgrading.md` -- the lock kept at nixos-config's node and moved with it, a 24th
+      item (ffmpeg's and FLAC's versions in the tests, the documents and the skills'
+      measurements); `decisions.md` -- the FDK sentence, nixos-config's mpv test; AGENTS.md's
+      `markup.py` and `flac.py`; this record (6.7.9's superseded lines, 6.7.12's tags and
+      `Changelog` links, §9.1's tag); nixos-config's `07-tools.md` (when its ffsuite pin moves)
+      and run-book 11.49 (the six checks). The templates took the same CI corrections. Left, the
+      owner's: nixos-config following ffsuite's `main` or, after 6.7.12, its tags (§9.1 asks it of
+      imi); python-template's release and publish, still two builds. 6.7.10's open parts are the
+      owner's results, reviewed when they come.*
 
 *6.7.12 The first release through the workflows* (the owner's, at the next release: deferred
 from 6.7.9)
 
-- [ ] Each package's 0.1.0 tagged (annotated, Release and Publish disabled meanwhile) at the last
-      commit touching its folder before 89d5487 -- ffman 33b6f55, ffmeta 71688f8, subverter
-      6827d02 (CONTRIBUTING.md); then subverter `minor` (0.2.0: 72310dc's `feat`), ffman's range
-      widened to `<0.3` before it and raised to `>=0.2` after -- HEAD's ffman imports
-      `subverter.markup.decoded`, which 0.1.0 lacks -- then ffman's release; ffmeta has nothing
-      new. Proven: each run of `release.yml` and `publish.yml` green, the GitHub release's notes
-      its changelog section, PyPI's files the tag's build, and a clean venv's `pip install ffman`
-      importing.
+- [ ] Each package's 0.1.0 tagged (annotated) at the last commit touching its folder before
+      89d5487 -- ffman 33b6f55, ffmeta 71688f8, subverter 6827d02 -- and the three pushed with the
+      workflows `Publish` and `Release` disabled (CONTRIBUTING.md); then subverter `minor` (0.2.0:
+      72310dc's `feat`), ffman's range widened to `<0.3` before it and raised to `>=0.2` after --
+      HEAD's ffman imports `subverter.markup.decoded`, which 0.1.0 lacks; `just release ffman`
+      refuses either left undone -- then ffman's release; ffmeta has nothing new. Proven:
+      `publish.yml`'s three jobs green, PyPI's files the tag's build with their attestations, the
+      GitHub release the same files and its notes the changelog's section, and a clean venv's `pip
+      install ffman` importing. Until each package's release, its `Changelog` link (PyPI's 0.1.0
+      page, the README) finds no file: git-cliff writes it then -- ffmeta's at its first release.
 
 **6.8 Subtitle formats** (each into each other; research and skills before code, as 6.6; G4 each)
 
@@ -2867,7 +2901,8 @@ Proposed, as ffsuite: imi's repository (`github:veralvx/imi`) gains a `flake.nix
 `overlays.default`, checks) building with `cargoLock.lockFile = ./Cargo.lock` -- each crate
 fetched against the checksum `Cargo.lock` already holds (nixpkgs' `importCargoLock`), so no
 written hash; a git dependency would need one, and at `v0.3.0` there is none. nixos-config takes
-it as it takes ffsuite: `imi.url = "github:veralvx/imi/v0.3.0"`,
+it as it takes ffsuite, but by a tag (ffsuite's input names its `main`: no tag before 6.7.12):
+`imi.url = "github:veralvx/imi/v0.3.0"`,
 `imi.inputs.nixpkgs.follows = "nixpkgs"`, the overlay applied in `modules/tools.nix`.
 
 Measured: tags `v0.1.4` to `v0.3.0`, `main` past the last (`d2c73a4`; `v0.3.0` is `db710d2`) --
