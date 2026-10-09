@@ -1,7 +1,9 @@
 # imi's rust-audit.yml as pip-audit: the lock's packages, exported with their hashes, against
 # PyPI's advisories -- daily, on demand, and when the lock changes. A finding fails the run,
 # notified to the workflow's creator (or whoever last changed its cron: docs.github.com,
-# "Notifications for workflow runs"); cargo-audit's issues have no counterpart here.
+# "Notifications for workflow runs"); cargo-audit's issues have no counterpart here. GitHub
+# disables a public repository's schedule after 60 days without activity ("Events that trigger
+# workflows"): Dependabot alerts, the repository's setting, watch the lock without one.
 name: Security
 
 on:

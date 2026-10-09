@@ -11,9 +11,11 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, edited]
 
+# a pull request's newest run cancels its older ones; any other run, a group of its own: every
+# commit on main checked (in a shared group, a pending run gives way to the newest: the default)
 concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }} # never cut short on main
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
 
 permissions:
   contents: read

@@ -4,10 +4,11 @@
 # 2. Settings > Branches > a protection rule on main: a pull request before merging, no approvals
 #    required (one would hold every merge for a person), and the checks required to pass --
 #    Checks', Nix's flake check jobs and the commits' check, not the outcome report
-# The token's permissions are this file's `permissions:`, which override the repository's default
-# (docs.github.com, "Troubleshooting Dependabot on GitHub Actions"); nothing here creates or
-# approves a pull request. A merge by this token starts no workflow (GitHub's rule for
-# GITHUB_TOKEN's events): such a commit on main is checked by its pull request's runs alone.
+# The token's permissions are this file's `permissions:`, which raise Dependabot's read-only
+# default (docs.github.com, "Troubleshooting Dependabot on GitHub Actions"); nothing here creates
+# or approves a pull request. A merge by this token starts no workflow (GitHub's rule for
+# GITHUB_TOKEN's events): such a commit is checked by its pull request's runs alone, against main
+# as it was then (the rule does not require the branch up to date).
 name: Dependabot Auto-Merge
 
 on:
@@ -20,8 +21,8 @@ permissions:
 jobs:
   dependabot:
     runs-on: ubuntu-latest
-    # user.login, the pull request's author -- not github.actor, whoever triggered this run, which
-    # a re-run changes (docs.github.com, "Automating Dependabot with GitHub Actions")
+    # user.login, the pull request's author -- not github.actor, whoever caused the event, a person
+    # pushing to Dependabot's branch too (docs.github.com, "Contexts reference")
     if: >-
       github.event.pull_request.user.login == 'dependabot[bot]' &&
       github.repository == 'veramachine/ffsuite'
@@ -34,7 +35,8 @@ jobs:
 
       - name: Enable auto-merge for patch and minor updates
         # update-type is version-update:semver-{patch,minor,major} alone: a security update
-        # carries the same labels (gating on alert-state needs alert-lookup, and a PAT)
+        # carries the same labels (gating on alert-state needs alert-lookup, and a PAT or an App's
+        # token: fetch-metadata's README)
         if: >-
           contains(
             fromJSON('["version-update:semver-patch", "version-update:semver-minor"]'),

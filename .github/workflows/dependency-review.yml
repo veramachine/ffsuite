@@ -1,9 +1,10 @@
 # imi's dependency-review.yml, adapted: the workflows' actions alone. uv.lock reaches GitHub's
 # dependency graph only through Dependabot's graph jobs (GitHub's changelog, 2026-04-23), seen
 # here on main alone: whether a pull request's lock change is reviewed is unmeasured, so the
-# lock is security.yml's (pip-audit). Every action is pinned to a commit, and GitHub's advisories
-# match actions by semantic version alone ("Dependency graph supported package ecosystems"):
-# what this gates in effect is the licences.
+# lock is security.yml's (pip-audit). Every action is pinned to a commit, and GitHub alerts only on
+# actions referenced by semantic version ("Dependency graph supported package ecosystems"): what
+# this gates in effect is the licences it can detect (one undetected is reported, not failed: the
+# action's README).
 name: Dependency Review
 
 on:
