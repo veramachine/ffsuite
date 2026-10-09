@@ -30,7 +30,7 @@ def _vhs_noise(target: float, sx: str, sy: str) -> tuple[int, int]:
 
     v = 12 * (target / math.sqrt(ss(float(sx)) * ss(float(sy)))) ** 2 + 1
     n = 1
-    while math.sqrt(v / n) > 99:  # noqa: PLR2004 -- the noise filter's strength ceiling, bash's
+    while math.sqrt(v / n) > 99:  # noqa: PLR2004 -- noise's highest odd strength (0-100), bash's
         n += 1
     # the odd strength 2*floor(r/2) + 1; bash then added 2 when r - s > 1, which cannot
     # be: r - s = (r - 2*floor(r/2)) - 1 lies in [-1, 1). Its dead line is not ported.

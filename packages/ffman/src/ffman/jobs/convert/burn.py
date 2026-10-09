@@ -99,6 +99,7 @@ def _check_timings(o: ConvertOptions, t: Transcript) -> None:
             refuse(f"--overlay-mode chunk-word needs word timings ({sources}); {t.source} has none")
         counts = Counter(w.segment for w in t.words)
         worded = sum(1 for n in counts.values() if n > 1)  # sentences with more than one word
+        # sentences, not a word a cue: a fifth of them, at least, more than one word
         if not counts or worded / len(counts) < 0.2:  # noqa: PLR2004 -- bash's fifth
             why = "--overlay-mode chunk-word needs sentences with their words"
             refuse(f"this {t.source} is word-level (e.g. whisper-cli -sow/-ml 1): {why}")
