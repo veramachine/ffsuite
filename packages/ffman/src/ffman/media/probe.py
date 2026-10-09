@@ -179,6 +179,17 @@ def parse(text: str) -> Media:
     )
 
 
+def tag_names(text: str) -> frozenset[str] | None:
+    """The format's tag names, lower-cased: ffprobe's ``-show_entries format_tags -of json``.
+
+    None where the text is not that shape (unreadable, not tagless).
+    """
+    root = _dict(cast("object", json.loads(text)))
+    found = _dict(root.get("format", {})) if root is not None else None
+    tags = _dict(found.get("tags", {})) if found is not None else None
+    return None if tags is None else frozenset(name.lower() for name in tags)
+
+
 def read(path: str, runner: Capturing) -> Media:
     """Probe ``path`` (read-only: it runs under --dry-run too), with bash's refusals."""
     if not Path(path).is_file():
@@ -253,8 +264,12 @@ def _attached_pic(s: _Json) -> object:
     return 0 if flag is None or flag is False else flag
 
 
+def _dict(value: object) -> _Json | None:
+    return cast("_Json", value) if isinstance(value, dict) else None
+
+
 def _object(value: object) -> _Json:
-    return cast("_Json", value) if isinstance(value, dict) else {}
+    return _dict(value) or {}
 
 
 def _list(value: object) -> list[object]:

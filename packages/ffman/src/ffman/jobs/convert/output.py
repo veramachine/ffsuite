@@ -1,6 +1,5 @@
 """What a job writes with: this ffmpeg's encoders, and the output through a partial file."""
 
-import json
 import os
 import shutil
 import sys
@@ -8,11 +7,10 @@ import tempfile
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import cast
 
 from ffman.errors import refuse
 from ffman.media.paths import ext_of, partial_output
-from ffman.media.probe import Audio, Media, Video
+from ffman.media.probe import Audio, Media, Video, tag_names
 from ffman.media.run import Runner, missing, note
 from ffman.plan.encode import (
     FDK_AAC,
@@ -105,8 +103,7 @@ def _tags_of(runner: Runner, path: Path) -> frozenset[str] | None:
     done = runner.capture(shown)
     if done.returncode != 0:
         return None
-    root = cast("dict[str, dict[str, dict[str, str]]]", json.loads(done.stdout or "{}"))
-    return frozenset(key.lower() for key in root.get("format", {}).get("tags", {}))
+    return tag_names(done.stdout or "{}")
 
 
 def holds(runner: Runner, args: list[str], ext: str) -> str | None:

@@ -9,7 +9,7 @@ from typing import Literal, final
 import pytest
 
 from ffman.errors import FfmanError
-from ffman.media.probe import Audio, Media, Rational, Subtitle, Video, parse, read
+from ffman.media.probe import Audio, Media, Rational, Subtitle, Video, parse, read, tag_names
 
 FIXTURES = Path(__file__).parent / "fixtures" / "probe"
 
@@ -269,3 +269,12 @@ def test_a_frame_time_from_the_rate_its_frames_come_at() -> None:
 def test_covers_are_read_apart_from_the_pictures() -> None:
     m = media("cover_art.m4a")
     assert (len(m.covers), m.pictures) == (1, 0)  # recorded: a cover, no other picture
+
+
+def test_format_tag_names_are_lower_cased_none_where_not_ffprobes_shape() -> None:
+    assert tag_names('{"format": {"tags": {"TITLE": "x", "Artist": "y"}}}') == {"title", "artist"}
+    assert tag_names('{"format": {}}') == frozenset()  # tagless
+    assert tag_names("{}") == frozenset()
+    assert tag_names("[]") is None
+    assert tag_names('{"format": null}') is None
+    assert tag_names('{"format": {"tags": ["title"]}}') is None
