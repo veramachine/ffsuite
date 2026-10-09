@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # A package's tag (ffmeta-v0.2.0) read as the package it releases: the name printed once the tag's
-# version is the one that package's pyproject.toml declares. release.yml's and publish.yml's.
+# version is the one that package's pyproject.toml declares. publish.yml's.
 set -euo pipefail
 
 tag=${1:?usage: package-tag.sh TAG (e.g. ffmeta-v0.2.0)}
