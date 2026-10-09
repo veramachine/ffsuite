@@ -22,6 +22,7 @@ pkgs.dockerTools.buildLayeredImage {
     WorkingDir = "/work"; # the folder mounted: docker run -v "$PWD:/work"
     Env = [ "HOME=/tmp" ]; # writable for any --user
   };
-  # tini and the image itself are Linux's: elsewhere, a refusal that names the image
+  # tini and the image are Linux's: elsewhere, `.#image` is refused by name (`.#image.stream`,
+  # given no meta by buildLayeredImage, through tini)
   meta.platforms = lib.platforms.linux;
 }
