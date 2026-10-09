@@ -1,10 +1,13 @@
 # imi's dependabot-automerge.yml, its guard this repository's. Required repository settings (the
 # owner's, once; plan 6.7.9):
 # 1. Settings > General > Allow auto-merge
-# 2. Settings > Actions > General > Workflow permissions > Read and write permissions
-# 3. Settings > Actions > General > Allow GitHub Actions to create and approve pull requests
-# 4. Settings > Branches > a protection rule on main: a pull request before merging, and the
-#    checks required to pass -- Checks' and Nix's flake check jobs, not the outcome report
+# 2. Settings > Branches > a protection rule on main: a pull request before merging, no approvals
+#    required (one would hold every merge for a person), and the checks required to pass --
+#    Checks', Nix's flake check jobs and the commits' check, not the outcome report
+# The token's permissions are this file's `permissions:`, which override the repository's default
+# (docs.github.com, "Troubleshooting Dependabot on GitHub Actions"); nothing here creates or
+# approves a pull request. A merge by this token starts no workflow (GitHub's rule for
+# GITHUB_TOKEN's events): such a commit on main is checked by its pull request's runs alone.
 name: Dependabot Auto-Merge
 
 on:

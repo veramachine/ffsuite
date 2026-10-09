@@ -1,5 +1,6 @@
 # imi's style-check-dprint.yml, its paths what dprint.json formats here: Markdown and TOML (path
-# filters take no brace expansion, so one entry each).
+# filters take no brace expansion, so one entry each). The action installs dprint's latest release,
+# attested; the formatting is the plugins', pinned in dprint.json.
 name: Dprint Formatting Checks
 
 on:
@@ -19,7 +20,7 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }} # never cut short on main
 
 permissions:
   contents: read

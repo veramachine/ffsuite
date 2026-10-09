@@ -1,7 +1,9 @@
 # imi's dependency-review.yml, adapted: the workflows' actions alone. GitHub's dependency graph
 # reads no uv.lock -- its supported ecosystems list pip, pipenv and Poetry files for Python
 # (docs.github.com, "Dependency graph supported package ecosystems") -- so a lock change would
-# pass unreviewed; the lock's packages are security.yml's (pip-audit).
+# pass unreviewed; the lock's packages are security.yml's (pip-audit). Every action here is pinned
+# to a commit, and GitHub's advisories match actions by semantic version alone (same page), so
+# what this gates in effect is the licences.
 name: Dependency Review
 
 on:
