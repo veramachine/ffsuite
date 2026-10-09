@@ -1,7 +1,7 @@
 [build-system]
-# 1.26.0 brought license-files to PEP 639's final form; 1.26.2 fixed the metadata 1.26.0 wrote
-# for older core-metadata versions (hatchling's changelog)
-requires = ["hatchling>=1.26.2"]
+# 1.27.0: core metadata 2.4 by default, the first to write License-Expression and License-File
+# (PEP 639); 1.26.x wrote 2.3 and neither (hatchling's changelog; measured, 1.26.3)
+requires = ["hatchling>=1.27.0"]
 build-backend = "hatchling.build"
 
 [project]
