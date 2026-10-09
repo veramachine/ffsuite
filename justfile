@@ -120,29 +120,64 @@ build:
 release package semver:
     #!/usr/bin/env bash
     set -euo pipefail
+    package="{{ package }}"
     # refused before the checks: cog refuses a branch or a dirty tree only after them
     if [ "$(git branch --show-current)" != main ] || [ -n "$(git status --porcelain)" ]; then
         echo "error: a release is cut from main, clean" >&2; exit 1
     fi
-    git fetch origin
+    git fetch --tags origin
     if [ "$(git rev-list --count HEAD..origin/main)" -ne 0 ]; then
         echo "error: main is behind origin/main: pull first" >&2; exit 1
     fi
-    # cog names the tag, the package and the bump checked: it counts from the package's latest
-    # tag, 0.0.0 before its first, so always above the version the package carries -- that version
-    # is on PyPI (each package's 0.1.0 too, published by hand: CONTRIBUTING.md)
-    tag=$(cog bump --package "{{ package }}" --{{ semver }} --dry-run)
-    current=$(uv version --package "{{ package }}" --short)
-    next=${tag#"{{ package }}-v"}
+    # cog counts from the package's latest tag (0.0.0 before its first), so the version the
+    # package carries is tagged on origin -- each 0.1.0, published by hand, too (CONTRIBUTING.md)
+    current=$(uv version --package "$package" --short)
+    if ! git ls-remote --exit-code --tags origin "refs/tags/$package-v$current" >/dev/null; then
+        echo "error: $package-v$current is not on origin: tag it and push it first" >&2; exit 1
+    fi
+    tag=$(cog bump --package "$package" --{{ semver }} --dry-run)
+    next=${tag#"$package-v"}
     if [ "$next" = "$current" ] || ! printf '%s\n' "$current" "$next" | sort -C -V; then
-        echo "error: $tag is not above {{ package }} $current" >&2; exit 1
+        echo "error: $tag is not above $package $current" >&2; exit 1
+    fi
+    if [ "$package" = ffman ]; then
+        # its wheel requires its libraries: each released as the workspace holds it, ffman's floor
+        # that release's minor -- else pip may pair it with one lacking what it imports
+        uv run --locked python - <<'EOF'
+    import subprocess
+    import sys
+    import tomllib
+    from pathlib import Path
+
+    from packaging.requirements import Requirement
+    from packaging.version import Version
+
+
+    def project(name):
+        text = Path(f"packages/{name}/pyproject.toml").read_text(encoding="utf-8")
+        return tomllib.loads(text)["project"]
+
+
+    errors = []
+    for req in map(Requirement, project("ffman")["dependencies"]):
+        version = Version(project(req.name)["version"])
+        tag, src = f"{req.name}-v{version}", f"packages/{req.name}/src"
+        diff = ["git", "diff", "--quiet", tag, "HEAD", "--", src]
+        if subprocess.run(diff, check=False).returncode:  # 1: changed; 128: no such tag
+            errors.append(f"{src} is not {tag}'s: release {req.name} first")
+        floor = Version(f"{version.major}.{version.minor}")
+        if not any(s.operator == ">=" and Version(s.version) >= floor for s in req.specifier):
+            errors.append(f"ffman requires {req}: raise its floor to {floor}")
+    sys.exit("\n".join(f"error: {e}" for e in errors) or None)
+    EOF
     fi
     just checks
-    cog bump --package "{{ package }}" --{{ semver }} --annotated "{{ package }} {{{{version}}"
-    # made, the commit and the tag: a failed push is retried as it is, never the bump -- unless
-    # origin moved meanwhile (refused, not a fast-forward): then drop the tag and the bump's
-    # commit, pull, and release again
-    git push --atomic --follow-tags origin main
+    cog bump --package "$package" --{{ semver }} --annotated "$package {{{{version}}"
+    # made, the commit and the tag, pushed together -- that tag alone: --follow-tags would take any
+    # other local one too, and more than three at once start no workflow (GitHub's push event). A
+    # failed push is retried as it is, never the bump -- unless origin moved meanwhile (refused,
+    # not a fast-forward): then drop the tag and the bump's commit, pull, and release again
+    git push --atomic origin main "refs/tags/$tag"
 
 [doc("git-cliff over a package's commits (cliff.toml); --unreleased: its next section")]
 [group("Misc")]

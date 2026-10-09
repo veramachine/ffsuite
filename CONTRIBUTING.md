@@ -68,22 +68,26 @@ just build    # each package's sdist and wheel, into dist/ (the root itself is n
 ## Releasing (maintainers)
 
 Each package is released on its own: `just release <ffman|ffmeta|subverter> <major|minor|patch>`,
-from a clean `main` up to date with `origin`. It refuses a version not above the package's own, runs
-`just checks`, and lets cocogitto set the version (`uv version`, the lock), write the package's
-`CHANGELOG.md` (git-cliff, `cliff.toml`) and commit both. It then tags `<package>-v<version>`
-and pushes the commit and the tag together. The tag runs `release.yml` (the GitHub release, its
-notes the changelog's new section) and `publish.yml` (PyPI).
-`just changelog <package> --unreleased` shows that section before the release.
+from a clean `main` up to date with `origin`. It refuses a version not above the package's own, or a
+package whose current version's tag is not on `origin`; runs `just checks`; and lets cocogitto set
+the version (`uv version`, the lock), write the package's `CHANGELOG.md` (git-cliff, `cliff.toml`)
+and commit both. It then tags `<package>-v<version>` and pushes the commit and that tag together.
+The tag runs `publish.yml`: the package built once, published to PyPI, then its GitHub release of
+the same files, its notes the changelog's new section. `just changelog <package> --unreleased` shows
+that section before the release.
 
-- Each package's 0.1.0 was published by hand (from 89d5487). Before the first `just release`,
-  tag it `<package>-v0.1.0`, annotated, with `release.yml` and `publish.yml` disabled meanwhile,
-  at the last commit touching its folder before 89d5487, which builds the same files byte for
-  byte: ffman 33b6f55, ffmeta 71688f8, subverter 6827d02. cocogitto counts from a package's latest
-  tag (untagged, from 0.0.0: a `major` would give 1.0.0), and git-cliff's `--include-path` sees
-  only commits touching the package: a tag elsewhere is lost.
-- Release a library before an ffman that needs it: ffman's wheel requires both libraries.
+- Each package's 0.1.0 was published by hand (from 89d5487). Before the first `just release`, tag it
+  `<package>-v0.1.0`, annotated, at the last commit touching its folder before 89d5487, which builds
+  the same files byte for byte -- ffman 33b6f55, ffmeta 71688f8, subverter 6827d02 -- and push the
+  three tags with the workflows `Publish` and `Release` disabled (`gh workflow disable`, then
+  `enable`): PyPI holds their files, and a tag runs the workflows of its own commit, where
+  `release.yml` still stands (gone from `main`, gh may not find it to disable: left on, it fails
+  there, releasing nothing -- no changelog yet). cocogitto counts from a package's latest tag, and
+  git-cliff's `--include-path` sees only commits touching the package: a tag elsewhere is lost.
+- Release a library before an ffman that needs it: ffman's wheel requires both libraries. For
+  ffman, the release refuses a library whose source is not its latest release's, and a floor in
+  ffman's range below that release's minor -- else pip may pair it with a release lacking what
+  it imports.
 - ffman's range for each library must admit that library's version (`test_workspace`, which
   the bump runs). A library's minor release in 0.x leaves ffman's `<0.2`, so widen ffman's range
-  first, in its own commit.
-- Its lower bound is the first release with what ffman uses: once ffman uses a library's new
-  name, raise it to that release (after it), or pip installs an ffman that cannot import.
+  first, in its own commit; after the release, raise its floor to it.

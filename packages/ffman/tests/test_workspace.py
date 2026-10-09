@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Final, cast
 
 import pytest
-from packaging.requirements import Requirement  # pytest's own dependency
+from packaging.requirements import Requirement  # the dev group's; in the Nix checks, pytest's
 
 ROOT: Final = Path(__file__).resolve().parents[3]  # packages/ffman/tests/ -> the workspace
 PACKAGES: Final = ("ffman", "ffmeta", "subverter")
