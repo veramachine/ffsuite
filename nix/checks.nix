@@ -55,7 +55,7 @@ let
             nativeCheckInputs = [
               python3Packages.pytestCheckHook
               python3Packages.pytest-cov
-              python3Packages.pytest-timeout # pyproject's timeout, under --strict-config
+              python3Packages.pytest-timeout # pyproject's timeout, under its strict = true
               python3Packages.pytest-xdist
               python3Packages.hypothesis
               python3Packages.numpy

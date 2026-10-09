@@ -49,6 +49,7 @@ matrix, the installed binary, on each Python). Moved from nixos-config's channel
 21. gblur's steps still 1-6 (6 the most accurate); lutrgb still takes 16-bit val
     (`graph/light.py`); color_transfer still 'iec61966-2-1' for sRGB in ffprobe.
 22. the dependency groups' pins and uv's `required-version` (`pyproject.toml`) set to the new
-    nixpkgs' versions, then `uv lock`: the `pins` check names each one left behind.
+    nixpkgs' versions, then `uv lock`: the `pins` check names each one left behind. A new
+    pytest's strictness options are on (`strict = true`): a test failing anew may be one.
 23. the image, which no check builds (the FDK ffmpeg, from source): `nix build .#image.stream &&
     ./result | docker load`, then a conversion in it (ffman's README).

@@ -126,7 +126,7 @@ def test_a_packages_pytest_rules_are_the_roots(package: str) -> None:
 
     own, root = options(ROOT / "packages" / package), options(ROOT)
     rules = own.keys() - {"testpaths", "pythonpath"}
-    assert {"addopts", "filterwarnings"} <= rules
+    assert {"addopts", "filterwarnings", "strict"} <= rules
     assert {key: own[key] for key in rules} == {key: root[key] for key in rules}
 
 

@@ -58,6 +58,6 @@ packages = ["src/subverter"]
 minversion = "9.0"
 testpaths = ["tests"]
 pythonpath = ["tests"]
-addopts = ["--strict-markers", "--strict-config", "-ra", "--import-mode=importlib"]
-xfail_strict = true
+addopts = ["-ra", "--import-mode=importlib"]
+strict = true # the root's, as each rule here (test_workspace)
 filterwarnings = ["error"]

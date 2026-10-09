@@ -113,8 +113,11 @@ minversion = "9.0"
 # tests package (packages/ffman) and each library's helper package, each its own name
 testpaths = ["packages/ffman/tests", "packages/ffmeta/tests", "packages/subverter/tests"]
 pythonpath = ["packages/ffman", "packages/ffmeta/tests", "packages/subverter/tests"]
-addopts = ["--strict-markers", "--strict-config", "-ra", "--import-mode=importlib"]
-xfail_strict = true
+addopts = ["-ra", "--import-mode=importlib"]
+# every strictness pytest has, as errors: unknown options and markers, an xfail that passes, a
+# repeated parametrize id -- and any it adds, on an upgrade. Set here: pytest 9.0 ignores
+# --strict-markers and --strict-config in addopts (pytest-dev/pytest#14442, fixed in 9.1)
+strict = true
 filterwarnings = ["error"] # a warning fails the suite: a leaked pipe went unseen for long
 timeout = 600
 markers = [
