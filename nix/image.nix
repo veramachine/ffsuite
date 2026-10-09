@@ -1,11 +1,10 @@
-# ffman as an OCI image, on whatever ffmpeg-full `pkgs` holds; Linux's alone.
+# ffman as a container image, the ffman given (overlays.default's: final.ffman); Linux's alone.
 #   nix build .#image          the gzipped docker-archive: `docker load < result`
 #   nix build .#image.stream   the script that streams it uncompressed: `./result | docker load`,
 #                              no second copy of the closure in the store
-{ pkgs }:
+{ pkgs, ffman }:
 let
   inherit (pkgs) lib;
-  inherit (import ./packages.nix { inherit pkgs; }) ffman;
 in
 pkgs.dockerTools.buildLayeredImage {
   name = "ffman";
@@ -23,4 +22,6 @@ pkgs.dockerTools.buildLayeredImage {
     WorkingDir = "/work"; # the folder mounted: docker run -v "$PWD:/work"
     Env = [ "HOME=/tmp" ]; # writable for any --user
   };
+  # tini and the image itself are Linux's: elsewhere, a refusal that names the image
+  meta.platforms = lib.platforms.linux;
 }

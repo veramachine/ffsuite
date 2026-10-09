@@ -19,9 +19,10 @@ let
       oldest = lib.throwIf (floor == null) "${project.name}: requires-python is no floor alone" (
         lib.head floor
       );
-      # the SPDX expression's identifiers, its operators and parentheses aside
+      # the SPDX expression's licence identifiers: its operators, parentheses and `WITH`
+      # exceptions aside
       licences = lib.subtractLists [ "" "AND" "OR" ] (
-        lib.filter lib.isString (builtins.split "[ ()]+" project.license)
+        lib.filter lib.isString (builtins.split "[ ()]+|WITH [^ ()]+" project.license)
       );
     in
     buildPython (

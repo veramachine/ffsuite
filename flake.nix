@@ -17,7 +17,8 @@
       forAllSystems = f: lib.genAttrs systems (system: f nixpkgs.legacyPackages.${system});
       # ffmpeg-full with FDK (withUnfree), the one tuning of the owner's system ffman reads (the
       # rest, a system's own: overlays.default's ffman-image) -- for the image alone: "nonfree and
-      # unredistributable" (ffmpeg's configure), built, never published
+      # unredistributable" (ffmpeg's configure), built, never published. The image is the
+      # overlay's, so the flake's and a consumer's are made alike.
       tuned =
         system:
         import nixpkgs {
@@ -27,6 +28,7 @@
             (_: prev: {
               ffmpeg-full = prev.ffmpeg-full.override { withUnfree = true; };
             })
+            self.overlays.default
           ];
         };
     in
@@ -41,7 +43,7 @@
           default = built.ffman;
         }
         // lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
-          image = import ./nix/image.nix { pkgs = tuned pkgs.stdenv.hostPlatform.system; };
+          image = (tuned pkgs.stdenv.hostPlatform.system).ffman-image;
         }
       );
 
@@ -54,10 +56,14 @@
         };
       }) self.packages;
 
-      # ffman and its image on the consumer's own nixpkgs: its ffmpeg-full, a system's tuned build
+      # ffman and its image on the consumer's own nixpkgs: its ffmpeg-full, a system's tuned build;
+      # the image of final.ffman, so a consumer's override of ffman reaches it
       overlays.default = final: _: {
         inherit (import ./nix/packages.nix { pkgs = final; }) ffman;
-        ffman-image = import ./nix/image.nix { pkgs = final; };
+        ffman-image = import ./nix/image.nix {
+          pkgs = final;
+          inherit (final) ffman;
+        };
       };
 
       checks = forAllSystems (pkgs: import ./nix/checks.nix { inherit pkgs; });
