@@ -1190,7 +1190,7 @@ repository, `veramachine/ffsuite` (the owner's: an organization for the NixOS
 project's repositories; the repository named for the tools it holds, `ffsuite` -- `fftools`,
 first chosen, is another's project on PyPI; first planned as `veralvx/ffman`), history kept -- its authorship one, unified before its first push
 (the owner's decision: trees, dates and messages kept, the hashes messages cite
-re-pointed); nixos-config takes it as a flake input -- not a submodule (a second pin beside `flake.lock`; Nix >= 2.27 needs
+re-pointed; superseded: published fresh, 6.7.4); nixos-config takes it as a flake input -- not a submodule (a second pin beside `flake.lock`; Nix >= 2.27 needs
 `inputs.self.submodules`). Nix builds it from source with nixpkgs' builders
 (`pypa-install-hook`: `installer`, bytecode at levels 0 and 1, measured); uv is
 the development tool; uv2nix only once a dependency is missing from nixpkgs.
@@ -1205,7 +1205,7 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       fails the job, nothing written (shown); a missing `metaflac` fails every
       FLAC to FLAC, a cue sheet or not. The font: `FFMAN_FONTS_DIR` alone (the
       Nix wrapper's), libass's `fontsdir` and ffman's measuring both; two files
-      used, IBM Plex Sans Regular and Bold, 276 KB (OFL-1.1). Read: csan
+      used, IBM Plex Sans Regular and Bold, 277 kB (OFL-1.1). Read: csan
       (`checks.yml` uv matrix, `publish.yml` Trusted Publishing, `release.yml`,
       `Justfile` groups), imi (dependency review, Dependabot automerge, audit,
       cocogitto -- monorepo package tags -- dprint, templates, CONTRIBUTING).
@@ -1650,7 +1650,8 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       list (`trove-classifiers`). `Typing :: Typed` was untrue -- no
       `py.typed`: added (basedpyright `all`, zero errors), in the wheel.
       `hatchling>=1.26.2`: its changelog's first release with
-      `license-files` in PEP 639's final form; nixpkgs' 1.29.0 within.
+      `license-files` in PEP 639's final form; nixpkgs' 1.29.0 within (6.7.11: 1.27.0, the first
+      writing core metadata 2.4, PEP 639's fields; 1.26.x wrote 2.3 without them, measured).
       `LICENSE-MIT`: SPDX's text, "Copyright (c) 2026 veralvx" (the owner's
       handle; ffman's history begins 2026-09-27), sha256 bb99fc5b...7872.
       `LICENSE-APACHE`: the ASF's, from its site's repository
@@ -1668,8 +1669,8 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       environment ruff, format, vulture, basedpyright clean, the suite
       1632 at 100%. Reviewed: of the lock's nine transitive packages, three
       differ from nixpkgs' -- `packaging`, `pygments` (no verdict) and
-      `coverage` 7.16.2 against 7.14.1, the 100% gate's measurer: pinned
-      too (the gate passes under it); numpy 2.4.4 has CPython 3.14 wheels
+      `coverage` 7.16.2 against 7.14.1, the coverage floor's measurer: pinned
+      too (the floor passes under it); numpy 2.4.4 has CPython 3.14 wheels
       (21, as for 3.13), so the CI matrix's 3.14 gets binaries.
       `dependencies` and `[tool.uv.sources]` for `ffmeta` and
       `subverter` move to the box that makes them (no workspace source
@@ -1824,7 +1825,7 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       `.agents/skills/` (`parents[3]` from `packages/ffmeta/tests/`).
       Their sdists then: ffman's drops the three `SKILL.md` it holds for
       them; ffmeta's cannot reach `../../.agents` (an upward path breaks an
-      sdist, 6.7.4) -- copies held equal by a test, or the oracle tests kept
+      sdist, 6.7.5) -- copies held equal by a test, or the oracle tests kept
       out of its sdist: decided there, each sdist's tests run from it. `test_readmes`
       and `test_copies` go with them: each package tests its own README,
       and the copies' test reads all three packages (the repository's). *Done. What moves
@@ -2126,7 +2127,7 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       checks and its dev shell removed; nixos-config's own references to it
       (`AGENTS.md`, 07-tools' section, the doc map and review maps under
       `.agents/review/`) pointed at the new repository. Its home presets stay
-      its own (`home/ffmpeg-normalize-presets.nix`, unchanged: the owner's
+      its own (`home/ffmpeg-normalize-presets.nix`, its values unchanged: the owner's
       decision, 6.7.7). `test_mpv_conf` re-homed here -- it holds
       `home/config/mpv.conf` to ffman's style -- reading ffman's package,
       `mpv.conf` in its fileset. ffman's skills -- `cue`, `ffmetadata`,
@@ -2259,7 +2260,7 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       filter: the system's Python and `lint`, evaluated), so its channel never fails on
       ffsuite's dev pins. `security.yml` still audits them daily. imi's schedule, group (minor
       and patch together, which the auto-merge takes -- fetch-metadata gives a group its
-      highest update type -- a major alone), labels (created if missing), `chore(deps)`
+      highest update type -- a major alone), labels (the owner creates them: one undefined is ignored -- Dependabot's options reference), `chore(deps)`
       commits (conventional, scoped) and cooldown (`default-days` alone: GitHub Actions takes
       no semver keys). Templates from imi's, their fields ffsuite's: the package and version,
       the install, ffmpeg's version, `--dry-run`'s commands, ffprobe's view of the input; a
@@ -2323,7 +2324,7 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       own; `minor` refused by `test_workspace`; each refusal before the checks. `just checks`:
       1730 and 770 passed, 100%; `nix flake check --no-build --all-systems` and actionlint clean.
       Reviewed, the section whole (the owner's): uv floated in the workflows (setup-uv's latest)
-      while every other tool is nixpkgs' -- now `required-version = "==0.11.21"`, which setup-uv
+      while every other tool is nixpkgs' (but dprint's CLI, the action's latest: the plugins format) -- now `required-version = "==0.11.21"`, which setup-uv
       installs and `pins` holds (two mutations; another uv refuses, naming the one to install);
       a squash merge of two commits or more takes the pull request's title as its commit (GitHub's
       default), an unchecked changelog entry -- the title is now `cog verify`'d, on an edit too,
@@ -2343,6 +2344,33 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       default message the pull request's title, checked conventional); on PyPI, a pending
       Trusted Publisher per project
       (`ffman`, `ffmeta`, `subverter`: repository, workflow, environment).
+      *Corrected by 6.7.11 (GitHub's and PyPI's documentation): each package's 0.1.0 is on PyPI
+      already, published by hand on 2026-10-07 -- a build at 89d5487 byte-identical to all six
+      files (measured) -- so a Trusted Publisher in each project's own Publishing settings, not
+      a pending one. In order, after the push: (1) each package's `<package>-v0.1.0`, annotated, at the last
+      commit touching its folder before 89d5487 -- ffman 33b6f55, ffmeta 71688f8, subverter
+      6827d02, each building PyPI's files byte for byte (measured): at 89d5487 itself, which
+      touches none, git-cliff's `--include-path` lost the tag (no 0.1.0 section, 6827d02 listed
+      under 0.2.0; measured) -- Release and Publish disabled meanwhile (no changelog then for
+      release.yml; PyPI holds the files). cog counts from there, and `just release` now refuses a
+      version not above the package's: a first `minor` gave 0.1.0 again; (2) Settings > General: squash
+      merging alone, its default message "Pull request title"; auto-merge allowed; (3) the labels
+      `dependencies` and `actions`; (4) Settings > Branches, a classic rule on `main`: a pull
+      request, no approvals, and the checks once each has run -- `Checks (Python 3.13)`, `Checks
+      (Python 3.14)`, `nix flake check (ubuntu-latest)`, `nix flake check (ubuntu-24.04-arm)`,
+      `nix flake check --all-systems (evaluation)`, `Check Conventional Commits` (unrequired, a
+      bad title merges, and fails every later push's whole-history check), and
+      macOS's once green; bypass left allowed (`just release` pushes to `main`); (5) the `pypi`
+      environment, its deployments the three tags' patterns; (6) Advanced Security > private
+      vulnerability reporting; (7) on PyPI, each project's publisher: `veramachine`, `ffsuite`,
+      `publish.yml`, `pypi`; (8) the releases (below); (9) nixos-config's `nix flake update
+      ffsuite`. Not needed, contrary to `dependabot-automerge.yml`'s first header: Actions' write
+      permissions and its "create and approve pull requests" -- the workflow's `permissions:`
+      override the default, and it creates and approves nothing. The releases: ffmeta none
+      (nothing since 0.1.0); subverter `minor` (72310dc, `feat`), ffman's range first widened to
+      `<0.3`; then ffman's lower bound raised to `>=0.2` -- found by 6.7.11's review: HEAD's ffman
+      imports `subverter.markup.decoded`, which 0.1.0 lacks, and `>=0.1` let pip install it
+      (measured, an `ImportError`; CONTRIBUTING.md's new rule) -- and ffman `patch`.*
 
 *6.7.10 Proven*
 
@@ -2353,10 +2381,49 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       classifiers) only once its checks pass; each package built (`uv build`)
       and installed in a clean venv, `ffman` run with only ffmpeg on `PATH`;
       the image built and run (the owner's: `docker load`, a conversion).
+      *Done here, at 0dbcd34 (x86_64 Linux): `just`'s recipes on 3.13 and 3.14 with the pins on
+      `PATH` (ffmpeg 8.1.2, FLAC 1.5.0, ffmpeg-normalize 1.37.7, nixpkgs' versions) -- lock, ruff,
+      basedpyright, vulture clean; 1768 passed at 100% line and branch (every file); the matrix,
+      770; dprint, cog, pip-audit clean; `nix flake check --no-build --all-systems` passes. The
+      outcome report against 253c5eb (nixos-config's last `tools/ffman`, which holds 6.7.2 and
+      6.7.3 already -- the box's "but 6.7.2's and 6.7.3's" was wrong): 425 identical, 4 changed,
+      each a recorded change -- `cli/version` 2.0.0.dev0 to 0.1.0 (6.7.5), `env/no-normalize-home`
+      refused to run on the carried presets (6.7.7), `attach/references` and
+      `burn/hostile/references.vtt` decoded (6.8.1's fix). Built (`uv build --all-packages
+      --no-sources`), installed offline from the six files into a clean 3.14 venv, run with
+      ffmpeg and ffprobe alone on `PATH`: `--version`, a burn of an SRT and of a VTT, a GIF (noted
+      unoptimised), and the refusals README.md's tools table names (`env not found` for
+      `--preset youtube`; with `env`, its own line naming ffmpeg-normalize, then the refusal).
+      Left, the owner's: `nix flake check` built on Linux and on a Mac (nix.yml, after the push:
+      no binary cache reachable here), and the image.*
 
 *6.7.11 Review*
 
 - [ ] The section reviewed whole.
+      *Done (three independent reviews -- 6.7.1-6.7.5, 6.7.6-6.7.8, 6.7.9 -- each claim against
+      the repositories, findings re-verified, then fixed or recorded). Release: each package's
+      0.1.0 published by hand left the release flow re-issuing 0.1.0 (the owner box, corrected
+      above; `just release` refuses a version not above the package's, CONTRIBUTING.md's rules);
+      ffman's `subverter>=0.1` admitted a release without `decoded` (measured: `ImportError`) --
+      the owner's release order. Packaging: `hatchling>=1.27.0` in the three (1.26.x wrote
+      metadata 2.3, no `License-Expression`: measured); subverter's summary names whisper-cli's
+      and WhisperX's JSON. CI: `dependabot-automerge.yml`'s settings (two unneeded, approvals
+      none, a merge by its token runs no workflow), the commits' check required, a run on
+      `main` never cancelled, dependency review in effect a licence check (commit-pinned
+      actions get no advisories), dprint's CLI the action's latest -- each said where it lives.
+      Tests: ffmeta's oracle tools held to ffman's by every name it carries (a rename now fails:
+      mutation). Documents: `decisions.md`'s floor (100% measured, 95% the floor) and `pins`;
+      AGENTS.md's library-tests row; `image.nix`'s comment (the overlay's `ffman-image` refused,
+      no `.#image` off Linux); nixos-config's comment on `pins` not re-exported; this record --
+      the intro's history (published fresh, 6.7.4), the fonts 277 kB, the coverage floor's
+      wording, hatchling, Dependabot's labels (the owner's to create), the home presets (their
+      values unchanged), three citations 6.7.4 that are 6.7.5's. Since, unrecorded until now:
+      `syrupy` left the dev group (7987ee3); `types-py314` checked 3.13 until `--pythonversion`
+      (56324b0, the image `buildLayeredImage` with `.#image.stream` there too); nixos-config
+      locks ffsuite at dd0e31a (the owner's `nix flake update ffsuite`). Not changed: the
+      GitHub release and PyPI each build their own files (hatchling floating; reproducible at
+      one version, measured), a library's own tree's coverage held by no check (100% measured).
+      Open until 6.7.9's and 6.7.10's owner parts are done.*
 
 **6.8 Subtitle formats** (each into each other; research and skills before code, as 6.6; G4 each)
 
