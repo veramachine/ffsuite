@@ -7,13 +7,13 @@ A file read becomes what it holds: its cues, the word timings where the format
 keeps them, notes on what it held that the model does not, and a refusal --
 with its reason -- for what cannot be read.
 
-| Format  | Read as                                                                                    |
-| ------- | ------------------------------------------------------------------------------------------ |
-| SubRip  | cues; WhisperX's highlighted cues read back into words                                     |
-| WebVTT  | cues, as SubRip's                                                                          |
-| LRC     | a line's time, its text                                                                    |
-| CSV/TSV | start, end, text (milliseconds), columns by header, as whisper-cli and WhisperX write them |
-| JSON    | whisper-cli's and WhisperX's: chunks and word timings                                      |
+| Format  | Read as                                                                                                        |
+| ------- | -------------------------------------------------------------------------------------------------------------- |
+| SubRip  | cues; WhisperX's highlighted cues read back into words                                                         |
+| WebVTT  | cues, as SubRip's; `has_references`: its texts hold HTML character references, each run between tags `decoded` |
+| LRC     | a line's time, its text                                                                                        |
+| CSV/TSV | start, end, text (milliseconds), columns by header, as whisper-cli and WhisperX write them                     |
+| JSON    | whisper-cli's and WhisperX's: chunks and word timings                                                          |
 
 ## Installing
 

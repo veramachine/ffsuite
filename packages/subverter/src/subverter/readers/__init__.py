@@ -22,11 +22,20 @@ def read(fmt: str, data: bytes, name: str) -> Reading:
     match fmt:
         case "srt" | "vtt":
             cues = subrip.rows(_lines(data))
+            references = fmt == "vtt"  # SubRip has none: ffmpeg's subrip decodes none
             if not subrip.is_highlighted(cues):
-                return Reading(f".{fmt}", has_words=False, cues=tuple(cues))
+                return Reading(
+                    f".{fmt}", has_words=False, cues=tuple(cues), has_references=references
+                )
             sentences, words = subrip.highlighted(cues)
             source = f"WhisperX --highlight_words .{fmt}"
-            return Reading(source, has_words=True, cues=tuple(sentences), words=tuple(words))
+            return Reading(
+                source,
+                has_words=True,
+                cues=tuple(sentences),
+                words=tuple(words),
+                has_references=references,
+            )
         case "lrc":
             return Reading(".lrc", has_words=False, cues=tuple(lrc.rows(_lines(data))))
         case "csv" | "tsv":

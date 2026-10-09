@@ -322,3 +322,35 @@ def test_a_token_or_word_not_an_object_is_no_value() -> None:
     words = ["nope", {"word": "ok", "start": 0, "end": 0.5}]  # a malformed word: skipped
     wx = json.dumps({"segments": [{"start": 0, "end": 0.5, "text": "ok", "words": words}]}).encode()
     assert subverter.read("json", wx, "a.json").words == (Timing("0", 0, 500, "ok"),)
+
+
+@pytest.mark.parametrize(
+    ("name", "data"),
+    [
+        ("a.vtt", "WEBVTT\n\n00:01.000 --> 00:02.000\nA &amp; B\n"),
+        (
+            "h.vtt",
+            "WEBVTT\n\n00:01.000 --> 00:02.000\n<u>A</u> &amp;\n\n00:02.000 --> 00:03.000\nA <u>&amp;</u>\n",
+        ),
+    ],
+)
+def test_a_vtts_texts_hold_references_kept_for_their_consumer_to_decode(
+    name: str, data: str
+) -> None:
+    reading = subverter.read("vtt", data.encode(), name)
+    assert reading.has_references
+    assert "&amp;" in reading.cues[0].text  # as written: its runs between tags decoded after
+
+
+@pytest.mark.parametrize("fmt", ["srt", "lrc", "csv", "tsv", "json"])
+def test_no_other_format_holds_references(fmt: str) -> None:
+    data = {
+        "srt": "1\n00:00:01,000 --> 00:00:02,000\nA &amp; B\n",
+        "lrc": "[00:01.00]A &amp; B\n",
+        "csv": "start,end,text\n1000,2000,A &amp; B\n",
+        "tsv": "start\tend\ttext\n1000\t2000\tA &amp; B\n",
+        "json": json.dumps({"segments": [{"start": 1, "end": 2, "text": "A &amp; B"}]}),
+    }[fmt]
+    reading = subverter.read(fmt, data.encode(), f"a.{fmt}")
+    assert not reading.has_references
+    assert reading.cues[0].text == "A &amp; B"

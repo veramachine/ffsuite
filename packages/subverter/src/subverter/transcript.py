@@ -59,10 +59,17 @@ class Timing:
 
 @dataclass(frozen=True, slots=True)
 class Reading:
-    """A reader's answer: its source's name, word timings or not, its cues, words and notes."""
+    """A reader's answer: its source's name, word timings or not, its cues, words and notes.
+
+    ``has_references``: its texts are WebVTT's, where ``&`` begins an HTML character
+    reference (W3C WebVTT, the cue text tokenizer: "HTML character reference in data
+    state") -- each run between tags decoded (``decoded``), so a decoded ``<`` stays text. A
+    highlighted reading's sentences come untagged: WhisperX's tags wrap whole words.
+    """
 
     source: str
     has_words: bool
     cues: tuple[Cue, ...]
     words: tuple[Timing, ...] = ()
     notes: tuple[str, ...] = ()
+    has_references: bool = False
