@@ -133,6 +133,9 @@ conditional expression) is invisible to coverage: find its cases by their output
 - **Numbers carry provenance**: a measured or sourced number is a named constant with its
   source, or has its source where it stands -- its comment (a `noqa: PLR2004` one's reason), its
   module's docstring, or its `docs/decisions.md` row.
+- **Comments hold what is essential**: what the code cannot say -- a decision, its source, a
+  constraint -- concise and precise, never the code restated. A change that falsifies one
+  rewrites it.
 - **NumPy is for the tests.** Its stubs (2.4) type a reduction, an index and a
   power as `Any`: cast where the value is made, or use the typed helpers in
   `packages/ffman/tests/support/measures.py`.
