@@ -68,13 +68,14 @@ just build    # each package's sdist and wheel, into dist/ (the root itself is n
 ## Releasing (maintainers)
 
 Each package is released on its own: `just release <ffman|ffmeta|subverter> <major|minor|patch>`,
-from a clean `main` up to date with `origin`. It refuses a version not above the package's own, or a
-package whose current version's tag is not on `origin`; runs `just checks`; and lets cocogitto set
-the version (`uv version`, the lock), write the package's `CHANGELOG.md` (git-cliff, `cliff.toml`)
-and commit both. It then tags `<package>-v<version>` and pushes the commit and that tag together.
-The tag runs `publish.yml`: the package built once, published to PyPI, then its GitHub release of
-the same files, its notes the changelog's new section. `just changelog <package> --unreleased` shows
-that section before the release.
+from a clean `main` equal to `origin/main`. It runs no tests: push first and release once CI is
+green on that commit. It refuses a version not above the package's own, or a package whose current
+version's tag is not on `origin`, and lets cocogitto set the version (`uv version`, the lock), write
+the package's `CHANGELOG.md` (git-cliff, `cliff.toml`) and commit both. It then tags
+`<package>-v<version>` and pushes the commit and that tag together. The tag runs `publish.yml`: the
+package built once, published to PyPI, then its GitHub release of the same files, its notes the
+changelog's new section. `just changelog <package> --unreleased` shows that section before the
+release.
 
 - Each package's 0.1.0 was published by hand (from 89d5487). Before the first `just release`, tag it
   `<package>-v0.1.0`, annotated, at the last commit touching its folder before 89d5487, which builds
@@ -86,8 +87,8 @@ that section before the release.
   git-cliff's `--include-path` sees only commits touching the package: a tag elsewhere is lost.
 - Release a library before an ffman that needs it: ffman's wheel requires both libraries. For
   ffman, the release refuses a library whose source is not its latest release's, and a floor in
-  ffman's range below that release's minor -- else pip may pair it with a release lacking what
-  it imports.
-- ffman's range for each library must admit that library's version (`test_workspace`, which
-  the bump runs). A library's minor release in 0.x leaves ffman's `<0.2`, so widen ffman's range
-  first, in its own commit; after the release, raise its floor to it.
+  ffman's range below that release, patch included -- ffman is tested with it alone, and pip keeps
+  an older one installed that the range admits.
+- A library's release refuses a version ffman's range excludes (uv's lock ignores the range): a
+  minor release in 0.x leaves ffman's `<0.2`, so widen ffman's range first, in its own commit; after
+  the release, raise its floor to it.

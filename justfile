@@ -115,19 +115,20 @@ nix:
 build:
     uv build --all-packages --no-sources
 
-[doc("Release a package from main: just release ffmeta minor (major, minor or patch)")]
+[doc("Release a package: just release ffmeta minor (major, minor or patch) -- no tests: CI's")]
 [group("Misc")]
 release package semver:
     #!/usr/bin/env bash
     set -euo pipefail
     package="{{ package }}"
-    # refused before the checks: cog refuses a branch or a dirty tree only after them
+    # a clean main, refused before anything runs (cog would refuse either, but only at its bump)
     if [ "$(git branch --show-current)" != main ] || [ -n "$(git status --porcelain)" ]; then
         echo "error: a release is cut from main, clean" >&2; exit 1
     fi
+    # no tests here: what is released is origin's main, which CI has checked (CONTRIBUTING.md)
     git fetch --tags origin
-    if [ "$(git rev-list --count HEAD..origin/main)" -ne 0 ]; then
-        echo "error: main is behind origin/main: pull first" >&2; exit 1
+    if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
+        echo "error: main is not origin/main: push (and let CI pass) or pull first" >&2; exit 1
     fi
     # cog counts from the package's latest tag (0.0.0 before its first), so the version the
     # package carries is tagged on origin -- each 0.1.0, published by hand, too (CONTRIBUTING.md)
@@ -140,10 +141,11 @@ release package semver:
     if [ "$next" = "$current" ] || ! printf '%s\n' "$current" "$next" | sort -C -V; then
         echo "error: $tag is not above $package $current" >&2; exit 1
     fi
-    if [ "$package" = ffman ]; then
-        # its wheel requires its libraries: each released as the workspace holds it, ffman's floor
-        # that release's minor -- else pip may pair it with one lacking what it imports
-        uv run --locked python - <<'EOF'
+    # ffman's requirements, which uv's lock ignores for a workspace member (measured): a library's
+    # next version within ffman's range; for ffman, each library released as the workspace holds
+    # it, and ffman's floor that release -- ffman is tested with it alone, and pip keeps an older
+    # one installed that the range admits (its upgrade strategy, only-if-needed)
+    uv run --locked python - "$package" "$next" <<'EOF'
     import subprocess
     import sys
     import tomllib
@@ -158,20 +160,22 @@ release package semver:
         return tomllib.loads(text)["project"]
 
 
+    package, upcoming = sys.argv[1], Version(sys.argv[2])
+    requires = {r.name: r for r in map(Requirement, project("ffman")["dependencies"])}
     errors = []
-    for req in map(Requirement, project("ffman")["dependencies"]):
-        version = Version(project(req.name)["version"])
-        tag, src = f"{req.name}-v{version}", f"packages/{req.name}/src"
-        diff = ["git", "diff", "--quiet", tag, "HEAD", "--", src]
-        if subprocess.run(diff, check=False).returncode:  # 1: changed; 128: no such tag
-            errors.append(f"{src} is not {tag}'s: release {req.name} first")
-        floor = Version(f"{version.major}.{version.minor}")
-        if not any(s.operator == ">=" and Version(s.version) >= floor for s in req.specifier):
-            errors.append(f"ffman requires {req}: raise its floor to {floor}")
+    if package in requires and not requires[package].specifier.contains(upcoming):
+        errors.append(f"ffman requires {requires[package]}, not {upcoming}: widen it first")
+    if package == "ffman":
+        for name, req in requires.items():
+            version = Version(project(name)["version"])
+            tag, src = f"{name}-v{version}", f"packages/{name}/src"
+            diff = ["git", "diff", "--quiet", tag, "HEAD", "--", src]
+            if subprocess.run(diff, check=False).returncode:  # 1: changed; 128: no such tag
+                errors.append(f"{src} is not {tag}'s: release {name} first")
+            if not any(s.operator == ">=" and Version(s.version) >= version for s in req.specifier):
+                errors.append(f"ffman requires {req}: raise its floor to {version}")
     sys.exit("\n".join(f"error: {e}" for e in errors) or None)
     EOF
-    fi
-    just checks
     cog bump --package "$package" --{{ semver }} --annotated "$package {{{{version}}"
     # made, the commit and the tag, pushed together -- that tag alone: --follow-tags would take any
     # other local one too, and more than three at once start no workflow (GitHub's push event). A

@@ -71,8 +71,8 @@ def test_the_licence_expressions_agree(package: str) -> None:
 @pytest.mark.parametrize("package", LIBRARIES)
 def test_ffmans_range_admits_each_librarys_version(package: str) -> None:
     # uv locks a workspace member without ffman's specifier (measured): a library bumped out of
-    # the range still locks, and ffman would be tested on a version its wheel refuses. The
-    # release hook (cog.toml) runs this test after the bump
+    # the range still locks, and ffman would be tested on a version its wheel refuses. `just
+    # release` refuses such a bump before it
     version = cast("str", _project(_pyproject(ROOT / "packages" / package))["version"])
     ffman = _project(_pyproject(ROOT / "packages/ffman"))
     (requirement,) = (

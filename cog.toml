@@ -14,13 +14,11 @@ generate_mono_repository_package_tags = true
 tag_prefix = "v"
 # hooks run in the package's folder (just runs from the root); their changes join the bump's
 # commit. `uv version` also re-locks; the README's image, `ffman:0.1.0`, takes the version, as
-# nix/image.nix tags it (test_readme); test_workspace refuses a version ffman's dependency range
-# excludes (uv's lock records workspace members without one)
+# nix/image.nix tags it (test_readme). No tests: `just release` releases what CI has checked
 pre_package_bump_hooks = [
     "uv version --package {{package}} {{version}} --no-sync",
     '''uv run --no-sync python -c "import pathlib, re; p = pathlib.Path('README.md'); p.write_text(re.sub(r'\b{{package}}:\d+\.\d+\.\d+\S*', '{{package}}:{{version}}', p.read_text(encoding='utf-8')), encoding='utf-8')"''',
     "just changelog {{package}} --tag {{package}}-v{{version}} --output packages/{{package}}/CHANGELOG.md",
-    "uv run --no-sync pytest -q -p no:cacheprovider ../ffman/tests/test_workspace.py",
 ]
 
 [monorepo.packages]
