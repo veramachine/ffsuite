@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ffman"
-version = "0.1.0"
+version = "0.1.1"
 description = "Opinionated media conversion on ffmpeg: resize, effects, subtitles"
 readme = "README.md"
 # the owner's: MIT or Apache-2.0, the user's choice; the wheel carries the OFL fonts. The

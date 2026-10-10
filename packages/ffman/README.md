@@ -18,7 +18,7 @@ nix run github:veramachine/ffsuite -- convert -i in.mp4 -w 1280
 Or as a container image, for amd64 and arm64, from the folder of your files:
 
 ```sh
-docker run --rm --user "$(id -u):$(id -g)" -v "$PWD:/work" ghcr.io/veramachine/ffman:0.1.0 \
+docker run --rm --user "$(id -u):$(id -g)" -v "$PWD:/work" ghcr.io/veramachine/ffman:0.1.1 \
   convert -i in.mp4 -w 1280
 ```
 
@@ -31,7 +31,7 @@ uncompressed, keeping no second copy of it:
 ```sh
 nix build github:veramachine/ffsuite#image && docker load < result
 nix build github:veramachine/ffsuite#image.stream && ./result | docker load   # or this
-docker run --rm --user "$(id -u):$(id -g)" -v "$PWD:/work" ffman:0.1.0 convert -i in.mp4 -w 1280
+docker run --rm --user "$(id -u):$(id -g)" -v "$PWD:/work" ffman:0.1.1 convert -i in.mp4 -w 1280
 ```
 
 `ffman convert --help` lists every option; `ffman effects`, the effects and
