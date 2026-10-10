@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ffmeta"
-version = "0.1.0"
+version = "0.1.1"
 description = "Media metadata files -- ffmetadata, Vorbis comments, cue sheets -- read, written and converted through one model"
 readme = "README.md"
 # the owner's: MIT or Apache-2.0, the user's choice
