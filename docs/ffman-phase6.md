@@ -2475,10 +2475,10 @@ from 6.7.9)
 
 - [ ] Each package's 0.1.0 tagged (annotated) at the last commit touching its folder before
       89d5487 -- ffman 33b6f55, ffmeta 71688f8, subverter 6827d02 -- and the three pushed with the
-      workflows `Publish` and `Release` disabled (CONTRIBUTING.md); then subverter `minor` (0.2.0:
-      72310dc's `feat`), ffman's range widened to `<0.3` before it and raised to `>=0.2` after --
-      HEAD's ffman imports `subverter.markup.decoded`, which 0.1.0 lacks; `just release ffman`
-      refuses either left undone -- then ffman's release; ffmeta has nothing new. Proven:
+      workflows `Publish` and `Release` disabled (CONTRIBUTING.md); then subverter's release --
+      HEAD's ffman imports `subverter.markup.decoded`, which 0.1.0 lacks -- ffman's floor raised to
+      it, `just release ffman` refusing it left undone; then ffman's release; ffmeta has nothing
+      new. Proven:
       `publish.yml`'s three jobs green, PyPI's files the tag's build with their attestations, the
       GitHub release the same files and its notes the changelog's section, and a clean venv's `pip
       install ffman` importing. Until each package's release, its `Changelog` link (PyPI's 0.1.0
@@ -2487,6 +2487,18 @@ from 6.7.9)
       for none (disabled), `Release` -- gone from `main`, so not disabled -- ran for each and
       failed at its notes, as expected (no changelog at those commits): no GitHub release, PyPI
       unchanged (0.1.0 alone). Next: subverter's release, then ffman's.*
+      *Progress (2026-10-10): subverter `patch` (the owner's: 0.1.1, 72310dc's `feat` in 0.x)
+      tagged and pushed; `Publish` #1 built, then its PyPI job was refused -- "not allowed to
+      deploy to pypi due to environment protection rules": the `pypi` environment's deployment
+      rules must admit the tags, each rule's ref type Tag (`ffman-v*`, `ffmeta-v*`,
+      `subverter-v*`); then "Re-run failed jobs". Found with it: `just release ffman` held ffman's
+      floor to a library's minor, so `subverter>=0.1` passed while 0.1.0 lacks `decoded` -- the
+      floor is now the library's release, patch included, and ffman's `>=0.1.1` (dc7e051). And
+      the owner's: `just release` runs no tests (CI's verdict on origin's `main`, which it now
+      requires HEAD to be); ffman's range checked before the bump, cog's test hook gone (c490655).
+      Proven on a clone against a bare remote: a floor of 0.1, a subverter `minor` outside `<0.2`
+      and an unpushed commit each refused before anything is written; at dc7e051, ffman 0.1.1
+      released in 8 s, its changelog's section and tag pushed.*
 
 **6.8 Subtitle formats** (each into each other; research and skills before code, as 6.6; G4 each)
 
