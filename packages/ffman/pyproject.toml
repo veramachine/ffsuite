@@ -49,7 +49,7 @@ classifiers = [
 # each library's 0.1 line: in 0.x a minor release may break, so the next is kept out (PEP 440:
 # `<0.2` admits no 0.2 pre-release either); the floor, the release ffman is tested with
 # (`just release`): subverter 0.1.1's `markup.decoded`, which ffman imports
-dependencies = ["ffmeta>=0.1,<0.2", "subverter>=0.1.1,<0.2"]
+dependencies = ["ffmeta>=0.1.1,<0.2", "subverter>=0.1.1,<0.2"]
 
 [project.urls]
 Changelog = "https://github.com/veramachine/ffsuite/blob/main/packages/ffman/CHANGELOG.md"
