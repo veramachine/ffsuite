@@ -56,8 +56,9 @@ that run-book; nixos-config's own couplings stay there.
     nixpkgs' versions, then `uv lock`: the `pins` check names each one left behind. A new
     pytest's strictness options are on (`strict = true`): a new failure, even before
     collection, may be one.
-23. the image, which no check builds (the FDK ffmpeg, from source): `nix build .#image.stream &&
-    ./result | docker load`, then a conversion in it (ffman's README).
+23. the images, which no check builds: `nix build .#image.stream && ./result | docker load` (the
+    FDK ffmpeg, from source), then a conversion in it (ffman's README); `.#image-free`, by
+    `image.yml` run by hand (built and run on both architectures, nothing pushed).
 24. ffmpeg's or FLAC's version moved: the conftests hold both (their pin checks); the `ffmpeg`
     marker's text and the documents name them (`git grep -niE '8\.1\.2|ffmpeg 8\.1|flac 1\.5'`); the
     skills' tables were measured on them, and ffmeta's tests read them as oracles -- re-measure

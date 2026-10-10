@@ -15,20 +15,23 @@ yet tested) -- the tools it runs come with it:
 nix run github:veramachine/ffsuite -- convert -i in.mp4 -w 1280
 ```
 
-Or as a container image, built from the flake on Linux, its ffmpeg with Fraunhofer's FDK AAC --
-for your own use: ffmpeg's own build calls such an ffmpeg "nonfree and unredistributable", so no
-binary cache holds it either (it builds from source). Docker, from the folder of your files:
+Or as a container image, for amd64 and arm64, from the folder of your files:
 
 ```sh
-nix build github:veramachine/ffsuite#image && docker load < result
-docker run --rm --user "$(id -u):$(id -g)" -v "$PWD:/work" ffman:0.1.0 convert -i in.mp4 -w 1280
+docker run --rm --user "$(id -u):$(id -g)" -v "$PWD:/work" ghcr.io/veramachine/ffman:0.1.0 \
+  convert -i in.mp4 -w 1280
 ```
 
+Its ffmpeg is nixpkgs' ffmpeg-full, whose AAC encoder is ffmpeg's own. The flake also builds
+one with Fraunhofer's FDK AAC, for your own use alone: ffmpeg's build calls such an ffmpeg
+"nonfree and unredistributable", so no registry or binary cache holds it (it builds from source).
 `#image` is the gzipped archive, kept in the store; `#image.stream` streams the same image
 uncompressed, keeping no second copy of it:
 
 ```sh
-nix build github:veramachine/ffsuite#image.stream && ./result | docker load
+nix build github:veramachine/ffsuite#image && docker load < result
+nix build github:veramachine/ffsuite#image.stream && ./result | docker load   # or this
+docker run --rm --user "$(id -u):$(id -g)" -v "$PWD:/work" ffman:0.1.0 convert -i in.mp4 -w 1280
 ```
 
 `ffman convert --help` lists every option; `ffman effects`, the effects and

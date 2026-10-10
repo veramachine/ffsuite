@@ -46,6 +46,8 @@ let
         build-system = [ python3Packages.hatchling ];
         doCheck = false;
         pythonImportsCheck = [ project.name ];
+        # the image's source label (nix/image.nix): the repository, not the homepage
+        passthru.repository = project.urls.Repository;
         meta = {
           inherit (project) description;
           homepage = project.urls.Homepage;

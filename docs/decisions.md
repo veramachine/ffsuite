@@ -62,7 +62,10 @@ macOS's adv_cmds), not `/proc`. The image (`nix/image.nix`, `dockerTools.buildLa
 Linux's: `.#image` the gzipped archive, `.#image.stream` the same streamed, no copy kept): ffman
 and its runtime, tini as PID 1, `/tmp`, on ffmpeg-full with FDK (`withUnfree`, as the owner's
 system) -- built for the owner, never published: ffmpeg's configure makes a GPL build with
-libfdk_aac "nonfree and unredistributable" (the owner's decision). `overlays.default` gives the
+libfdk_aac "nonfree and unredistributable" (the owner's decision). `.#image-free` is the published
+one (`image.yml`, ffman's tag, to GHCR): the flake's own `ffman`, nixpkgs' ffmpeg-full -- no FDK
+(`withUnfree ? false`, so `withFdkAac` off: nixpkgs' `generic.nix`), every package free by
+nixpkgs' licences (built with unfree refused, nixpkgs' default). `overlays.default` gives the
 same image as `ffman-image`, on the consumer's ffmpeg-full: a system's tuned build, the store path
 it already has.
 

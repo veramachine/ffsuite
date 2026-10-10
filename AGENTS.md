@@ -28,7 +28,7 @@ read them as oracles.
 | `packages/ffman/tests/`                                        | ffman's unit and property tests; `suite/`, the bash suites ported (ids `S…`: run.sh's, `M…`: matrix.sh's); `test_workspace.py` and the outcome harness, the repository's own                                                                                                                                                                                                                                                                                                  |
 | `packages/ffman/tests/support/`                                | ffman's shared measures (numpy), media helpers, Hypothesis strategies                                                                                                                                                                                                                                                                                                                                                                                                         |
 | `packages/{ffmeta,subverter}/tests/`                           | each library's own tests, no package (`--import-mode=importlib`): ffmeta's with `ffmeta_support` (strategies, examples, its oracles' tools) and the pinned-tool fixtures; subverter's; `test_imports.py` in each: itself and the standard library alone. One run from the root takes all three trees; each sdist runs its own                                                                                                                                                 |
-| `flake.nix`, `nix/`                                            | the flake (Linux, Apple silicon): the packages (`packages.nix`: the runtime, the wrapper), the image (`image.nix`, Linux's: FDK's ffmpeg, never published), the checks (`checks.nix`; `installed.sh`, the installed binary's), the dev shell (`shell.nix`)                                                                                                                                                                                                                    |
+| `flake.nix`, `nix/`                                            | the flake (Linux, Apple silicon): the packages (`packages.nix`: the runtime, the wrapper), the images (`image.nix`, Linux's: `image` FDK's ffmpeg, never published; `image-free` nixpkgs', `image.yml`'s), the checks (`checks.nix`; `installed.sh`, the installed binary's), the dev shell (`shell.nix`)                                                                                                                                                                     |
 | `justfile` `cog.toml` `dprint.json` `.pre-commit-config.yaml`  | the tooling (CONTRIBUTING.md): the checks and the release as recipes; Conventional Commits and the packages' tags; their changelogs, `cliff.toml` (git-cliff's); Markdown and TOML formatting; the hooks                                                                                                                                                                                                                                                                      |
 | `.github/`                                                     | the workflows, each from its source (csan's, imi's); `package-tag.sh`, a package's tag read as its package (publish's); Dependabot (GitHub Actions alone); the issue and pull request templates                                                                                                                                                                                                                                                                               |
 | `docs/`                                                        | the spec, `decisions.md` (a row a behaviour), `upgrading.md` (a nixpkgs bump's re-checks), the port's records (`ffman-python.md`, the plan; `ffman-phase6.md`; `ffman-from-bash.md`)                                                                                                                                                                                                                                                                                          |
@@ -68,14 +68,15 @@ of them. At a nixpkgs bump,
 the tools' behaviour ffman holds to, re-checked: [`docs/upgrading.md`](docs/upgrading.md).
 
 GitHub runs them too (`.github/workflows/`): `checks.yml`, the dev group's tools on 3.13 and 3.14
-without ffmpeg (`-m "not ffmpeg and not slow"`; ty advisory) and `uv lock --check`; `nix.yml`,
-`nix flake check` built on x86_64 and aarch64 Linux and Apple silicon and evaluated for all three
-at once, and on a pull request the outcome report against its base; `security.yml`, pip-audit over
-the lock, daily; on a package's tag (`ffmeta-v0.2.0`), `publish.yml`: the package built once, then
-PyPI through Trusted Publishing and its GitHub release, of the same files. `just release` cuts that
-tag, the package's `CHANGELOG.md` written by git-cliff (CONTRIBUTING.md). The commit messages and
-the Markdown and TOML formatting: `style-check-cocogitto.yml`, `style-check-dprint.yml`; a pull
-request's new actions, `dependency-review.yml`; auto-merge for Dependabot's patch and minor updates,
+without ffmpeg (`-m "not ffmpeg and not slow"`; ty advisory) and `uv lock --check`; `nix.yml`, `nix
+flake check` built on x86_64 and aarch64 Linux and Apple silicon and evaluated for all three at
+once, and on a pull request the outcome report against its base; `security.yml`, pip-audit over the
+lock, daily; on a package's tag (`ffmeta-v0.2.0`), `publish.yml`: the package built once, then PyPI
+through Trusted Publishing and its GitHub release, of the same files; on ffman's, `image.yml` too:
+`image-free` to GHCR. `just release` cuts that tag, the package's `CHANGELOG.md` written by
+git-cliff (CONTRIBUTING.md). The commit messages and the Markdown and TOML formatting:
+`style-check-cocogitto.yml`, `style-check-dprint.yml`; a pull request's new actions,
+`dependency-review.yml`; auto-merge for Dependabot's patch and minor updates,
 `dependabot-automerge.yml`.
 
 ## The outcome report

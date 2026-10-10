@@ -1,0 +1,112 @@
+# python-template's image.yml for ffman: its release tag publishes the flake's `image-free` --
+# nixpkgs' ffmpeg-full, no FDK (`image`, FDK's, is built by its user alone: flake.nix) -- to GHCR
+# as ghcr.io/<owner>/ffman, built on each Linux architecture, run once, pushed per architecture,
+# then joined under one multi-architecture tag, <version> (and `latest` while it is ffman's
+# highest release). The job's token pushes (packages: write): no secret stored. A first push is
+# private (GHCR's default): make the package public in its settings once. Run by hand
+# (workflow_dispatch) on a branch, it builds and runs the image on both, pushing nothing; on a
+# tag, it publishes that release again.
+name: Image
+
+on:
+  push:
+    tags: ["ffman-v*"]
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  build:
+    name: Build and run (${{ matrix.arch }})
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        include:
+          - runner: ubuntu-latest
+            arch: amd64
+          - runner: ubuntu-24.04-arm
+            arch: arm64
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      description: ${{ steps.build.outputs.description }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
+
+      - name: Build and run
+        id: build
+        run: |
+          set -euo pipefail
+          version="$(nix eval --raw .#image-free.imageTag)"
+          # a tag's version is ffman's (package-tag.sh, publish.yml's), the image's tag
+          if [[ $GITHUB_REF_TYPE == tag && $GITHUB_REF_NAME != "ffman-v$version" ]]; then
+            echo "::error::$GITHUB_REF_NAME, but ffman's pyproject.toml declares $version" >&2
+            exit 1
+          fi
+          # streamed into docker: no compressed copy of the closure in the store
+          stream="$(nix build --no-link --print-out-paths .#image-free.stream)"
+          "$stream" | docker load
+          # the image as a user runs it, through its entrypoint (tini, then ffman); the binary
+          # itself is the flake's `ffman`, which the checks' installed-* already run
+          actual="$(docker run --rm --pull never "ffman:$version" --version)"
+          if [[ $actual != "ffman $version" ]]; then
+            echo "::error::--version gave '$actual', expected 'ffman $version'" >&2
+            exit 1
+          fi
+          echo "description=$(nix eval --raw .#ffman.meta.description)" >> "$GITHUB_OUTPUT"
+
+      - name: Push
+        if: github.ref_type == 'tag'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARCH: ${{ matrix.arch }}
+        run: |
+          set -euo pipefail
+          version="${GITHUB_REF_NAME#ffman-v}"
+          repository="ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/ffman"
+          docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin <<< "$GH_TOKEN"
+          docker tag "ffman:$version" "$repository:$version-$ARCH"
+          docker push "$repository:$version-$ARCH"
+
+  publish:
+    name: Multi-architecture tag
+    needs: build
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        # every tag, to tell whether this one is ffman's highest
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Join the architectures
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DESCRIPTION: ${{ needs.build.outputs.description }}
+        run: |
+          set -euo pipefail
+          version="${GITHUB_REF_NAME#ffman-v}"
+          repository="ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/ffman"
+          docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin <<< "$GH_TOKEN"
+          # `latest`: ffman's highest final release (N.N.N, maybe .postN), so a patch to an older
+          # line leaves it where it is
+          highest="$(git tag --list 'ffman-v[0-9]*' | sed 's/^ffman-v//' \
+            | { grep -E '^[0-9]+(\.[0-9]+)*(\.post[0-9]+)?$' || true; } | sort -V | tail -n 1)"
+          tags=(--tag "$repository:$version")
+          if [[ $version == "$highest" ]]; then tags+=(--tag "$repository:latest"); fi
+          # the description, the index's annotation: what GHCR reads for a multi-architecture image
+          docker buildx imagetools create "${tags[@]}" \
+            --annotation "index:org.opencontainers.image.description=$DESCRIPTION" \
+            "$repository:$version-amd64" "$repository:$version-arm64"

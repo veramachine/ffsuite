@@ -16,9 +16,9 @@
       ];
       forAllSystems = f: lib.genAttrs systems (system: f nixpkgs.legacyPackages.${system});
       # ffmpeg-full with FDK (withUnfree), the one tuning of the owner's system ffman reads (the
-      # rest, a system's own: overlays.default's ffman-image) -- for the image alone: "nonfree and
-      # unredistributable" (ffmpeg's configure), built, never published. The image is the
-      # overlay's, so the flake's and a consumer's are made alike.
+      # rest, a system's own: overlays.default's ffman-image) -- for `image` alone: "nonfree and
+      # unredistributable" (ffmpeg's configure), built by its user, never published. The image is
+      # the overlay's, so the flake's and a consumer's are made alike.
       tuned =
         system:
         import nixpkgs {
@@ -44,6 +44,12 @@
         }
         // lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
           image = (tuned pkgs.stdenv.hostPlatform.system).ffman-image;
+          # the published one (image.yml): this ffman, nixpkgs' ffmpeg-full -- no FDK (withUnfree
+          # false, nixpkgs' default), every package free by nixpkgs' licences (decisions.md)
+          image-free = import ./nix/image.nix {
+            inherit pkgs;
+            inherit (built) ffman;
+          };
         }
       );
 
