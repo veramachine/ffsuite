@@ -2411,6 +2411,12 @@ Names free on PyPI (measured: `ffman`, `ffmeta`, `subverter`, 404).
       *Again at 35c1760 (6.7.11's changes in), on 3.14 with the pins: lock, ruff, basedpyright,
       vulture clean; 1768 passed at 100%; the matrix, 770; dprint, cog and the evaluation of all
       three systems clean. macOS stays "not yet tested" in both READMEs until its result is seen.*
+      *macOS (2026-10-10): nix.yml's `nix flake check (macos-latest)`, aarch64-darwin, the
+      suite on 3.13 and 3.14, the matrix and the installed binary, passed at fbfb3fb, 8edd92e and
+      55580ae (#8 to #10); at 6b6dbb0 (#11), with the same code, one case failed: a TERM'd tree
+      not gone within 1 s, on a builder running the suite and the matrix at once. The test's
+      bound is 2 s now: the KILL path takes at least 3 s, so it still tells the two apart. The
+      READMEs drop "not yet tested". Left: the image, run (the owner's).*
 
 *6.7.11 Review*
 
@@ -2507,6 +2513,11 @@ from 6.7.9)
       error, and a range excluding the release or a floor below it, each as expected. The index
       is `RELEASE_INDEX_URL`'s (PyPI's by default), as python-template's workspace release asks
       it too.*
+      *Progress (2026-10-10, the owner's): ffmeta 0.1.1 (8edd92e) and ffman 0.1.1 (6b6dbb0, its
+      floors `ffmeta>=0.1.1`, `subverter>=0.1.1`) released after subverter's; `just release ffman`
+      passing means subverter 0.1.1 was on PyPI by then. `Publish` #3 (ffman-v0.1.1): build, PyPI
+      with its attestations, GitHub release, all green. Left: a clean venv's `pip install ffman`,
+      and nixos-config's `nix flake update ffsuite`.*
 
 *6.7.13 The image published* (the owner's proposal, 2026-10-10)
 
@@ -2524,6 +2535,9 @@ from 6.7.9)
       gst-plugins-bad's input (via openal-soft, SDL), never ffmpeg's; nixpkgs gives FDK-AAC free
       and redistributable, and cache.nixos.org holds it. Whether it is in the image's runtime
       closure needs a build.*
+      *Progress (2026-10-10): `Image` #1 (ffman-v0.1.1) green, built and run on both
+      architectures and joined as `ghcr.io/veramachine/ffman:0.1.1` and `latest`. Left: the
+      package made public.*
 
 **6.8 Subtitle formats** (each into each other; research and skills before code, as 6.6; G4 each)
 

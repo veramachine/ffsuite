@@ -23,7 +23,7 @@ pip install ffmeta subverter
 ```
 
 From the flake, ffman with every tool it runs, on Linux (x86_64, aarch64) or macOS (Apple
-silicon: not yet tested):
+silicon):
 
 ```sh
 nix run github:veramachine/ffsuite -- convert -i in.mp4 -w 1280   # in.ffman.mp4, 1280 wide

@@ -8,8 +8,8 @@ nothing.
 ## Running it
 
 On Linux or macOS; on Windows, in WSL (ffman refuses to run on Windows itself: it handles its
-tools as POSIX does). From its flake -- on Linux (x86_64, aarch64) or macOS (Apple silicon: not
-yet tested) -- the tools it runs come with it:
+tools as POSIX does). From its flake -- on Linux (x86_64, aarch64) or macOS (Apple silicon) --
+the tools it runs come with it:
 
 ```sh
 nix run github:veramachine/ffsuite -- convert -i in.mp4 -w 1280

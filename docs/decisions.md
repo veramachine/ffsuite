@@ -56,7 +56,7 @@ absolute paths (`C:\`) are no filter-safe path; ffmpeg-normalize reads `%APPDATA
 `ffman/__main__.py`, the command's entry, refuses Windows before importing any module that
 names them -- else a traceback (shown: SIGHUP removed, the import fails) -- and points to WSL,
 a Linux. The flake: Linux (x86_64, aarch64) and Apple silicon (aarch64-darwin: every runtime
-tool available there, evaluated; nixpkgs 26.05 the last to support Intel Macs, until December
+tool available there, built and tested by nix.yml; nixpkgs 26.05 the last to support Intel Macs, until December
 2026); the checks read the process table through `ps` (nixpkgs' `unixtools.ps`: procps, or
 macOS's adv_cmds), not `/proc`. The image (`nix/image.nix`, `dockerTools.buildLayeredImage`,
 Linux's: `.#image` the gzipped archive, `.#image.stream` the same streamed, no copy kept): ffman
