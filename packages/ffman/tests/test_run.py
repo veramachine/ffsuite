@@ -211,7 +211,10 @@ def test_a_signal_stops_the_tree_and_cleans_up(
             # TERM reaches the whole group at once; a tree ignoring it lives until the KILL,
             # after bash's 10 polls of 0.3 s. (ffman's exit also waits, within those 3 s, for
             # PID 1 to reap the orphans' zombies: measured, not assumed; so did bash's kill -0.)
-            assert gone_within(marker, 1.0) is honours_term
+            # 2 s parts the two with a second each side -- the KILL comes no sooner than 3 s
+            # (each poll sleeps at least its 0.3 s) -- where 1 s failed a TERM on a loaded macOS
+            # builder (nix.yml #11, at 6b6dbb0; #8 to #10, the same code, passed)
+            assert gone_within(marker, 2.0) is honours_term
             assert job.wait(timeout=10) == status
             elapsed = time.monotonic() - start
             # 3 s of polls, and room for a loaded builder (macOS CI's took 4.009 s)
