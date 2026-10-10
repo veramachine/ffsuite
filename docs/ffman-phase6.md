@@ -2504,7 +2504,9 @@ from 6.7.9)
       release ffman` now asks PyPI's Simple API (PEP 691's JSON) for each library's release, a
       file not yanked, and refuses a range that excludes it. Proven against a local index: a
       release published, missing, yanked alone, an sdist alone, an unknown project and a server
-      error, and a range excluding the release or a floor below it, each as expected.*
+      error, and a range excluding the release or a floor below it, each as expected. The index
+      is `RELEASE_INDEX_URL`'s (PyPI's by default), as python-template's workspace release asks
+      it too.*
 
 *6.7.13 The image published* (the owner's proposal, 2026-10-10)
 

@@ -145,9 +145,12 @@ release package semver:
     # next version within ffman's range; for ffman, each library released as the workspace holds
     # it -- tagged, and on PyPI (a file not yanked: the Simple API's JSON, PEP 691) -- and ffman's
     # range admitting that release, its floor: ffman is tested with it alone, and pip keeps an
-    # older one installed that the range admits (its upgrade strategy, only-if-needed)
-    uv run --locked python - "$package" "$next" <<'EOF'
+    # older one installed that the range admits (its upgrade strategy, only-if-needed).
+    # RELEASE_INDEX_URL names another index than PyPI's (a test's)
+    RELEASE_INDEX_URL="${RELEASE_INDEX_URL:-https://pypi.org/simple/}" \
+        uv run --locked python - "$package" "$next" <<'EOF'
     import json
+    import os
     import subprocess
     import sys
     import tomllib
@@ -159,6 +162,8 @@ release package semver:
     from packaging.utils import parse_sdist_filename, parse_wheel_filename
     from packaging.version import Version
 
+    INDEX = os.environ["RELEASE_INDEX_URL"].rstrip("/")
+
 
     def project(name):
         text = Path(f"packages/{name}/pyproject.toml").read_text(encoding="utf-8")
@@ -167,7 +172,7 @@ release package semver:
 
     def on_pypi(name, version):
         accept = {"Accept": "application/vnd.pypi.simple.v1+json"}
-        request = urllib.request.Request(f"https://pypi.org/simple/{name}/", headers=accept)
+        request = urllib.request.Request(f"{INDEX}/{name}/", headers=accept)
         try:
             with urllib.request.urlopen(request, timeout=30) as response:
                 files = json.load(response)["files"]
@@ -197,15 +202,16 @@ release package semver:
             version = Version(project(name)["version"])
             tag, src = f"{name}-v{version}", f"packages/{name}/src"
             diff = ["git", "diff", "--quiet", tag, "HEAD", "--", src]
-            if subprocess.run(diff, check=False).returncode:  # 1: changed; 128: no such tag
-                errors.append(f"{src} is not {tag}'s: release {name} first")
+            # 1: changed; 128: no such tag (git's own message aside: the one below says it)
+            if subprocess.run(diff, check=False, stderr=subprocess.DEVNULL).returncode:
+                errors.append(f"{src} is not {tag}'s (or no such tag): release {name} first")
             else:
                 try:
                     if not on_pypi(name, version):
-                        missing = f"{name} {version} is not on PyPI, or only yanked"
+                        missing = f"{name} {version} is not on {INDEX}, or only yanked"
                         errors.append(f"{missing}: see {tag}'s Publish run")
-                except (urllib.error.URLError, TimeoutError) as error:  # HTTPError's 404 aside
-                    errors.append(f"PyPI, asked for {name}: {error}")
+                except (urllib.error.URLError, TimeoutError, ValueError, KeyError) as error:
+                    errors.append(f"{INDEX}, asked for {name}: {error!r}")
             floors = [Version(s.version) for s in req.specifier if s.operator == ">="]
             if not req.specifier.contains(version):
                 errors.append(f"ffman requires {req}, not {name} {version}: widen it")
