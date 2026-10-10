@@ -86,9 +86,10 @@ release.
   there, releasing nothing -- no changelog yet). cocogitto counts from a package's latest tag, and
   git-cliff's `--include-path` sees only commits touching the package: a tag elsewhere is lost.
 - Release a library before an ffman that needs it: ffman's wheel requires both libraries. For
-  ffman, the release refuses a library whose source is not its latest release's, and a floor in
-  ffman's range below that release, patch included -- ffman is tested with it alone, and pip keeps
-  an older one installed that the range admits.
+  ffman, the release refuses a library whose source is not its latest release's, a release not on
+  PyPI (its Publish run failed, or every file yanked), and a range that excludes it or a floor
+  below it, patch included -- ffman is tested with it alone, and pip keeps an older one installed
+  that the range admits.
 - A library's release refuses a version ffman's range excludes (uv's lock ignores the range): a
   minor release in 0.x leaves ffman's `<0.2`, so widen ffman's range first, in its own commit; after
   the release, raise its floor to it.

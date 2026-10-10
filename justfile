@@ -143,21 +143,48 @@ release package semver:
     fi
     # ffman's requirements, which uv's lock ignores for a workspace member (measured): a library's
     # next version within ffman's range; for ffman, each library released as the workspace holds
-    # it, and ffman's floor that release -- ffman is tested with it alone, and pip keeps an older
-    # one installed that the range admits (its upgrade strategy, only-if-needed)
+    # it -- tagged, and on PyPI (a file not yanked: the Simple API's JSON, PEP 691) -- and ffman's
+    # range admitting that release, its floor: ffman is tested with it alone, and pip keeps an
+    # older one installed that the range admits (its upgrade strategy, only-if-needed)
     uv run --locked python - "$package" "$next" <<'EOF'
+    import json
     import subprocess
     import sys
     import tomllib
+    import urllib.error
+    import urllib.request
     from pathlib import Path
 
     from packaging.requirements import Requirement
+    from packaging.utils import parse_sdist_filename, parse_wheel_filename
     from packaging.version import Version
 
 
     def project(name):
         text = Path(f"packages/{name}/pyproject.toml").read_text(encoding="utf-8")
         return tomllib.loads(text)["project"]
+
+
+    def on_pypi(name, version):
+        accept = {"Accept": "application/vnd.pypi.simple.v1+json"}
+        request = urllib.request.Request(f"https://pypi.org/simple/{name}/", headers=accept)
+        try:
+            with urllib.request.urlopen(request, timeout=30) as response:
+                files = json.load(response)["files"]
+        except urllib.error.HTTPError as error:
+            if error.code == 404:  # no such project
+                return False
+            raise
+        for file in files:
+            filename = file["filename"]
+            parse = parse_wheel_filename if filename.endswith(".whl") else parse_sdist_filename
+            try:
+                found = parse(filename)[1]
+            except ValueError:  # neither a wheel nor an sdist (an egg): never pip's here
+                continue
+            if found == version and not file["yanked"]:
+                return True
+        return False
 
 
     package, upcoming = sys.argv[1], Version(sys.argv[2])
@@ -172,7 +199,17 @@ release package semver:
             diff = ["git", "diff", "--quiet", tag, "HEAD", "--", src]
             if subprocess.run(diff, check=False).returncode:  # 1: changed; 128: no such tag
                 errors.append(f"{src} is not {tag}'s: release {name} first")
-            if not any(s.operator == ">=" and Version(s.version) >= version for s in req.specifier):
+            else:
+                try:
+                    if not on_pypi(name, version):
+                        missing = f"{name} {version} is not on PyPI, or only yanked"
+                        errors.append(f"{missing}: see {tag}'s Publish run")
+                except (urllib.error.URLError, TimeoutError) as error:  # HTTPError's 404 aside
+                    errors.append(f"PyPI, asked for {name}: {error}")
+            floors = [Version(s.version) for s in req.specifier if s.operator == ">="]
+            if not req.specifier.contains(version):
+                errors.append(f"ffman requires {req}, not {name} {version}: widen it")
+            elif not any(floor >= version for floor in floors):
                 errors.append(f"ffman requires {req}: raise its floor to {version}")
     sys.exit("\n".join(f"error: {e}" for e in errors) or None)
     EOF
