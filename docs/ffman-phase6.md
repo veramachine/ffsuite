@@ -2499,6 +2499,29 @@ from 6.7.9)
       Proven on a clone against a bare remote: a floor of 0.1, a subverter `minor` outside `<0.2`
       and an unpushed commit each refused before anything is written; at dc7e051, ffman 0.1.1
       released in 8 s, its changelog's section and tag pushed.*
+      *And found: the release checked a library's tag, never PyPI -- with subverter-v0.1.1 tagged
+      and its upload refused, ffman's would have published a wheel no pip can install. `just
+      release ffman` now asks PyPI's Simple API (PEP 691's JSON) for each library's release, a
+      file not yanked, and refuses a range that excludes it. Proven against a local index: a
+      release published, missing, yanked alone, an sdist alone, an unknown project and a server
+      error, and a range excluding the release or a floor below it, each as expected.*
+
+*6.7.13 The image published* (the owner's proposal, 2026-10-10)
+
+- [ ] `.#image-free` (Linux's): the flake's own `ffman`, nixpkgs' ffmpeg-full -- no FDK
+      (`withUnfree ? false`, so `withFdkAac` off: `generic.nix` at 4c78701), its licences LGPL and
+      GPL -- published by `image.yml` on ffman's tag to `ghcr.io/veramachine/ffman`, amd64 and
+      arm64, `<version>` and `latest`; `.#image`, FDK's, stays its user's to build. The OCI labels
+      (title, description, version, source: ffman's `Repository`); no licences label, ffman's
+      would misstate ffmpeg's. Proven: the flake evaluated for all three systems (`nix flake
+      check --no-build --all-systems`); the free image's labels in its derivation; its ffmpeg's
+      licences `lgpl21Plus gpl2Plus lgpl3Plus gpl3Plus`; `image.yml` by actionlint. Left:
+      `image.yml` run by hand on `main` (built and run on both architectures), then ffman's
+      release publishing it, and the package made public (GHCR's default is private).
+      *Found: FDK's library is still in the free image's build graph -- pipewire's and
+      gst-plugins-bad's input (via openal-soft, SDL), never ffmpeg's; nixpkgs gives FDK-AAC free
+      and redistributable, and cache.nixos.org holds it. Whether it is in the image's runtime
+      closure needs a build.*
 
 **6.8 Subtitle formats** (each into each other; research and skills before code, as 6.6; G4 each)
 
